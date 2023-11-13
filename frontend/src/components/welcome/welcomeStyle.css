@@ -1,0 +1,26 @@
+.welcome-container {
+  position: relative;
+
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  /* Estilos para pantallas más pequeñas (responsivo) */
+  .welcome-container {
+    top: 70px;
+    padding: 20px;
+    padding-bottom: 42px;
+  }
+}
+.title {
+  color: #363636;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.125;
+}
+
+/* Estilo para el subtítulo */
+.subtitle {
+  font-size: 18px;
+  font-weight: normal;
+}

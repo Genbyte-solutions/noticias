@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "JwtGenerator",
+      "request": "launch",
+      "mainClass": "com.mendozanews.apinews.tokens.JwtGenerator",
+      "projectName": "api-news"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-ApiNewsApplication<api-news>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.mendozanews.apinews.ApiNewsApplication",
+      "projectName": "api-news",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

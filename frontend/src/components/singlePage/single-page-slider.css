@@ -1,0 +1,57 @@
+.singlePopular {
+    overflow: hidden;
+}
+
+.singlePopular .box {
+    width: 200px;
+    height: 100px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 5px;
+    background-image: linear-gradient(to bottom,
+            transparent 10%,
+            rgba(0, 0, 0, 0.2) 30%,
+            rgba(0, 0, 0, 0.4) 60%,
+            rgba(0, 0, 0, 0.7) 95%);
+}
+
+.singlePopular img {
+    min-width: 200px;
+    height: 100px;
+    position: absolute;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.90);
+}
+
+.singlePopular .text {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    padding: 10px;
+    color: #fff;
+}
+
+.singlePopular .text h1 {
+    font-size: 13px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: baseline;
+    line-height: normal;
+}
+
+.singlePopular .box:hover {
+    background-image: linear-gradient(to bottom,
+            transparent 0%,
+            rgba(0, 0, 0, 0.6) 0%);
+
+    & h1 {
+        color: rgb(255, 255, 255);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .singlePopular {
+        margin-top: 90px;
+    }
+}

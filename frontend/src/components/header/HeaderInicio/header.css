@@ -1,0 +1,118 @@
+.head {
+  cursor: pointer;
+  background-color: #ef850b;
+  padding: 40px 0px;
+  position: relative;
+}
+
+.head a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.head .logo img {
+  min-width: 10%;
+  max-width: 50%;
+}
+
+/* HEADER */
+
+header {
+  padding: 0 0;
+}
+
+header nav {
+  display: flex;
+  justify-content: center;
+}
+
+header ul {
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+header li {
+  margin: 7px 0;
+}
+
+header li a {
+  margin: 0px 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #333;
+  transition: 0.3s;
+  display: flex;
+  text-align: center;
+}
+
+header li a:hover {
+  color: #b6943a;
+}
+
+
+/* Bar Ico */
+.barIco {
+  font-size: 25px;
+  background-color: #ef850b;
+  color: #333;
+  border: none;
+  display: none;
+  margin-right: 20px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .full-header{
+    display: flex;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+  }
+
+  header{
+    background-color: #ef850b;
+    display: flex;
+  }
+
+  .head {
+    padding: 20px 0px !important;
+  }
+
+  header .flexCT {
+    display: none;
+  }
+
+  .barIco {
+    display: block;
+    margin-left: 10px;
+    z-index: 6;
+    cursor: pointer;
+  }
+
+  header .navbar {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    left: 0px;
+    top: 12vw;
+    /* ??? */
+    width: 100%;
+    z-index: 5;
+    padding: 20px 30px;
+    padding-bottom: 30px;
+    /* overflow-y: scroll; */
+    background-color: #fff;
+  }
+
+  header li {
+    margin: 0;
+    height: 15px;
+  }
+
+  header li a {
+    margin: 0;
+  }
+}

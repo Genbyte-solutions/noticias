@@ -1,0 +1,87 @@
+.seccion-paginas {
+  margin: auto 20px;
+}
+
+/* ------ CARROUSEL DOTS------ */
+.seccion-paginas .slick-dots {
+    display: flex !important;
+    gap: 10px;
+    justify-content: center;
+}
+
+.seccion-paginas .slick-dots div {
+    text-align: center;
+    border: none;
+    width: 30px;
+    background-color: #ef850b;
+    border-radius: 10px;
+}
+
+.seccion-paginas .slick-dots .slick-active div {
+  background-color: #9e5603;
+}
+
+/* ------ CAJITAS ------ */
+
+.seccion-paginas .box {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 15px 15px 15px 10px;
+}
+
+.seccion-paginas .images {
+  position: relative;
+  height: 220px;
+}
+
+.seccion-paginas img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.seccion-paginas .text{
+  height: 200px;
+  position:relative;
+}
+
+.seccion-paginas .text h1 {
+  padding: 20px 10px 0 20px;
+  margin: 0;
+  display: block; /* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 5.6em;
+  line-height: 1.4em;
+}
+
+.seccion-paginas .text p {
+  padding: 20px 10px 0 20px;
+  margin: 0;
+  display: block; /* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 5.2em;
+  line-height: 1.4em;
+}
+
+.seccion-paginas .fecha {
+  margin-top: 15px;
+  padding: 0 0 0 20px;
+  position: absolute;
+  bottom: 10px;
+}
+
+.seccion-paginas .fecha label {
+  padding-left: 10px;
+}
+
+@media screen and (width: 800px) {
+  .seccion-paginas .text h1 {
+    padding-top: 10px;
+  }
+}

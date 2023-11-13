@@ -1,0 +1,35 @@
+.notification-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.notification {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification .message {
+  color: white;
+  font-size: 1rem;
+  margin-right: 20px;
+}
+
+.notification .close-button {
+  padding: 10px 20px;
+  background-color: #2196f3;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.notification .close-button:hover {
+  background-color: #0b7dda;
+}

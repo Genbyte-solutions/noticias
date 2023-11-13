@@ -1,0 +1,166 @@
+.singlePage {
+  margin-top: 10px;
+}
+
+.singlePage .info {
+  margin-top: 10px;
+  padding-right: 50px;
+}
+
+.singlePage .info h1 {
+  margin-bottom: 10px;
+}
+
+.singlePage .titulo {
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 700;
+}
+
+.singlePage .autor {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  margin: 20px 0;
+}
+
+.singlePage .autor p {
+  text-transform: capitalize;
+  margin-right: 10px;
+}
+
+.singlePage .info .autor img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.singlePage .autor label {
+  color: gray;
+}
+
+.singlePage .info .social {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.singlePage .info .socBox {
+  border-radius: 20px;
+  box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+    -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+  transition: transform 0.5s;
+}
+
+.singlePage .info .socBox:hover {
+  cursor: pointer;
+  box-shadow: inset 4px 4px 6px -1px rgba(0, 0, 0, 0.2),
+    inset -4px -4px 6px -1px rgba(255, 255, 255, 0.7),
+    -0.5px -0.5px 0px rgba(255, 255, 255, 1),
+    0.5px 0.5px 0px rgba(0, 0, 0, 0.15),
+    0px 12px 10px -10px rgba(0, 0, 0, 0.05);
+    transform: translateX(0.5em);
+}
+
+.singlePage .info .socBox .fab {
+  position: relative;
+  left: 9px;
+  transition: transform 0.5s;
+}
+
+.singlePage .info .socBox:hover .fab {
+  transform: scale(1.3);
+  fill: #333333;
+}
+
+.singlePage .info img {
+  margin: 30px 0;
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.descTop p {
+  margin: 20px 0;
+  line-height: 30px;
+}
+
+.descBot h1 {
+  font-weight: 600;
+  font-size: 30px;
+}
+
+.quote {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-left: 50px;
+  border-left: 5px solid red;
+}
+
+.quote i {
+  font-size: 50px;
+  color: red;
+  margin-bottom: 20px;
+}
+
+.quote p {
+  font-size: 18px;
+}
+
+/* ----- SOBRE AUTOR ----- */
+
+.sobre-autor .autor {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.sobre-autor .autor img {
+  width: 200px !important;
+  height: 200px !important;
+}
+
+.sobre-autor .autor .texto {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.sobre-autor .autor p {
+  font-size: 60px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .singlePage .info {
+    padding-right: 0px;
+  }
+
+  .singlePage .info img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .singlePage .info .socBox {
+    margin-right: 0px;
+    justify-content: space-between;
+  }
+
+  .singlePage .info .social {
+    justify-content: space-around;
+  }
+
+  .sobre-autor .autor {
+    gap: 10px;
+  }
+
+  .sobre-autor .autor p {
+    font-size: 40px;
+  }
+
+}

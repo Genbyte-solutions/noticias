@@ -1,0 +1,53 @@
+.cotizacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.cotizacion div {
+  width: 20%;
+  height: 52px;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+}
+
+.cotizacion iframe {
+  max-width: 100vw;
+  height: 257px;
+  -webkit-transform: scale(0.50);
+  position: absolute;
+  top: -98px;
+  border-inline: 1px solid black;
+}
+
+@media screen and (max-width: 768px) {
+  .cotizacion {
+    margin-top: 90px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .cotizacion {
+    flex-direction: row;
+  }
+
+  .cotizacion div {
+    width: 30%;
+    height: 42px;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+  }
+
+  .cotizacion iframe {
+    max-width: 100vw;
+    height: 257px;
+    -webkit-transform: scale(0.40);
+    position: absolute;
+    top: -110px;
+  }
+}

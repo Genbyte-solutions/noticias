@@ -1,0 +1,134 @@
+.clients {
+  padding: 0;
+}
+
+.clients .client-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  height: 100px;
+}
+
+.clients .client-logo img {
+  height: 40px;
+  z-index: 1000;
+  transition: all 0.4s ease-in-out;
+}
+
+.clients .client-logo:hover img {
+  transform: scale(1.2);
+}
+
+@media screen and (max-width: 950px) {
+  .clients .publicidades {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(2, 6vh);
+    grid-gap: 30px;
+  }
+  .clients .cajita:nth-child(1) {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 1;
+  }
+  .clients .cajita:nth-child(2) {
+    grid-column-start: 5;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 1;
+  }
+  .clients .cajita:nth-child(3) {
+    grid-column-start: 8;
+    grid-column-end: 10;
+    grid-row-start: 1;
+    grid-row-end: 1;
+  }
+  .clients .cajita:nth-child(4) {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 2;
+  }
+  .clients .cajita:nth-child(5) {
+    grid-column-start: 5;
+    grid-column-end: 7;
+    grid-row-start: 2;
+    grid-row-end: 2;
+  }
+  .clients .cajita:nth-child(6) {
+    grid-column-start: 8;
+    grid-column-end: 10;
+    grid-row-start: 2;
+    grid-row-end: 2;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .clients .publicidades {
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(3, 6vh);
+  }
+  .clients .cajita:nth-child(1) {
+    grid-column-start: 2;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 1;
+  }
+  .clients .cajita:nth-child(2) {
+    grid-column-start: 6;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 1;
+  }
+  .clients .cajita:nth-child(3) {
+    grid-column-start: 2;
+    grid-column-end: 5;
+    grid-row-start: 2;
+    grid-row-end: 2;
+  }
+  .clients .cajita:nth-child(4) {
+    grid-column-start: 6;
+    grid-column-end: 9;
+    grid-row-start: 2;
+    grid-row-end: 2;
+  }
+  .clients .cajita:nth-child(5) {
+    grid-column-start: 2;
+    grid-column-end: 5;
+    grid-row-start: 3;
+    grid-row-end: 3;
+  }
+  .clients .cajita:nth-child(6) {
+    grid-column-start: 6;
+    grid-column-end: 9;
+    grid-row-start: 3;
+    grid-row-end: 3;
+  }
+}
+
+/* PUBLICIDAD SIMPLE */
+
+.publi-simple {
+  padding: 0;
+
+}
+
+.publi-simple .img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  height: 50px;
+}
+
+.publi-simple .img-container img {
+  height: 70px;
+  z-index: 1000;
+  transition: all 0.4s ease-in-out;
+}
+
+.publi-simple .img-container img:hover {
+  transform: scale(1.2);
+}

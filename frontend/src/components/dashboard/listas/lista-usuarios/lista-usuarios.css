@@ -1,0 +1,82 @@
+.lista-usuarios-container {
+  margin: 20px;
+}
+
+.lista-usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-header {
+  background-color: #ff7a01;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.icono-image {
+  width: 50px;
+  height: 50px;
+}
+
+.usuarios-button {
+  background-color: #ff7a01;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+.usuarios-button:hover {
+  background-color: #ff5733; /* Change the color on hover if desired */
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .lista-usuarios-container {
+    margin: 10px;
+  }
+
+  .table-header {
+    padding: 8px;
+  }
+
+  .icono-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  .usuarios-button {
+    padding: 4px 8px;
+  }
+}
+@media (max-width: 470px) {
+  .table-header {
+    padding: 0;
+  }
+
+  .icono-image {
+    width: 30px;
+    height: 30px;
+  }
+
+  .usuarios-button {
+    padding: 0;
+  }
+}
+.table-body-usuarios {
+  border: 1px solid black;
+  text-align: center;
+}
+.border-usuarios {
+  border: 1px solid black;
+}
+.button-usuarios-td {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}

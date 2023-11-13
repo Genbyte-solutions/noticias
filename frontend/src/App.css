@@ -1,0 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=Diphylleia&family=Kablammo&family=Montserrat:ital,wght@0,200;0,400;0,500;0,600;0,700;0,800;1,200;1,400;1,500;1,600;1,700;1,800&family=Play&family=Poppins:wght@200;300;400;500;600&family=Rock+3D&family=Tilt+Prism&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  background-color: #fff;
+  line-height: 1.6575em;
+  overflow-x: hidden;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+label {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+a h1{
+  transition: transform 0.3s;
+}
+
+a:hover h1{
+  color: #333;
+  transform: scale(1.02);
+}
+
+li {
+  list-style: none;
+}
+
+.container {
+  max-width: 90%;
+  margin: auto;
+}
+
+.flex {
+  display: flex;
+}
+
+.flexCT {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexSB {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flexSA {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.col-SA {
+  display: flex;
+  flex-direction: column;
+  flex: start;
+  justify-content: space-around;
+}
+
+.paddingY {
+  padding: 40px 0;
+}
+
+.paddingYS {
+  padding: 20px 0;
+}
+
+.paddingB{
+  padding-bottom: 40px;
+}
+
+.paddingBS{
+  padding-bottom: 20px;
+}
+
+li,
+ul {
+  list-style-type: none;
+}
+
+label {
+  padding-left: 10px;
+}
+
+.categoria {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  letter-spacing: 2px;
+  color: #333;
+}
+
+.row {
+  width: 50%;
+}
+
+.images {
+  position: relative;
+}
+
+.categoria1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-left: 5px solid #333;
+  width: auto;
+  display: block;
+  background: linear-gradient(to right, #333 50%, #fff 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all 0.5s ease-out;
+  cursor: pointer;
+}
+
+.categoria1 span {
+  color: #333;
+  text-transform: capitalize;
+  letter-spacing: 0;
+}
+
+.categoria1:hover {
+  background-position: left bottom;
+}
+
+.categoria1:hover span {
+  color: #fff;
+}
+
+.titulo {
+  font-weight: 500;
+  font-size: 17px;
+  margin-bottom: 15px;
+}
+
+.shadow {
+  box-shadow: rgba(0, 0, 0, 0.2) 0 15px 10px -10px;
+}
+
+.popularNews, .popular, .seccion, .seccion-row{
+  margin-bottom: 10vh;
+}
+
+.error{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-top: 50px;
+}

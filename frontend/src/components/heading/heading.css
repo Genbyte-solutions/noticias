@@ -1,0 +1,58 @@
+.heading {
+    margin: 30px 0;
+    height: 40px;
+    background-image: url("../../assets/image/p_da0431_ll_da04313.jpg");
+    background-size: contain;
+
+}
+
+.heading-title {
+    display: flex;
+    background-color: #333;
+    width: 170px;
+    gap: 3px;
+    padding-left: 10px;
+}
+
+.heading img {
+    max-height: 30px;
+    max-width: 30px;
+    position: relative;
+    top: 5px;
+    display: block;
+    /* filter: drop-shadow(2px, 2px, 10px, #fff); */
+    /* No anda */
+}
+
+.heading h6 {
+    font-weight: 400;
+    color: #fff;
+    height: 40px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #333;
+    font-size: 14px;
+    width: 130px;
+}
+
+.sideContent .heading h6 {
+    background-color: #ef850b;
+}
+
+.sideContent .radio .heading h6 {
+    width: 220px;
+}
+
+/* Skew Forward */
+.skew-forward {
+    display: inline-block;
+    transition-duration: 0.3s;
+    transition-property: transform;
+    transform-origin: 0 100%;
+
+    &:hover {
+        transform: skew(-10deg);
+    }
+}
