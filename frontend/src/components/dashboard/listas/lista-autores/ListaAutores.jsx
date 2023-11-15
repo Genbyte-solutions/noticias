@@ -51,7 +51,7 @@ function ListaAutores() {
 
   const handleEliminarAutor = (id) => {
     fetch(`http://localhost:8080/api/autor/eliminar/${id}`, {
-      method: "POST",
+      method: "DELETE",
     })
       .then(async (response) => {
         if (response.ok) {
@@ -64,7 +64,7 @@ function ListaAutores() {
         } else {
           setNotificationMessage(
             "Error, una o mas noticias utilizan este autor" +
-              response.statusText
+            response.statusText
           );
           setShowNotification(true);
         }
@@ -96,7 +96,7 @@ function ListaAutores() {
               <td className="table-body-seccion">
                 {autor.foto && fotos[autor.id] && (
                   <img
-                    src={[fotos[autor.id]]}
+                    src={fotos[autor.id]}
                     alt="Foto"
                     className="icono-image"
                   />

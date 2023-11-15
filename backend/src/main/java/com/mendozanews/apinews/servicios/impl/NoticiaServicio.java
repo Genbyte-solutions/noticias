@@ -1,4 +1,4 @@
-package com.mendozanews.apinews.servicios;
+package com.mendozanews.apinews.servicios.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@ import com.mendozanews.apinews.model.entidades.Portada;
 import com.mendozanews.apinews.model.entidades.Seccion;
 import com.mendozanews.apinews.repositorios.NoticiaRepositorio;
 import com.mendozanews.apinews.repositorios.SeccionRepositorio;
-import com.mendozanews.apinews.servicios.NoticiaServicio;
+import com.mendozanews.apinews.servicios.impl.NoticiaServicio;
 import com.mendozanews.apinews.repositorios.AutorRepositorio;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

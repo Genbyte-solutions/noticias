@@ -1,4 +1,4 @@
-package com.mendozanews.apinews.servicios;
+package com.mendozanews.apinews.servicios.impl;
 
 import org.springframework.web.multipart.MultipartFile;
 
