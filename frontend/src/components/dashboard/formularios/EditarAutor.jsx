@@ -67,7 +67,7 @@ function EditarAutor() {
       const response = await fetch(
         `http://localhost:8080/api/autor/editar/${id}`,
         {
-          method: "POST",
+          method: "PUT",
           body: formData,
         }
       );

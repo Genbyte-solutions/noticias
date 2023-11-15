@@ -1,7 +1,7 @@
 package com.mendozanews.apinews.controllers;
 
 import com.mendozanews.apinews.model.entidades.Seccion;
-import com.mendozanews.apinews.servicios.SeccionServicio;
+import com.mendozanews.apinews.servicios.impl.SeccionServicio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

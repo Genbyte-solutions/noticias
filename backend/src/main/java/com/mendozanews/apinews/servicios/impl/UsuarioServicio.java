@@ -1,4 +1,4 @@
-package com.mendozanews.apinews.servicios;
+package com.mendozanews.apinews.servicios.impl;
 
 import com.mendozanews.apinews.excepciones.MiException;
 import com.mendozanews.apinews.model.entidades.Imagen;
