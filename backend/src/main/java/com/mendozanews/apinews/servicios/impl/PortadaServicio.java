@@ -1,5 +1,6 @@
 package com.mendozanews.apinews.servicios.impl;
 
+import com.mendozanews.apinews.servicios.interfaces.IPortada;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mendozanews.apinews.excepciones.MiException;
@@ -8,11 +9,24 @@ import com.mendozanews.apinews.repositorios.PortadaRepositorio;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.IOException;
 import java.util.Optional;
 
 @Service
-public class PortadaServicio {
+public class PortadaServicio implements IPortada {
+
+    @Override
+    public Portada guardarPortada(MultipartFile portada) throws IOException {
+
+        return portadaRepositorio.save(
+                Portada.builder()
+                        .imagen(portada.getBytes())
+                        .tipoMime(portada.getContentType())
+                        .nombre(portada.getOriginalFilename())
+                        .build()
+        );
+    }
 
     @Autowired
     private PortadaRepositorio portadaRepositorio;
@@ -21,8 +35,8 @@ public class PortadaServicio {
         Optional<Portada> portada = portadaRepositorio.findById(id);
         if (portada.isPresent()) {
             Portada portadaEncontrada = portada.get();
-            if (portadaEncontrada.getId() != null) { // Reemplazar con el método de obtención de ID correcto
-                return portadaEncontrada.getId();
+            if (portadaEncontrada.getPortadaId() != null) { // Reemplazar con el método de obtención de ID correcto
+                return portadaEncontrada.getPortadaId();
             } else {
                 return null;
             }
@@ -41,11 +55,11 @@ public class PortadaServicio {
                 if (respuesta.isPresent()) {
                     portada = respuesta.get();
                 }
-                portada.setMime(archivo.getContentType());
+                portada.setTipoMime(archivo.getContentType());
                 portada.setNombre(archivo.getOriginalFilename());
                 portada.setImagen(archivo.getBytes());
                 portadaRepositorio.save(portada);
-                return portada.getId();
+                return portada.getPortadaId();
             } catch (IOException e) {
                 throw new MiException("No se pudo actualizar la portada: " + e.getMessage());
             }

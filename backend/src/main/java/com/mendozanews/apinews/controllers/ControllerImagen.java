@@ -28,7 +28,7 @@ public class ControllerImagen {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Imagen imagen = this.imagenServicio.getOne(autor.getFoto().getId());
+        Imagen imagen = this.imagenServicio.getOne(autor.getFoto().getImagenId());
         HttpHeaders headers = this.imagenServicio.buildImageResponseHeaders(imagen);
 
         return new ResponseEntity<>(imagen.getContenido(),HttpStatus.OK);

@@ -76,7 +76,7 @@ public class SeccionServicio {
             String idImg = null;
 
             if (seccion.getIcono() != null) {
-                idImg = seccion.getIcono().getId();
+                idImg = seccion.getIcono().getImagenId();
             }
 
             Imagen icono = is.actualizar(archivo, idImg);
