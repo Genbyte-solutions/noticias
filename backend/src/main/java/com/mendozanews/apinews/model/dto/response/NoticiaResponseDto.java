@@ -1,4 +1,4 @@
-package com.mendozanews.apinews.model.dto;
+package com.mendozanews.apinews.model.dto.response;
 import java.util.Date;
 import com.mendozanews.apinews.model.entidades.Autor;
 import com.mendozanews.apinews.model.entidades.Seccion;

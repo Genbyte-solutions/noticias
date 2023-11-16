@@ -1,6 +1,6 @@
 package com.mendozanews.apinews.controllers;
 
-import com.mendozanews.apinews.servicios.UsuarioServicio;
+import com.mendozanews.apinews.servicios.impl.UsuarioServicio;
 import com.mendozanews.apinews.tokens.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +29,7 @@ public class ControllerLogin {
             String password = loginRequest.getPassword();
             System.out.println("Email recibido: " + email);
             System.out.println("Contraseña recibida: " + password);
+
 
             // Lógica de autenticación utilizando el servicio de usuario
             boolean isAuthenticated = usuarioServicio.authenticate(email, password);
