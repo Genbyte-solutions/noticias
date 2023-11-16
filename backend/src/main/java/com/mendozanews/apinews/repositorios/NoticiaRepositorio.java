@@ -14,14 +14,14 @@ import com.mendozanews.apinews.model.entidades.Noticia;
 @Repository
 public interface NoticiaRepositorio extends JpaRepository<Noticia, String> {
 
-    @Query("SELECT n FROM Noticia n WHERE n.titulo LIKE :titulo")
+    @Query("SELECT n FROM Noticia n WHERE n.titulo LIKE %:titulo%")
     public List<Noticia> buscarPorTitulo(@Param("titulo") String titulo);
 
-    @Query("SELECT n FROM Noticia n WHERE n.autor.id = :id")
-    public List<Noticia> buscarPorAutor(@Param("id") String id);
+    @Query("SELECT n FROM Noticia n WHERE n.autor.nombre = :nombre")
+    public List<Noticia> buscarPorAutor(@Param("nombre") String nombre, @Param("apellido") String apellido);
 
-    @Query("SELECT n FROM Noticia n WHERE n.seccion.id = :id")
-    public List<Noticia> buscarPorSeccion(@Param("id") String id);
+    @Query("SELECT n FROM Noticia n WHERE n.seccion.nombre = :nombre OR n.seccion.apellido = :apellido")
+    public List<Noticia> buscarPorSeccion(@Param("nombre") String nombre, @Param("apellido") String apellido);
 
     @Query("SELECT n FROM Noticia n WHERE n.seccion.id = :id")
     public List<Noticia> findTop6BySeccionId(@Param("id") String id);

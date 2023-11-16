@@ -57,7 +57,7 @@ public class AutorControlador {
         if(autor==null){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        this.autorServicio.modificarAutor(autor,nombre,apellido,this.imagenServicio.actualizar(foto,autor.getFoto().getId()));
+        this.autorServicio.modificarAutor(autor,nombre,apellido,this.imagenServicio.actualizar(foto,autor.getFoto().getImagenId()));
         return new ResponseEntity<>(autor,HttpStatus.CREATED);
     }
 

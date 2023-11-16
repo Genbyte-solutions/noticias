@@ -86,7 +86,7 @@ public class UsuarioServicio implements UserDetailsService {
 
             String idImg = null;
             if (usuario.getImagen() != null) {
-                idImg = usuario.getImagen().getId();
+                idImg = usuario.getImagen().getImagenId();
             }
             Imagen foto = is.actualizar(imagen, idImg);
             usuario.setImagen(foto);

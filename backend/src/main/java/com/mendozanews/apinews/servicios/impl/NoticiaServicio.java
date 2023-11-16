@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.mendozanews.apinews.model.dto.request.NoticiaDto;
+import com.mendozanews.apinews.servicios.interfaces.INoticia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mendozanews.apinews.excepciones.MiException;
-import com.mendozanews.apinews.model.dto.NoticiaResponseDto;
+import com.mendozanews.apinews.model.dto.response.NoticiaResponseDto;
 import com.mendozanews.apinews.model.entidades.Autor;
 import com.mendozanews.apinews.model.entidades.Imagen;
 import com.mendozanews.apinews.model.entidades.Noticia;
@@ -28,7 +30,7 @@ import com.mendozanews.apinews.repositorios.SeccionRepositorio;
 import com.mendozanews.apinews.repositorios.ImagenRepositorio;
 
 @Service
-public class NoticiaServicio {
+public class NoticiaServicio implements INoticia {
 
     @Autowired
     private PortadaRepositorio portadaRepositorio;
@@ -46,54 +48,43 @@ public class NoticiaServicio {
     private NoticiaRepositorio noticiaRepositorio;
 
     @Transactional
-    public Noticia cargarNoticia(MultipartFile[] imagenes, MultipartFile portada, String titulo, String subtitulo,
-                                 List<String> parrafos, List<String> etiquetas, Seccion seccion, Autor autor) {
-        try {
-            validar(titulo, subtitulo, seccion.getId(), autor.getId());
+    @Override
+    public Noticia guardarNoticia(NoticiaDto noticiaDto, Autor autor, Seccion seccion) {
+        validar(titulo, subtitulo, seccion.getSeccionId(), autor.getAutorId());
 
-            Autor autorEncontrado = autorRepositorio.findById(autor.getId())
-                    .orElseThrow(() -> new MiException("Autor no encontrado"));
-            Seccion seccionEncontrada = seccionRepositorio.findById(seccion.getId())
-                    .orElseThrow(() -> new MiException("Sección no encontrada"));
 
-            Noticia noticia = new Noticia();
-            noticia.setTitulo(titulo);
-            noticia.setSubtitulo(subtitulo);
-            noticia.setParrafos(parrafos);
-            noticia.setEtiquetas(etiquetas);
-            noticia.setAutor(autorEncontrado);
-            noticia.setSeccion(seccionEncontrada);
-            noticia.setFechaPublicacion(new Date()); 
-            noticia.setActiva(true);
 
-            if (portada != null) {
-                Portada portadaGuardada = guardarPortadaYDevolverNoticia(portada, noticia);
-                noticia.setPortada(portadaGuardada);
-            }
+        Noticia noticia = Noticia.builder()
+                .titulo(noticiaDto.getTitulo())
+                .subtitulo(noticiaDto.getSubtitulo())
+                .parrafos(noticiaDto.getParrafos())
+                .etiquetas(noticiaDto.getEtiquetas())
+                .seccion(seccion)
+                .autor(autor)
+                .build();
 
-            Noticia noticiaGuardada = noticiaRepositorio.save(noticia);
-
-            for (MultipartFile imagen : imagenes) {
-                if (imagen != null) {
-                    Imagen imagenGuardada = guardarImagenYDevolverNoticia(imagen, noticiaGuardada);
-                    if (noticiaGuardada.getImagenes() == null) {
-                        noticiaGuardada.setImagenes(new ArrayList<>());
-                    }
-                    noticiaGuardada.getImagenes().add(imagenGuardada);
-                }
-            }
-
-            noticiaGuardada = noticiaRepositorio.save(noticiaGuardada);
-
-            return noticiaGuardada;
-        } catch (MiException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new MiException("Error al cargar la noticia: " + e.getMessage());
+        if (portada != null) {
+            Portada portadaGuardada = guardarPortadaYDevolverNoticia(portada, noticia);
+            noticia.setPortada(portadaGuardada);
         }
-    }
 
+        Noticia noticiaGuardada = noticiaRepositorio.save(noticia);
+
+        for (MultipartFile imagen : imagenes) {
+            if (imagen != null) {
+                Imagen imagenGuardada = guardarImagenYDevolverNoticia(imagen, noticiaGuardada);
+                if (noticiaGuardada.getImagenes() == null) {
+                    noticiaGuardada.setImagenes(new ArrayList<>());
+                }
+                noticiaGuardada.getImagenes().add(imagenGuardada);
+            }
+        }
+
+        noticiaGuardada = noticiaRepositorio.save(noticiaGuardada);
+
+        return noticiaGuardada;
+
+    }
 
     private Portada guardarPortadaYDevolverNoticia(MultipartFile portada, Noticia noticia) {
         Portada portadaGuardada = new Portada();
@@ -101,8 +92,7 @@ public class NoticiaServicio {
             byte[] portadaBytes = portada.getBytes();
             portadaGuardada.setImagen(portadaBytes);
             portadaGuardada.setNombre(portada.getOriginalFilename());
-            portadaGuardada.setMime(portada.getContentType());
-            portadaGuardada.setNoticia(noticia);
+            portadaGuardada.setTipoMime(portada.getContentType());
             portadaRepositorio.save(portadaGuardada);
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,7 +103,7 @@ public class NoticiaServicio {
 
     @Transactional
     public void modificarNoticia(String titulo, String subtitulo, List<String> parrafos, List<String> etiquetas,
-            String idSeccion, String idAutor, MultipartFile portada, String idNoticia) throws MiException {
+                                 String idSeccion, String idAutor, MultipartFile portada, String idNoticia) throws MiException {
         validar(titulo, subtitulo, idSeccion, idAutor);
 
         Optional<Noticia> respuesta = noticiaRepositorio.findById(idNoticia);
@@ -141,9 +131,9 @@ public class NoticiaServicio {
         try {
             imagenGuardada.setNombre(imagen.getOriginalFilename());
             imagenGuardada.setContenido(imagen.getBytes());
-            imagenGuardada.setMime(imagen.getContentType());
+            imagenGuardada.setTipoMime(imagen.getContentType());
             imagenGuardada = imagenRepositorio.save(imagenGuardada);
-            imagenGuardada.setNoticiaId(noticia); 
+            imagenGuardada.setNoticia(noticia);
             // el objeto con el ID generado
         } catch (IOException e) {
             e.printStackTrace();
@@ -196,7 +186,7 @@ public class NoticiaServicio {
         List<Noticia> noticias = new ArrayList<>();
 
         for (Seccion seccion : secciones) {
-            Noticia noticia = noticiaRepositorio.findFirstBySeccionId(seccion.getId());
+            Noticia noticia = noticiaRepositorio.findFirstBySeccionId(seccion.getSeccionId());
             if (noticia != null) {
                 noticias.add(noticia);
             }
@@ -224,7 +214,7 @@ public class NoticiaServicio {
     @Transactional
     public void asignarID(String id, String idNuevo) throws MiException {
         Noticia principal = getOne(id);
-        principal.setId(idNuevo);
+        principal.setNoticiaId(idNuevo);
         noticiaRepositorio.save(principal);
     }
 
@@ -267,41 +257,41 @@ public class NoticiaServicio {
         if (cantidad <= 0) {
             throw new MiException("La cantidad debe ser un número positivo mayor que cero");
         }
-    
+
         long cantidadNoticias = noticiaRepositorio.count();
         if (cantidadNoticias < cantidad) {
             for (int i = 1; i <= cantidad; i++) {
                 Noticia noticia = new Noticia();
-    
+
                 Autor autor = new Autor();
                 autor.setNombre("Autor");
                 autor.setApellido(Integer.toString(i));
-                autor.setId("autor_" + i);
+                autor.setAutorId("autor_" + i);
                 autor = autorRepositorio.save(autor);
-    
+
                 Seccion seccion = new Seccion();
-                seccion.setId("seccion_" + i);
+                seccion.setSeccionId("seccion_" + i);
                 seccion.setNombre("Sección " + i);
                 seccion = seccionRepositorio.save(seccion);
-    
+
                 noticia.setTitulo("titulo " + i);
                 noticia.setSubtitulo("subtitulo " + i);
-    
+
                 List<String> parrafos = new ArrayList<>();
                 parrafos.add("parrafo 1 de noticia " + i);
                 parrafos.add("parrafo 2 de noticia " + i);
                 noticia.setParrafos(parrafos);
-    
+
                 List<String> etiquetas = new ArrayList<>();
                 etiquetas.add("etiquetas 1 N" + i);
                 etiquetas.add("etiquetas 2 N" + i);
                 noticia.setEtiquetas(etiquetas);
-    
+
                 noticia.setSeccion(seccion);
                 noticia.setAutor(autor);
                 noticia.setFechaPublicacion(new Date()); // Utiliza LocalDateTime.now() para la fecha actual
                 noticia.setActiva(true);
-    
+
                 noticiaRepositorio.save(noticia);
             }
             return "Se cargó la lista porque ingresaste un número de noticias mayor al existente en la base de datos";
@@ -313,7 +303,7 @@ public class NoticiaServicio {
     @Transactional
     public void actualizarNoticia(Noticia noticia) {
         try {
-            Optional<Noticia> noticiaExistente = noticiaRepositorio.findById(noticia.getId());
+            Optional<Noticia> noticiaExistente = noticiaRepositorio.findById(noticia.getNoticiaId());
             if (noticiaExistente.isPresent()) {
                 Noticia noticiaActualizada = noticiaExistente.get();
                 noticiaActualizada.setTitulo(noticia.getTitulo());
@@ -356,14 +346,14 @@ public class NoticiaServicio {
             return null;
         }
     }
-    
+
 
     public List<NoticiaResponseDto> listarNoticiasRecientesDto(int cantidad, int horas) {
         Calendar calendar = Calendar.getInstance();
         Date fechaFin = calendar.getTime();
         calendar.add(Calendar.HOUR, -horas);
         Date fechaInicio = calendar.getTime();
-    
+
         List<Noticia> noticiasRecientes = noticiaRepositorio.findUltimasNoticias48Horas(fechaInicio, fechaFin);
         // Si quieres limitar la cantidad de noticias, puedes hacerlo manualmente aquí
         if (noticiasRecientes.size() > cantidad) {
@@ -374,15 +364,15 @@ public class NoticiaServicio {
 
     private List<NoticiaResponseDto> convertirAListaDto(List<Noticia> noticias) {
         return noticias.stream()
-            .map(this::convertirADto)
-            .collect(Collectors.toList());
+                .map(this::convertirADto)
+                .collect(Collectors.toList());
     }
-    
+
     private NoticiaResponseDto convertirADto(Noticia noticia) {
         NoticiaResponseDto dto = new NoticiaResponseDto();
         dto.setTitulo(noticia.getTitulo());
         dto.setSeccion(noticia.getSeccion()); // Utiliza getSeccionName en lugar de getSeccion().getNombre()
-        dto.setId(noticia.getId());
+        dto.setId(noticia.getNoticiaId());
         dto.setFechaPublicacion(noticia.getFechaPublicacion());
         dto.setAutor(noticia.getAutor());
         // Añade otros campos según tu requisito
@@ -390,8 +380,8 @@ public class NoticiaServicio {
     }
 
 
-    public Noticia cargarNoticia(MultipartFile[] imagenes, MultipartFile portada, String titulo, String subtitulo,
-            List<String> parrafos, List<String> etiquetas, Seccion seccion, String nombre) {
+    public Noticia guardarNoticia(MultipartFile[] imagenes, MultipartFile portada, String titulo, String subtitulo,
+                                  List<String> parrafos, List<String> etiquetas, Seccion seccion, String nombre) {
         return null;
     }
 
