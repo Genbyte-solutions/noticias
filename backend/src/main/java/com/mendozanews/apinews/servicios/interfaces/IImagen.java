@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface IImagen {
 
-    List<Imagen> guardarImagenes(MultipartFile[] imagenes, Noticia noticia);
+
 }

@@ -1,6 +1,5 @@
 package com.mendozanews.apinews.model.entidades;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,21 +12,22 @@ import org.hibernate.annotations.GenericGenerator;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "seccion")
-public class Seccion {
+@Table(name = "icono_seccion")
+public class IconoSeccion {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "seccion_id")
-    private String seccionId;
+    @Column(name = "icono_seccion_id")
+    private String iconoSeccionId;
 
-    @Column(name = "codigo", unique = true)
-    private String codigo;
+    @Column(name = "tipo_mime")
+    private String tipoMime;
 
-    @Column(name = "nombre", unique = true)
-    private String nombre;
+    @Column(name = "nombre_archivo")
+    private String nombreArchivo;
 
-    @OneToOne
-    @JoinColumn(name = "icono", referencedColumnName = "icono_seccion_id")
-    private IconoSeccion icono;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "imagen", columnDefinition = "LONGBLOB")
+    private byte[] imagen;
 }

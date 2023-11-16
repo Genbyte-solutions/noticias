@@ -55,6 +55,6 @@ public class Usuario {
     private Date fechaAlta;
 
     @OneToOne
-    @JoinColumn(name = "imagen", referencedColumnName = "imagen_id")
+    @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
     private Imagen imagen;
 }

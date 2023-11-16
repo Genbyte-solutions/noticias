@@ -1,0 +1,19 @@
+package com.mendozanews.apinews.servicios.interfaces;
+
+import com.mendozanews.apinews.model.dto.request.SeccionDto;
+import com.mendozanews.apinews.model.entidades.Seccion;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+
+public interface ISeccion {
+
+    void crearSeccion(SeccionDto seccionDto, MultipartFile icono) throws IOException;
+
+    Seccion buscarSeccion(String dato);
+
+    List<Seccion> listarSecciones();
+
+    void eliminarSeccionPorId(String seccionId);
+}

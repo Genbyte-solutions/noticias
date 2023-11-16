@@ -1,26 +1,24 @@
-
 package com.mendozanews.apinews.model.entidades;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-
-import jakarta.persistence.*;
-import lombok.Data;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "portada")
-public class Portada {
+@Table(name = "imagenes_noticia")
+public class ImagenesNoticia {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "portada_id")
-    private String portadaId;
+    @Column(name = "imagen_noticia_id")
+    private String imagenNoticiaId;
 
     @Column(name = "tipo_mime")
     private String tipoMime;
@@ -30,6 +28,10 @@ public class Portada {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "imagen", columnDefinition = "LONGBLOB")
-    private byte[] imagen;
+    @Column(name = "contenido", nullable = false, columnDefinition = "LONGBLOB")
+    private byte[] contenido;
+
+    @ManyToOne
+    @JoinColumn(name = "noticia", referencedColumnName = "noticia_id")
+    private Noticia noticia;
 }

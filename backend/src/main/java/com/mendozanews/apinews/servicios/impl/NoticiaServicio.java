@@ -9,96 +9,101 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.mendozanews.apinews.model.dto.request.NoticiaDto;
+import com.mendozanews.apinews.model.entidades.*;
+import com.mendozanews.apinews.repositorios.*;
 import com.mendozanews.apinews.servicios.interfaces.INoticia;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mendozanews.apinews.excepciones.MiException;
+import com.mendozanews.apinews.exception.MiException;
 import com.mendozanews.apinews.model.dto.response.NoticiaResponseDto;
-import com.mendozanews.apinews.model.entidades.Autor;
-import com.mendozanews.apinews.model.entidades.Imagen;
-import com.mendozanews.apinews.model.entidades.Noticia;
-import com.mendozanews.apinews.model.entidades.Portada;
-import com.mendozanews.apinews.model.entidades.Seccion;
-import com.mendozanews.apinews.repositorios.AutorRepositorio;
-import com.mendozanews.apinews.repositorios.NoticiaRepositorio;
-import com.mendozanews.apinews.repositorios.PortadaRepositorio;
-import com.mendozanews.apinews.repositorios.SeccionRepositorio;
-
-import com.mendozanews.apinews.repositorios.ImagenRepositorio;
+import scala.Int;
 
 @Service
 public class NoticiaServicio implements INoticia {
+    private final PortadaRepositorio portadaRepo;
+    private final ImagenesNoticaRepositorio imagenesNoticiaRepo;
+    private final ImagenRepositorio imagenRepo;
+    private final AutorRepositorio autorRepo;
+    private final SeccionRepositorio seccionRepo;
+    private final NoticiaRepositorio noticiaRepo;
 
-    @Autowired
-    private PortadaRepositorio portadaRepositorio;
+    public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo, ImagenRepositorio imagenRepo, AutorRepositorio autorRepo, SeccionRepositorio seccionRepo, NoticiaRepositorio noticiaRepo) {
+        this.portadaRepo = portadaRepo;
+        this.imagenesNoticiaRepo = imagenesNoticiaRepo;
+        this.imagenRepo = imagenRepo;
+        this.autorRepo = autorRepo;
+        this.seccionRepo = seccionRepo;
+        this.noticiaRepo = noticiaRepo;
+    }
 
-    @Autowired
-    private ImagenRepositorio imagenRepositorio;
+    @Transactional
+    public Portada guardarPortada(MultipartFile portada) throws IOException {
+        return portadaRepo.save(
+                Portada.builder()
+                        .tipoMime(portada.getContentType())
+                        .nombreArchivo(portada.getOriginalFilename())
+                        .imagen(portada.getBytes())
+                        .build()
+        );
+    }
 
-    @Autowired
-    private AutorRepositorio autorRepositorio;
-
-    @Autowired
-    private SeccionRepositorio seccionRepositorio;
-
-    @Autowired
-    private NoticiaRepositorio noticiaRepositorio;
+    @Transactional
+    public void guardarImagenesNoticia(List<MultipartFile> imagenes, Noticia noticia) throws IOException {
+        for (MultipartFile imagen : imagenes) {
+            imagenesNoticiaRepo.save(
+                    ImagenesNoticia.builder()
+                            .tipoMime(imagen.getContentType())
+                            .nombreArchivo(imagen.getOriginalFilename())
+                            .contenido(imagen.getBytes())
+                            .noticia(noticia)
+                            .build()
+            );
+        }
+    }
 
     @Transactional
     @Override
-    public Noticia guardarNoticia(NoticiaDto noticiaDto, Autor autor, Seccion seccion) {
-        validar(titulo, subtitulo, seccion.getSeccionId(), autor.getAutorId());
+    public String crearNoticia(NoticiaDto noticiaDto, Autor autor, Seccion seccion,
+                               List<MultipartFile> imagenes, MultipartFile portada) throws IOException {
 
-
-
-        Noticia noticia = Noticia.builder()
+        Portada portadaGuardada = guardarPortada(portada);
+        Noticia noticiaGuardada = noticiaRepo.save(Noticia.builder()
                 .titulo(noticiaDto.getTitulo())
                 .subtitulo(noticiaDto.getSubtitulo())
                 .parrafos(noticiaDto.getParrafos())
                 .etiquetas(noticiaDto.getEtiquetas())
+                .portada(portadaGuardada)
                 .seccion(seccion)
                 .autor(autor)
-                .build();
+                .build());
 
-        if (portada != null) {
-            Portada portadaGuardada = guardarPortadaYDevolverNoticia(portada, noticia);
-            noticia.setPortada(portadaGuardada);
-        }
+        guardarImagenesNoticia(imagenes, noticiaGuardada);
 
-        Noticia noticiaGuardada = noticiaRepositorio.save(noticia);
-
-        for (MultipartFile imagen : imagenes) {
-            if (imagen != null) {
-                Imagen imagenGuardada = guardarImagenYDevolverNoticia(imagen, noticiaGuardada);
-                if (noticiaGuardada.getImagenes() == null) {
-                    noticiaGuardada.setImagenes(new ArrayList<>());
-                }
-                noticiaGuardada.getImagenes().add(imagenGuardada);
-            }
-        }
-
-        noticiaGuardada = noticiaRepositorio.save(noticiaGuardada);
-
-        return noticiaGuardada;
-
+        return noticiaGuardada.getNoticiaId();
     }
 
-    private Portada guardarPortadaYDevolverNoticia(MultipartFile portada, Noticia noticia) {
-        Portada portadaGuardada = new Portada();
-        try {
-            byte[] portadaBytes = portada.getBytes();
-            portadaGuardada.setImagen(portadaBytes);
-            portadaGuardada.setNombre(portada.getOriginalFilename());
-            portadaGuardada.setTipoMime(portada.getContentType());
-            portadaRepositorio.save(portadaGuardada);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new MiException("Error al guardar la portada: " + e.getMessage());
-        }
-        return portadaGuardada;
+    // BUSCA NOTICIA POR ID
+    @Transactional(readOnly = true)
+    @Override
+    public Noticia buscarNoticiaPorId(String noticiaId) {
+        return noticiaRepo.findById(noticiaId).orElse(null);
+    }
+
+    // ELIMINA NOTICIA POR ID
+    @Transactional
+    @Override
+    public void eliminarNoticiaPorId(String noticiaId) {
+        noticiaRepo.deleteById(noticiaId);
+    }
+
+    // LISTA TODAS LAS NOTICIAS
+    @Transactional(readOnly = true)
+    @Override
+    public List<Noticia> listarNoticias(Integer limit, Integer offset) {
+
+        return noticiaRepo.;
     }
 
     @Transactional
@@ -126,96 +131,34 @@ public class NoticiaServicio implements INoticia {
 
     }
 
-    private Imagen guardarImagenYDevolverNoticia(MultipartFile imagen, Noticia noticia) {
-        Imagen imagenGuardada = new Imagen();
-        try {
-            imagenGuardada.setNombre(imagen.getOriginalFilename());
-            imagenGuardada.setContenido(imagen.getBytes());
-            imagenGuardada.setTipoMime(imagen.getContentType());
-            imagenGuardada = imagenRepositorio.save(imagenGuardada);
-            imagenGuardada.setNoticia(noticia);
-            // el objeto con el ID generado
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new MiException("Error al guardar la imagen: " + e.getMessage());
-        }
-        return imagenGuardada;
-    }
 
-    // public Noticia obtenerNoticiaPorPortadaId(String id) {
-    //     try {
-    //         return noticiaRepositorio.findById(id).orElse(null);
-    //     } catch (Exception e) {
-    //         throw new MiException("Error al obtener la noticia por el ID de la portada: " + e.getMessage());
-    //     }
-    // }
-
-    // LISTA TODAS LAS NOTICIAS
-    public List<Noticia> listarNoticias() {
-        List<Noticia> noticias = noticiaRepositorio.findAll();
-        return noticias;
-    }
-
-    // BUSCA UNA o MAS NOTICIAS QUE CONTENGAN EL STRING QUE SE LE PASA
+    // BUSCA NOTICIAS EN LAS QUE EL TITULO CONTENGA EL ARGUMENTO
+    @Transactional(readOnly = true)
+    @Override
     public List<Noticia> buscarPorTitulo(String titulo) {
-        List<Noticia> noticias = noticiaRepositorio.buscarPorTitulo(titulo);
-        return noticias;
-    }
-
-    // BUSCA NOTICIAS POR AUTOR
-    public List<Noticia> buscarPorAutor(String idAutor) {
-        List<Noticia> noticias = noticiaRepositorio.buscarPorAutor(idAutor);
-        return noticias;
+        return noticiaRepo.buscarPorTitulo(titulo);
     }
 
     // BUSCA NOTICIAS POR SECCION
-    public List<Noticia> buscarPorSeccion(String idSeccion) {
-        List<Noticia> noticias = noticiaRepositorio.buscarPorSeccion(idSeccion);
-        return noticias;
+    @Transactional(readOnly = true)
+    @Override
+    public List<Noticia> buscarPorSeccion(String seccion) {
+
+        return noticiaRepo.buscarPorSeccion(seccion);
+    }
+
+    // BUSCA NOTICIAS POR AUTOR
+    @Transactional(readOnly = true)
+    @Override
+    public List<Noticia> buscarPorAutor(String nombre, String apellido) {
+
+        return noticiaRepo.buscarPorAutor(nombre, apellido);
     }
 
     // BUSCA 6 NOTICIAS POR SECCION
     public List<Noticia> buscar6PorSeccion(String idSeccion) {
         List<Noticia> noticias = noticiaRepositorio.findTop6BySeccionId(idSeccion);
         return noticias;
-    }
-
-    // BUSCA 1 NOTICIA DE CADA SECCION
-    public List<Noticia> unaPorSeccion() {
-        List<Seccion> secciones = (List<Seccion>) seccionRepositorio.findAll();
-        List<Noticia> noticias = new ArrayList<>();
-
-        for (Seccion seccion : secciones) {
-            Noticia noticia = noticiaRepositorio.findFirstBySeccionId(seccion.getSeccionId());
-            if (noticia != null) {
-                noticias.add(noticia);
-            }
-        }
-        return noticias;
-    }
-
-    // OBTIENE 1 NOTICIA POR ID
-    public Noticia getOne(String id) {
-        return noticiaRepositorio.getReferenceById(id);
-    }
-
-    // ELIMINA NOTICIA POR ID
-    @Transactional
-    public void eliminarNoticiaId(String id) throws MiException {
-        Optional<Noticia> respuesta = noticiaRepositorio.findById(id);
-        if (respuesta.isPresent()) {
-            noticiaRepositorio.deleteById(id);
-        } else {
-            throw new MiException("No se encontro la noticia");
-        }
-    }
-
-    // COPIA UNA NOTICIA Y LE ASIGNA EL ID NUEVO
-    @Transactional
-    public void asignarID(String id, String idNuevo) throws MiException {
-        Noticia principal = getOne(id);
-        principal.setNoticiaId(idNuevo);
-        noticiaRepositorio.save(principal);
     }
 
     // LISTA LAS 3 NOTICIAS PRINCIPALES
@@ -225,29 +168,6 @@ public class NoticiaServicio implements INoticia {
             return noticias;
         } catch (Exception e) {
             throw new MiException("Error al listar las 3 noticias principales");
-        }
-    }
-
-    // VALIDA LOS ATRIBUTOS STRINGS DE UNA NOTICIA
-    private void validar(String titulo, String subtitulo, String idSeccion, String idAutor) throws MiException {
-        if (titulo == null || titulo.isEmpty()) {
-            throw new MiException("El título no puede ser nulo o estar vacío");
-        }
-        if (subtitulo == null || subtitulo.isEmpty() || subtitulo.length() > 220) {
-            throw new MiException("El subtítulo no puede ser nulo, estar vacío o tener más de 220 caracteres");
-        }
-        if (idAutor == null || idAutor.isEmpty()) {
-            throw new MiException("Debe indicar un autor");
-        }
-        if (idSeccion == null || idSeccion.isEmpty()) {
-            throw new MiException("Debe indicar la sección");
-        }
-    }
-
-    // VALIDA QUE EL TITULO NO EXISTA YA
-    private void validarTituloNuevo(String titulo, String tituloNuevo) throws MiException {
-        if (!titulo.equalsIgnoreCase(tituloNuevo) && noticiaRepositorio.buscarPorTitulo(tituloNuevo) != null) {
-            throw new MiException("Ya existe una noticia con ese título");
         }
     }
 
@@ -300,40 +220,6 @@ public class NoticiaServicio implements INoticia {
         }
     }
 
-    @Transactional
-    public void actualizarNoticia(Noticia noticia) {
-        try {
-            Optional<Noticia> noticiaExistente = noticiaRepositorio.findById(noticia.getNoticiaId());
-            if (noticiaExistente.isPresent()) {
-                Noticia noticiaActualizada = noticiaExistente.get();
-                noticiaActualizada.setTitulo(noticia.getTitulo());
-                noticiaActualizada.setSubtitulo(noticia.getSubtitulo());
-                noticiaActualizada.setParrafos(noticia.getParrafos());
-                noticiaActualizada.setEtiquetas(noticia.getEtiquetas());
-                noticiaActualizada.setSeccion(noticia.getSeccion());
-                noticiaActualizada.setAutor(noticia.getAutor());
-                noticiaActualizada.setFechaEdicion(new Date());
-
-                noticiaRepositorio.save(noticiaActualizada);
-            } else {
-                throw new MiException("La noticia no existe en la base de datos");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public Noticia guardarPortada(MultipartFile portada) {
-        return null;
-    }
-
-    public void guardarLista(MultipartFile imagen) {
-    }
-
-    public void setTipo(String tipo) {
-    }
-
     public Noticia obtenerNoticiaPorPortadaId(String id) {
         Optional<Portada> portada = portadaRepositorio.findById(id);
         if (portada.isPresent()) {
@@ -346,45 +232,6 @@ public class NoticiaServicio implements INoticia {
             return null;
         }
     }
-
-
-    public List<NoticiaResponseDto> listarNoticiasRecientesDto(int cantidad, int horas) {
-        Calendar calendar = Calendar.getInstance();
-        Date fechaFin = calendar.getTime();
-        calendar.add(Calendar.HOUR, -horas);
-        Date fechaInicio = calendar.getTime();
-
-        List<Noticia> noticiasRecientes = noticiaRepositorio.findUltimasNoticias48Horas(fechaInicio, fechaFin);
-        // Si quieres limitar la cantidad de noticias, puedes hacerlo manualmente aquí
-        if (noticiasRecientes.size() > cantidad) {
-            noticiasRecientes = noticiasRecientes.subList(0, cantidad);
-        }
-        return convertirAListaDto(noticiasRecientes);
-    }
-
-    private List<NoticiaResponseDto> convertirAListaDto(List<Noticia> noticias) {
-        return noticias.stream()
-                .map(this::convertirADto)
-                .collect(Collectors.toList());
-    }
-
-    private NoticiaResponseDto convertirADto(Noticia noticia) {
-        NoticiaResponseDto dto = new NoticiaResponseDto();
-        dto.setTitulo(noticia.getTitulo());
-        dto.setSeccion(noticia.getSeccion()); // Utiliza getSeccionName en lugar de getSeccion().getNombre()
-        dto.setId(noticia.getNoticiaId());
-        dto.setFechaPublicacion(noticia.getFechaPublicacion());
-        dto.setAutor(noticia.getAutor());
-        // Añade otros campos según tu requisito
-        return dto;
-    }
-
-
-    public Noticia guardarNoticia(MultipartFile[] imagenes, MultipartFile portada, String titulo, String subtitulo,
-                                  List<String> parrafos, List<String> etiquetas, Seccion seccion, String nombre) {
-        return null;
-    }
-
 }
 
 

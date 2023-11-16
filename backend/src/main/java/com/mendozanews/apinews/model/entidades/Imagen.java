@@ -30,8 +30,4 @@ public class Imagen {
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "contenido", nullable = false, columnDefinition = "LONGBLOB")
     private byte[] contenido;
-
-    @ManyToOne
-    @JoinColumn(name = "noticia", referencedColumnName = "noticia_id")
-    private Noticia noticia;
 }

@@ -1,6 +1,6 @@
 package com.mendozanews.apinews.servicios.impl;
 
-import com.mendozanews.apinews.excepciones.MiException;
+import com.mendozanews.apinews.exception.MiException;
 import com.mendozanews.apinews.model.entidades.Imagen;
 import com.mendozanews.apinews.model.entidades.Usuario;
 import com.mendozanews.apinews.model.enums.Rol;

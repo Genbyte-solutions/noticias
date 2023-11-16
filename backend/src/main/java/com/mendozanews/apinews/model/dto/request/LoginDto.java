@@ -1,8 +1,8 @@
-package com.mendozanews.apinews.controllers;
+package com.mendozanews.apinews.model.dto.request;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class LoginRequest {
+public class LoginDto {
     private String email;
     private String password;
 

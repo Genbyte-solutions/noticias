@@ -1,5 +1,6 @@
 package com.mendozanews.apinews.controllers;
 
+import com.mendozanews.apinews.model.dto.request.LoginDto;
 import com.mendozanews.apinews.servicios.impl.UsuarioServicio;
 import com.mendozanews.apinews.tokens.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ public class ControllerLogin {
     private JwtUtil jwtUtil;
 
     @PostMapping("/entrar")
-    public ResponseEntity<?> authenticate(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticate(@RequestBody LoginDto loginDto) {
         try {
-            String email = loginRequest.getEmail();
-            String password = loginRequest.getPassword();
+            String email = loginDto.getEmail();
+            String password = loginDto.getPassword();
             System.out.println("Email recibido: " + email);
             System.out.println("Contraseña recibida: " + password);
 

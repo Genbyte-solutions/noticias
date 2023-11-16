@@ -1,8 +1,7 @@
 package com.mendozanews.apinews.servicios.impl;
 
-import com.mendozanews.apinews.excepciones.MiException;
+import com.mendozanews.apinews.exception.MiException;
 import com.mendozanews.apinews.model.entidades.Imagen;
-import com.mendozanews.apinews.model.entidades.Noticia;
 import com.mendozanews.apinews.repositorios.ImagenRepositorio;
 
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mendozanews.apinews.servicios.interfaces.IImagen;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -21,41 +19,22 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImagenServicio implements IImagen {
 
-    @Autowired
-    private ImagenRepositorio ir;
+    private final ImagenRepositorio imagenRepo;
 
-    // Guarda imagen en el repositorio de imagenes
-    public List<Imagen> guardarImagenes(MultipartFile[] imagenes, Noticia noticia) {
-        List<Imagen> imagenGuardada = new ArrayList<>();
-        for (MultipartFile imagen : imagenes) {
-
-            Imagen nuevaImagen = new Imagen();
-            nuevaImagen.setNombre(imagen.getOriginalFilename());
-            nuevaImagen.setContenido(imagen.getBytes());
-            nuevaImagen.setTipoMime(imagen.getContentType());
-            imagenGuardada.add(ir.save(nuevaImagen));
-
-        }
-        return imagenGuardada;
+    public ImagenServicio(ImagenRepositorio imagenRepo) {
+        this.imagenRepo = imagenRepo;
     }
 
-    // GUARDA UNA IMAGEN
+    // GUARDA UNA IMAGEN (AUTOR O USUARIO)
     @Transactional
-    public Imagen guardar(MultipartFile archivo) throws MiException {
-
-        if (archivo != null) {
-            try {
-                Imagen imagen = new Imagen();
-                imagen.setTipoMime(archivo.getContentType());
-                imagen.setNombre(archivo.getName());
-                imagen.setContenido(archivo.getBytes());
-                imagen = ir.save(imagen); // Guarda la imagen en la base de datos
-                return imagen;
-            } catch (IOException e) {
-                throw new MiException("No se pudo guardar la imagen");
-            }
-        }
-        return null;
+    public Imagen guardarImagen(MultipartFile foto) throws IOException {
+        return imagenRepo.save(
+                Imagen.builder()
+                        .tipoMime(foto.getContentType())
+                        .nombre(foto.getOriginalFilename())
+                        .contenido(foto.getBytes())
+                        .build()
+        );
     }
 
     // ACTUALIZA UNA IMAGEN
@@ -72,7 +51,7 @@ public class ImagenServicio implements IImagen {
 
                 if (id != null) {
 
-                    Optional<Imagen> respuesta = ir.findById(id);
+                    Optional<Imagen> respuesta = imagenRepo.findById(id);
 
                     if (respuesta.isPresent()) {
                         imagen = respuesta.get();
@@ -83,7 +62,7 @@ public class ImagenServicio implements IImagen {
                 imagen.setNombre(archivo.getName());
                 imagen.setContenido(archivo.getBytes());
 
-                return ir.save(imagen);
+                return imagenRepo.save(imagen);
 
             } catch (IOException e) {
                 throw new MiException("No se pudo actualizar la imagen" + e.getMessage());

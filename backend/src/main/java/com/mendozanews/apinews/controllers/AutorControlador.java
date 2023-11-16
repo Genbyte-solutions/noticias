@@ -1,20 +1,22 @@
 package com.mendozanews.apinews.controllers;
 
-import com.mendozanews.apinews.model.entidades.Autor;
+import com.mendozanews.apinews.model.dto.request.AutorDto;
 import com.mendozanews.apinews.servicios.impl.AutorServicio;
 import com.mendozanews.apinews.servicios.impl.ImagenServicio;
+import com.mendozanews.apinews.servicios.interfaces.IAutor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/autor")
+@RequestMapping("/api/v1")
 public class AutorControlador {
 
-    private final AutorServicio autorServicio;
+    private final IAutor autorServicio;
     private final ImagenServicio imagenServicio;
 
     public AutorControlador(AutorServicio autorServicio, ImagenServicio imagenServicio) {
@@ -22,24 +24,22 @@ public class AutorControlador {
         this.imagenServicio = imagenServicio;
     }
 
-    @PostMapping("/nuevo")
-    public ResponseEntity<?> crearAutor(@RequestParam("nombre") String nombre,
-                                        @RequestParam("apellido") String apellido,
-                                        @RequestParam("foto") MultipartFile foto){
-        Autor buscarAutor = this.autorServicio.findByNombreCompleto(nombre, apellido);
-        if(buscarAutor!=null){
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+    @PostMapping("/autor")
+    public ResponseEntity<?> crearAutor(@RequestParam AutorDto autorDto,
+                                        @RequestParam("foto") MultipartFile foto) {
+
+        try {
+            autorServicio.crearAutor(autorDto, foto);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        buscarAutor = new Autor();
-        buscarAutor.setNombre(nombre);
-        buscarAutor.setApellido(apellido);
-        buscarAutor.setFoto(this.imagenServicio.guardar(foto));
-        this.autorServicio.crearAutor(buscarAutor);
-        return new ResponseEntity<>(buscarAutor,HttpStatus.CREATED);
     }
+
     @GetMapping("/listar")
     public ResponseEntity<?> listarAutores() {
-        List<Autor> autores = this.autorServicio.listarAutores();
+        List<com.mendozanews.apinews.model.entidades.Autor> autores = this.autorServicio.listarAutores();
 
         if (autores.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -50,20 +50,20 @@ public class AutorControlador {
 
     @PutMapping("/editar/{id}")
     public ResponseEntity<?> actualizarAutor(@PathVariable String id,
-                                           @RequestParam("nombre") String nombre,
-                                           @RequestParam("apellido") String apellido,
-                                             @RequestParam("foto") MultipartFile foto){
-        Autor autor = this.autorServicio.getOne(id);
-        if(autor==null){
+                                             @RequestParam("nombre") String nombre,
+                                             @RequestParam("apellido") String apellido,
+                                             @RequestParam("foto") MultipartFile foto) {
+        com.mendozanews.apinews.model.entidades.Autor autor = this.autorServicio.buscarAutorPorId(id);
+        if (autor == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        this.autorServicio.modificarAutor(autor,nombre,apellido,this.imagenServicio.actualizar(foto,autor.getFoto().getImagenId()));
-        return new ResponseEntity<>(autor,HttpStatus.CREATED);
+        this.autorServicio.modificarAutor(autor, nombre, apellido, this.imagenServicio.actualizar(foto, autor.getFoto().getImagenId()));
+        return new ResponseEntity<>(autor, HttpStatus.CREATED);
     }
 
     @DeleteMapping("eliminar/{id}")
-    public ResponseEntity<?> eliminarAutor(@PathVariable String id){
-        this.autorServicio.eliminarAutorId(id);
+    public ResponseEntity<?> eliminarAutor(@PathVariable String id) {
+        this.autorServicio.eliminarAutorPorId(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

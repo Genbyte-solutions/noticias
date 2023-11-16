@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
 
-//@JsonIgnoreProperties({ "hibernateLazyInitializer" })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,11 +26,8 @@ public class Autor {
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "apellido")
-    private String apellido;
-
     @OneToOne
-    @JoinColumn(name = "foto")
+    @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
     private Imagen foto;
 
     @OneToMany(mappedBy = "autor")

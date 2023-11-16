@@ -65,6 +65,6 @@ public class Noticia {
     @JoinColumn(name = "autor", referencedColumnName = "autor_id", nullable = false)
     private Autor autor;
 
-    @OneToMany(mappedBy = "noticiaId")
-    private List<Imagen> imagenes;
+    @OneToMany(mappedBy = "imagenNoticiaId")
+    private List<ImagenesNoticia> imagenesNoticia;
 }

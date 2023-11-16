@@ -10,9 +10,7 @@ import com.mendozanews.apinews.model.entidades.Seccion;
 @Repository
 public interface SeccionRepositorio extends JpaRepository<Seccion, String> {
 
-    @Query("SELECT s FROM Seccion s WHERE s.nombre = :nombre")
-    public Seccion buscarPorNombre(@Param("nombre") String nombre);
+    @Query("SELECT s FROM Seccion s WHERE s.seccion_id = :dato OR s.nombre = :dato OR s.codigo = :dato")
+    public Seccion buscarSeccion(@Param("dato") String dato);
 
-    @Query("SELECT s FROM Seccion s WHERE s.codigo = :codigo")
-    public Seccion buscarPorCodigo(@Param("codigo") String codigo);
 }
