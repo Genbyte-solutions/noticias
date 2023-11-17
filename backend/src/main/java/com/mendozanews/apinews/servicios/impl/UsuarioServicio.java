@@ -6,6 +6,8 @@ import com.mendozanews.apinews.model.entidades.Usuario;
 import com.mendozanews.apinews.model.enums.Rol;
 import com.mendozanews.apinews.repositorios.UsuarioRepositorio;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +39,7 @@ public class UsuarioServicio implements UserDetailsService {
     @Transactional
     public void cargarUsuario(String nombre, String apellido, String nombreUsuario,
             MultipartFile imagen, String email, String telefono, String password, String password2, String rol)
-            throws MiException {
+            throws MiException, IOException {
 
         validar(nombre, apellido, email, nombreUsuario, telefono, password, password2);
 
@@ -59,7 +61,7 @@ public class UsuarioServicio implements UserDetailsService {
         usuario.setAlta(true);
         Date fechaRegistro = new Date();
         usuario.setFechaAlta(fechaRegistro);
-        Imagen foto = is.guardar(imagen);
+        Imagen foto = is.guardarImagen(imagen);
         usuario.setImagen(foto);
         ur.save(usuario);
     }

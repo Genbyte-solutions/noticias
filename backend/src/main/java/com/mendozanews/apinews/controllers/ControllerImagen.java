@@ -1,5 +1,6 @@
 package com.mendozanews.apinews.controllers;
 
+import com.mendozanews.apinews.model.entidades.Autor;
 import com.mendozanews.apinews.model.entidades.Imagen;
 import com.mendozanews.apinews.servicios.impl.AutorServicio;
 import com.mendozanews.apinews.servicios.impl.ImagenServicio;
@@ -22,7 +23,7 @@ public class ControllerImagen {
 
     @GetMapping("/autor/{id}")
     public ResponseEntity<?> obtenerImagenPorAutor(@PathVariable String id){
-        com.mendozanews.apinews.model.entidades.Autor autor = this.autorServicio.buscarAutorPorId(id);
+        Autor autor = this.autorServicio.buscarAutorPorId(id);
         if(autor==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

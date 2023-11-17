@@ -9,7 +9,7 @@ import com.mendozanews.apinews.model.entidades.Autor;
 
 @Repository
 public interface AutorRepositorio extends JpaRepository<Autor, String> {
-    @Query("SELECT a FROM Autor a WHERE a.nombre = :nombre and a.apellido = :apellido")
+    @Query("SELECT a FROM Autor a WHERE a.nombre = :nombre AND a.apellido = :apellido")
     Autor findByNombreCompleto(@Param("nombre") String nombre,
                                @Param("apellido") String apellido);
 

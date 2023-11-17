@@ -38,35 +38,38 @@ public class AutorServicio implements IAutor {
 
     // LISTA TODOS LOS AUTORES
     @Transactional
-    public List<com.mendozanews.apinews.model.entidades.Autor> listarAutores() {
+    public List<Autor> listarAutores() {
         return this.autorRepositorio.findAll();
     }
 
     // MODIFICA UN AUTOR ENTERO
     @Transactional
-    public void modificarAutor(com.mendozanews.apinews.model.entidades.Autor autor, String nombre, String apellido, Imagen foto) {
-        autor.setNombre(nombre);
-        autor.setApellido(apellido);
-        autor.setFoto(foto);
-        this.autorRepositorio.save(autor);
+    public void modificarAutor(Autor autor, AutorDto autorDto, MultipartFile foto) {
+
+        autor.setNombre(autorDto.getNombre());
+        autor.setApellido(autorDto.getApellido());
+        if (foto != null) {
+            autor.setFoto(imagenServicio.actualizar(foto, autor.getFoto().getImagenId()));
+        }
+        autorRepositorio.save(autor);
     }
 
     // OBTIENE UN AUTOR POR ID
     @Transactional
-    public com.mendozanews.apinews.model.entidades.Autor buscarAutorPorId(String idAutor) {
+    public Autor buscarAutorPorId(String idAutor) {
         return this.autorRepositorio.findById(idAutor).orElse(null);
     }
 
     // OBTIENE UN AUTOR POR NOMBRE COMPLETO
     @Transactional
-    public com.mendozanews.apinews.model.entidades.Autor buscarAutor(String nombre, String apellido) {
-        return this.autorRepositorio.findByNombreCompleto(nombre, apellido);
+    public Autor buscarAutor(AutorDto autorDto) {
+        return this.autorRepositorio.findByNombreCompleto(autorDto.getNombre(), autorDto.getApellido());
     }
 
     // ELIMINA AUTOR POR ID
     @Transactional
     public void eliminarAutorPorId(String idAutor) {
-        com.mendozanews.apinews.model.entidades.Autor autor = this.buscarAutorPorId(idAutor);
+        Autor autor = this.buscarAutorPorId(idAutor);
         Imagen imagenAutor = this.imagenServicio.getOne(autor.getFoto().getImagenId());
         this.autorRepositorio.deleteById(idAutor);
         this.imagenServicio.eliminarImagenId(imagenAutor.getImagenId());

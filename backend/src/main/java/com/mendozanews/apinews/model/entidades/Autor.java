@@ -26,6 +26,9 @@ public class Autor {
     @Column(name = "nombre")
     private String nombre;
 
+    @Column(name = "apellido")
+    private String apellido;
+
     @OneToOne
     @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
     private Imagen foto;

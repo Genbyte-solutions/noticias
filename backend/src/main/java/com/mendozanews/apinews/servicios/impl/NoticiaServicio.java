@@ -12,6 +12,7 @@ import com.mendozanews.apinews.model.dto.request.NoticiaDto;
 import com.mendozanews.apinews.model.entidades.*;
 import com.mendozanews.apinews.repositorios.*;
 import com.mendozanews.apinews.servicios.interfaces.INoticia;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +30,9 @@ public class NoticiaServicio implements INoticia {
     private final SeccionRepositorio seccionRepo;
     private final NoticiaRepositorio noticiaRepo;
 
-    public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo, ImagenRepositorio imagenRepo, AutorRepositorio autorRepo, SeccionRepositorio seccionRepo, NoticiaRepositorio noticiaRepo) {
+    public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo,
+                           ImagenRepositorio imagenRepo, AutorRepositorio autorRepo,
+                           SeccionRepositorio seccionRepo, NoticiaRepositorio noticiaRepo) {
         this.portadaRepo = portadaRepo;
         this.imagenesNoticiaRepo = imagenesNoticiaRepo;
         this.imagenRepo = imagenRepo;
@@ -101,61 +104,36 @@ public class NoticiaServicio implements INoticia {
     // LISTA TODAS LAS NOTICIAS
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> listarNoticias(Integer limit, Integer offset) {
+    public List<Noticia> listarNoticias(Integer offset, Integer limit) {
 
-        return noticiaRepo.;
-    }
-
-    @Transactional
-    public void modificarNoticia(String titulo, String subtitulo, List<String> parrafos, List<String> etiquetas,
-                                 String idSeccion, String idAutor, MultipartFile portada, String idNoticia) throws MiException {
-        validar(titulo, subtitulo, idSeccion, idAutor);
-
-        Optional<Noticia> respuesta = noticiaRepositorio.findById(idNoticia);
-        Optional<Autor> respuestaAutor = autorRepositorio.findById(idAutor);
-        Optional<Seccion> respuestaSeccion = seccionRepositorio.findById(idSeccion);
-
-        Autor autor = respuestaAutor.orElseThrow(() -> new MiException("Autor no encontrado"));
-        Seccion seccion = respuestaSeccion.orElseThrow(() -> new MiException("Sección no encontrada"));
-
-        Noticia noticia = respuesta.orElseThrow(() -> new MiException("Noticia no encontrada"));
-        validarTituloNuevo(noticia.getTitulo(), titulo);
-
-        noticia.setTitulo(titulo);
-        noticia.setSubtitulo(subtitulo);
-        noticia.setParrafos(parrafos);
-        noticia.setEtiquetas(etiquetas);
-        noticia.setSeccion(seccion);
-        noticia.setAutor(autor);
-        noticia.setFechaEdicion(new Date());
-
+        return noticiaRepo.buscarRecientes(PageRequest.of(offset,limit));
     }
 
 
     // BUSCA NOTICIAS EN LAS QUE EL TITULO CONTENGA EL ARGUMENTO
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorTitulo(String titulo) {
-        return noticiaRepo.buscarPorTitulo(titulo);
+    public List<Noticia> buscarPorTitulo(String titulo, Integer offset, Integer limit) {
+        return noticiaRepo.buscarPorTitulo(titulo, PageRequest.of(offset,limit));
     }
 
     // BUSCA NOTICIAS POR SECCION
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorSeccion(String seccion) {
+    public List<Noticia> buscarPorSeccion(String seccion,Integer offset, Integer limit) {
 
-        return noticiaRepo.buscarPorSeccion(seccion);
+        return noticiaRepo.buscarPorSeccion(seccion, PageRequest.of(offset,limit));
     }
 
     // BUSCA NOTICIAS POR AUTOR
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorAutor(String nombre, String apellido) {
+    public List<Noticia> buscarPorAutor(String nombre, String apellido,Integer offset, Integer limit) {
 
-        return noticiaRepo.buscarPorAutor(nombre, apellido);
+        return noticiaRepo.buscarPorAutor(nombre, apellido, PageRequest.of(offset,limit));
     }
 
-    // BUSCA 6 NOTICIAS POR SECCION
+/*    // BUSCA 6 NOTICIAS POR SECCION
     public List<Noticia> buscar6PorSeccion(String idSeccion) {
         List<Noticia> noticias = noticiaRepositorio.findTop6BySeccionId(idSeccion);
         return noticias;
@@ -231,8 +209,5 @@ public class NoticiaServicio implements INoticia {
             // Manejo en caso de que no se encuentre la portada con el ID especificado
             return null;
         }
-    }
+    }*/
 }
-
-
-

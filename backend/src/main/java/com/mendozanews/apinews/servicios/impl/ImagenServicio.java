@@ -70,7 +70,7 @@ public class ImagenServicio implements IImagen {
         }
 
         if (id != null) {
-            ir.deleteById(id);
+            imagenRepo.deleteById(id);
         }
 
         return null;
@@ -93,7 +93,7 @@ public class ImagenServicio implements IImagen {
                     imagen.setNombre(archivo.getName());
                     imagen.setContenido(archivo.getBytes());
 
-                    imagenesGuardadas.add(ir.save(imagen));
+                    imagenesGuardadas.add(imagenRepo.save(imagen));
                 } catch (IOException e) {
                     throw new MiException("No se pudo guardar la lista de imágenes: " + e.getMessage());
                 }
@@ -105,7 +105,7 @@ public class ImagenServicio implements IImagen {
 
     // OBTIENE UNA IMAGEN POR ID
     public Imagen getOne(String id) {
-        return ir.getReferenceById(id);
+        return imagenRepo.getReferenceById(id);
     }
 
     // CONVERTIR IMAGEN A FORMATO ACEPTADO POR EL FRONT
@@ -120,9 +120,9 @@ public class ImagenServicio implements IImagen {
     // ELIMINA IMAGEN POR ID
     @Transactional
     public void eliminarImagenId(String id) throws MiException {
-        Optional<Imagen> respuesta = ir.findById(id);
+        Optional<Imagen> respuesta = imagenRepo.findById(id);
         if (respuesta.isPresent()) {
-            ir.deleteById(id);
+            imagenRepo.deleteById(id);
         } else {
             throw new MiException("No se encontro la imagen" + (id));
         }
@@ -143,7 +143,7 @@ public class ImagenServicio implements IImagen {
     public Imagen buscarPorContenido(MultipartFile archivo) throws MiException {
         try {
             byte[] contenido = archivo.getBytes();
-            Imagen imagen = ir.buscarPorContenido(contenido);
+            Imagen imagen = imagenRepo.buscarPorContenido(contenido);
             return imagen;
         } catch (IOException ex) {
             throw new MiException("Error al buscar imagen por contenido" + ex.getMessage());

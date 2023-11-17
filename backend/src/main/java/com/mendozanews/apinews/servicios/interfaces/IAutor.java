@@ -13,7 +13,7 @@ public interface IAutor {
 
     List<Autor> listarAutores();
 
-    void modificarAutor(Autor autor, String nombre, String apellido, Imagen foto);
+    void modificarAutor(Autor autor, AutorDto autorDto, MultipartFile foto);
 
     Autor buscarAutorPorId(String autorId);
 
