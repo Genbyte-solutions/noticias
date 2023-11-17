@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.List;
 
 import com.mendozanews.apinews.servicios.interfaces.ISeccion;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +47,26 @@ public class SeccionServicio implements ISeccion {
                 .nombre(seccionDto.getNombre())
                 .icono(iconoSeccion)
                 .build());
+    }
+
+    @Transactional
+    @Override
+    public void editarSeccion(String seccionId, SeccionDto seccionDto, MultipartFile icono) throws IOException {
+
+        Seccion seccion = seccionRepo.findById(seccionId).orElse(null);
+        IconoSeccion iconoSeccion;
+
+        if (seccion != null) {
+            seccion.setNombre(seccionDto.getNombre());
+            seccion.setCodigo(seccionDto.getCodigo());
+            iconoSeccion = iconoRepo.findById(seccion.getIcono().getIconoSeccionId()).orElse(null);
+            if (icono != null && iconoSeccion != null) {
+                iconoSeccion.setTipoMime(icono.getContentType());
+                iconoSeccion.setNombreArchivo(icono.getOriginalFilename());
+                iconoSeccion.setImagen(icono.getBytes());
+                iconoRepo.save(iconoSeccion);
+            }
+        }
     }
 
     // LISTA TODAS LAS SECCIONES

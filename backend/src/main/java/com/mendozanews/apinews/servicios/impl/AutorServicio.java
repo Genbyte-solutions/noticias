@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.mendozanews.apinews.servicios.interfaces.IAutor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,50 +29,56 @@ public class AutorServicio implements IAutor {
     @Override
     public void crearAutor(AutorDto autorDto, MultipartFile foto) throws IOException {
 
-        Imagen fotoGuardada = imagenServicio.guardarImagen(foto);
-        autorRepositorio.save(Autor.builder()
-                .nombre(autorDto.getNombre())
-                .apellido(autorDto.getApellido())
-                .foto(fotoGuardada)
-                .build());
-    }
+        Imagen fotoGuardada = null;
+        if (foto != null) fotoGuardada = imagenServicio.guardarImagen(foto);
 
-    // LISTA TODOS LOS AUTORES
-    @Transactional
-    public List<Autor> listarAutores() {
-        return this.autorRepositorio.findAll();
+        Autor autor = new Autor();
+        autor.setNombre(autorDto.getNombre());
+        autor.setApellido(autorDto.getApellido());
+        if (fotoGuardada != null) autor.setFoto(fotoGuardada);
+
+        autorRepositorio.save(autor);
     }
 
     // MODIFICA UN AUTOR ENTERO
     @Transactional
-    public void modificarAutor(Autor autor, AutorDto autorDto, MultipartFile foto) {
+    public void editarAutor(Autor autor, AutorDto autorDto, MultipartFile foto) throws IOException {
+        Imagen imagen = null;
+        if (foto != null) imagen = imagenServicio.actualizarImagen(foto, autor.getFoto().getImagenId());
 
         autor.setNombre(autorDto.getNombre());
         autor.setApellido(autorDto.getApellido());
-        if (foto != null) {
-            autor.setFoto(imagenServicio.actualizar(foto, autor.getFoto().getImagenId()));
-        }
+        if (imagen != null) autor.setFoto(imagen);
+
         autorRepositorio.save(autor);
     }
 
+    // LISTA TODOS LOS AUTORES
+    @Transactional(readOnly = true)
+    public List<Autor> listarAutores() {
+        return autorRepositorio.findAll();
+    }
+
     // OBTIENE UN AUTOR POR ID
-    @Transactional
+    @Transactional(readOnly = true)
     public Autor buscarAutorPorId(String idAutor) {
-        return this.autorRepositorio.findById(idAutor).orElse(null);
+        return autorRepositorio.findById(idAutor).orElse(null);
     }
 
     // OBTIENE UN AUTOR POR NOMBRE COMPLETO
-    @Transactional
+    @Transactional(readOnly = true)
     public Autor buscarAutor(AutorDto autorDto) {
-        return this.autorRepositorio.findByNombreCompleto(autorDto.getNombre(), autorDto.getApellido());
+        return autorRepositorio.findByNombreCompleto(autorDto.getNombre(), autorDto.getApellido());
     }
 
     // ELIMINA AUTOR POR ID
     @Transactional
-    public void eliminarAutorPorId(String idAutor) {
-        Autor autor = this.buscarAutorPorId(idAutor);
-        Imagen imagenAutor = this.imagenServicio.getOne(autor.getFoto().getImagenId());
-        this.autorRepositorio.deleteById(idAutor);
-        this.imagenServicio.eliminarImagenId(imagenAutor.getImagenId());
+    public void eliminarAutorPorId(String autorId) {
+
+        Autor autor = autorRepositorio.findById(autorId).orElse(null);
+        if (autor != null && autor.getFoto().getImagenId() != null) {
+            imagenServicio.eliminarImagenPorId(autor.getFoto().getImagenId());
+        }
+        autorRepositorio.deleteById(autorId);
     }
 }

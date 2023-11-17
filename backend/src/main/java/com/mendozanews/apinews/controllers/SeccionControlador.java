@@ -13,31 +13,44 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1")
-public class SeccionController {
+public class SeccionControlador {
 
     private final ISeccion seccionService;
 
-    public SeccionController(ISeccion seccionService) {
+    public SeccionControlador(ISeccion seccionService) {
         this.seccionService = seccionService;
     }
 
-    @PostMapping("/seccion/guardar")
+    @PostMapping("/seccion")
     public ResponseEntity<?> GuardarSeccion(
             @RequestBody SeccionDto seccionDto,
-            @RequestParam("icono") MultipartFile icono) throws IOException {
+            @RequestPart(value = "icono") MultipartFile icono) throws IOException {
 
-        seccionService.crearSeccion(seccionDto, icono);
+        this.seccionService.crearSeccion(seccionDto, icono);
 
         return new ResponseEntity<>("Nueva seccion añadida", HttpStatus.CREATED);
     }
 
-    @GetMapping("/seccion/")
+    @PutMapping("/seccion/{seccionId}")
+    public ResponseEntity<?> editarSeccion(@PathVariable("seccionId") String seccionId,
+                                           @RequestBody SeccionDto seccionDto,
+                                           @RequestPart(value = "icono", required = false) MultipartFile icono) {
+
+        try {
+            seccionService.editarSeccion(seccionId, seccionDto, icono);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException ioEx) {
+            return new ResponseEntity<>(ioEx.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/seccion")
     public ResponseEntity<?> buscarSeccion(@RequestParam("buscar") String buscar) {
 
-        Seccion seccion = seccionService.buscarSeccion(buscar);
-        if (seccion == null) {
+        Seccion seccion = this.seccionService.buscarSeccion(buscar);
+        if (seccion == null)
             return new ResponseEntity<>("Seccion no encontrada", HttpStatus.NOT_FOUND);
-        }
 
         return new ResponseEntity<>(seccion, HttpStatus.OK);
     }
@@ -45,11 +58,9 @@ public class SeccionController {
     @GetMapping("/secciones")
     public ResponseEntity<?> obtenerSecciones() {
 
-        List<Seccion> secciones = seccionService.listarSecciones();
-
-        if (secciones.isEmpty()) {
+        List<Seccion> secciones = this.seccionService.listarSecciones();
+        if (secciones.isEmpty())
             return new ResponseEntity<>("No se encontraron secciones", HttpStatus.NOT_FOUND);
-        }
 
         return new ResponseEntity<>(secciones, HttpStatus.OK);
     }
@@ -57,8 +68,7 @@ public class SeccionController {
     @DeleteMapping("/seccion/{id}")
     public ResponseEntity<?> eliminarSeccionPorId(@PathVariable("id") String id) {
 
-        seccionService.eliminarSeccionPorId(id);
-
+        this.seccionService.eliminarSeccionPorId(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

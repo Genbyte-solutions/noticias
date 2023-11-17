@@ -9,6 +9,5 @@ import com.mendozanews.apinews.model.entidades.Imagen;
 
 @Repository
 public interface ImagenRepositorio extends JpaRepository<Imagen, String> {
-    @Query("SELECT i FROM Imagen i WHERE i.contenido = :contenido")
-    public Imagen buscarPorContenido(@Param("contenido") byte[] contenido);
+
 }

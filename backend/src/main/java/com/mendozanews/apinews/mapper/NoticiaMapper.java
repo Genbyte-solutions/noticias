@@ -1,6 +1,7 @@
 package com.mendozanews.apinews.mapper;
 
 import com.mendozanews.apinews.model.dto.request.NoticiaDto;
+import com.mendozanews.apinews.model.dto.response.NoticiaResDto;
 import com.mendozanews.apinews.model.entidades.Noticia;
 import org.mapstruct.Mapper;
 
@@ -9,23 +10,23 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public class NoticiaMapper {
-    public NoticiaDto toDTO(Noticia noticia) {
-        return NoticiaDto.builder()
+    public NoticiaResDto toDTO(Noticia noticia) {
+        return NoticiaResDto.builder()
                 .titulo(noticia.getTitulo())
                 .subtitulo(noticia.getSubtitulo())
                 .parrafos(noticia.getParrafos())
                 .etiquetas(noticia.getEtiquetas())
-                .seccionId(noticia.getSeccion().getSeccionId())
-                .autorId(noticia.getAutor().getAutorId())
+                .seccion(noticia.getSeccion())
+                .autor(noticia.getAutor())
+                .portada(noticia.getPortada())
+                .imagenes(noticia.getImagenesNoticia())
                 .build();
     }
 
-    public List<NoticiaDto> toDTOs(List<Noticia> noticias) {
-        if (noticias == null) {
-            return null;
-        }
+    public List<NoticiaResDto> toDTOs(List<Noticia> noticias) {
+        if (noticias == null) return null;
 
-        List<NoticiaDto> list = new ArrayList<>();
+        List<NoticiaResDto> list = new ArrayList<>();
 
         for (Noticia noticia : noticias) {
             list.add(toDTO(noticia));

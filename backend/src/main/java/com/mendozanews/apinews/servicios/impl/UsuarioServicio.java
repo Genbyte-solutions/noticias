@@ -1,18 +1,18 @@
 package com.mendozanews.apinews.servicios.impl;
 
 import com.mendozanews.apinews.exception.MiException;
+import com.mendozanews.apinews.model.dto.request.UsuarioDto;
 import com.mendozanews.apinews.model.entidades.Imagen;
 import com.mendozanews.apinews.model.entidades.Usuario;
 import com.mendozanews.apinews.model.enums.Rol;
 import com.mendozanews.apinews.repositorios.UsuarioRepositorio;
+import com.mendozanews.apinews.servicios.interfaces.IUsuario;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -27,142 +27,107 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class UsuarioServicio implements UserDetailsService {
+public class UsuarioServicio implements UserDetailsService, IUsuario {
 
-    @Autowired
-    UsuarioRepositorio ur;
+    private final UsuarioRepositorio usuarioRepo;
+    private final ImagenServicio imagenServicio;
 
-    @Autowired
-    ImagenServicio is;
+    public UsuarioServicio(UsuarioRepositorio usuarioRepo, ImagenServicio imagenServicio) {
+        this.usuarioRepo = usuarioRepo;
+        this.imagenServicio = imagenServicio;
+    }
 
     // CARGA UN USUARIO
     @Transactional
-    public void cargarUsuario(String nombre, String apellido, String nombreUsuario,
-            MultipartFile imagen, String email, String telefono, String password, String password2, String rol)
-            throws MiException, IOException {
+    @Override
+    public void crearUsuario(UsuarioDto usuarioDto, MultipartFile foto) throws IOException {
 
-        validar(nombre, apellido, email, nombreUsuario, telefono, password, password2);
+        Imagen fotoGuardada = null;
+        if (foto != null) fotoGuardada = imagenServicio.guardarImagen(foto);
 
         Usuario usuario = new Usuario();
-        usuario.setNombre(nombre);
-        usuario.setApellido(apellido);
-        usuario.setEmail(email);
-        usuario.setNombreUsuario(nombreUsuario);
-        usuario.setTelefono(telefono);
-        usuario.setPassword(new BCryptPasswordEncoder().encode(password));
-
-        // Asignación de roles según el valor de 'rol'
-        if (rol.equalsIgnoreCase("admin")) {
+        usuario.setNombre(usuarioDto.getNombre());
+        usuario.setApellido(usuarioDto.getApellido());
+        usuario.setNombreUsuario(usuarioDto.getNombreUsuario());
+        usuario.setEmail(usuarioDto.getNombreUsuario());
+        usuario.setPassword(new BCryptPasswordEncoder().encode(usuarioDto.getPassword()));
+        usuario.setAlta(true);
+        usuario.setTelefono(usuarioDto.getTelefono());
+        if (Rol.ADMIN.equals(usuarioDto.getRol())) {
             usuario.setRol(Rol.ADMIN);
         } else {
             usuario.setRol(Rol.USUARIO);
         }
+        if (fotoGuardada != null) usuario.setFoto(fotoGuardada);
 
-        usuario.setAlta(true);
-        Date fechaRegistro = new Date();
-        usuario.setFechaAlta(fechaRegistro);
-        Imagen foto = is.guardarImagen(imagen);
-        usuario.setImagen(foto);
-        ur.save(usuario);
+        usuarioRepo.save(usuario);
     }
 
     // MODIFICA UN USUARIO
     @Transactional
-    public void editarUsuario(String id, String nombre, String apellido, String nombreUsuario,
-            MultipartFile imagen, String email, String telefono, String password, String password2) throws MiException {
+    @Override
+    public void editarUsuario(Usuario usuario, UsuarioDto usuarioDto, MultipartFile foto) throws IOException {
 
-        validar(nombre, apellido, email, nombreUsuario, telefono, password, password2);
+        Imagen fotoActualizada = null;
+        if (foto != null) fotoActualizada = imagenServicio.actualizarImagen(foto, usuario.getFoto().getImagenId());
 
-        Optional<Usuario> respuesta = ur.findById(id);
+        usuario.setNombre(usuarioDto.getNombre());
+        usuario.setApellido(usuarioDto.getApellido());
+        usuario.setNombreUsuario(usuarioDto.getNombreUsuario());
+        usuario.setEmail(usuarioDto.getEmail());
+        usuario.setPassword(new BCryptPasswordEncoder().encode(usuarioDto.getPassword()));
+        usuario.setTelefono(usuarioDto.getTelefono());
+        if (fotoActualizada != null) usuario.setFoto(fotoActualizada);
 
-        if (respuesta.isPresent()) {
-
-            Usuario usuario = respuesta.get();
-
-            usuario.setNombre(nombre);
-            usuario.setApellido(apellido);
-            usuario.setEmail(email);
-            usuario.setNombreUsuario(nombreUsuario);
-            usuario.setPassword(new BCryptPasswordEncoder().encode(password));
-            usuario.setTelefono(telefono);
-
-            String idImg = null;
-            if (usuario.getImagen() != null) {
-                idImg = usuario.getImagen().getImagenId();
-            }
-            Imagen foto = is.actualizar(imagen, idImg);
-            usuario.setImagen(foto);
-
-            ur.save(usuario);
-        }
+        usuarioRepo.save(usuario);
     }
 
     // LISTA TODOS LOS USUARIOS
+    @Transactional(readOnly = true)
     public List<Usuario> listarUsuarios() {
-        List<Usuario> noticias = ur.findAll();
+        List<Usuario> noticias = usuarioRepo.findAll();
         return noticias;
     }
 
     // OBTIENE UN USUARIO POR ID
-    public Usuario getOne(String id) {
-        return ur.getReferenceById(id);
+    @Transactional(readOnly = true)
+    @Override
+    public Usuario buscarUsuarioPorId(String usuarioId) {
+        return usuarioRepo.findById(usuarioId).orElse(null);
     }
 
-    // BUSCA USUARIO POR EMAIL
-    public Usuario buscarPorEmail(String email) {
-        Usuario usuario = ur.buscarPorEmail(email);
-        return usuario;
-    }
-
-    // BUSCA USUARIO POR NOMBRE DE USUARIO
-    public Usuario buscarPorNombreUsuario(String nombreUsuario) {
-        Usuario usuario = ur.buscarPorNombreUsuario(nombreUsuario);
-        return usuario;
-    }
-
-    // ELIMINA USUARIO POR ID
-    @Transactional
-    public void eliminarUsuarioId(String id) throws MiException {
-        Optional<Usuario> respuesta = ur.findById(id);
-        if (respuesta.isPresent()) {
-            ur.deleteById(id);
-        } else {
-            throw new MiException("No se encontro el usuario");
-        }
+    // BUSCA USUARIO POR EMAIL O NOMBRE DE USUARIO
+    @Transactional(readOnly = true)
+    @Override
+    public Usuario buscarUsuario(String entrada) {
+        return usuarioRepo.buscarPorEmailONombreUsuarios(entrada);
     }
 
     // CAMBIA ALTA UN USUARIO POR ID
     @Transactional
-    public void altaUsuarioId(String id) throws MiException {
-        Optional<Usuario> respuesta = ur.findById(id);
-        if (respuesta.isPresent()) {
-            Usuario usuario = respuesta.get();
-            boolean estado = usuario.getAlta();
-            usuario.setAlta(!estado);
-            ur.save(usuario);
-        } else {
-            throw new MiException("No se encontro el usuario");
+    @Override
+    public void cambiarEstadoDeAlta(String usuarioId) {
+        Usuario usuario = usuarioRepo.findById(usuarioId).orElse(null);
+        if (usuario != null) {
+            usuario.setAlta(!usuario.getAlta());
+            usuarioRepo.save(usuario);
         }
     }
 
-    // CAMBIA ROL DE USUARIO
+    // ELIMINA USUARIO POR ID
     @Transactional
-    public void cambiarRol(String id, String rol) throws MiException {
-        Optional<Usuario> respuesta = ur.findById(id);
-        rol = rol.toUpperCase();
-        if (respuesta.isPresent()) {
-            Usuario usuario = respuesta.get();
-            usuario.setRol(Rol.valueOf(rol));
-            ur.save(usuario);
-        } else {
-            throw new MiException("No se encontro el usuario");
+    public void eliminarUsuarioPorId(String id) {
+        Usuario usuario = usuarioRepo.findById(id).orElse(null);
+        if (usuario != null && usuario.getFoto().getImagenId() != null) {
+            imagenServicio.eliminarImagenPorId(usuario.getFoto().getImagenId());
         }
+        usuarioRepo.deleteById(id);
     }
 
     // VALIDA EL USUARIO POR EMAIL
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = ur.buscarPorNombreUsuario(username);
+        Usuario usuario = usuarioRepo.buscarPorEmailONombreUsuarios(username);
 
         if (usuario != null) {
             List<GrantedAuthority> permisos = new ArrayList<>();
@@ -182,59 +147,25 @@ public class UsuarioServicio implements UserDetailsService {
         }
     }
 
-    // VALIDA LOS DATOS DE ENTRADA
-    private void validar(String nombre, String apellido, String email, String nombreUsuario, String telefono,
-            String password, String password2) throws MiException {
-
-        if (nombre.isEmpty() || nombre == null) {
-            throw new MiException("EL nombre no puede estar vacio.");
-        }
-        if (apellido.isEmpty() || apellido == null) {
-            throw new MiException("EL apellido no puede estar vacio.");
-        }
-        if (email.isEmpty() || email == null) {
-            throw new MiException("EL email no puede estar vacio.");
-        }
-        if (nombreUsuario.isEmpty() || nombreUsuario == null) {
-            throw new MiException("EL nombreUsuario no puede estar vacio.");
-        }
-        if (telefono.isEmpty() || telefono == null) {
-            throw new MiException("El telefono no puede estar vacio.");
-        }
-        if (password.isEmpty() || password == null || password.length() <= 5) {
-            throw new MiException("La contraseña no puede estar vacia y tiene que tener mas de 5 caracteres.");
-        }
-        if (!password.equals(password2)) {
-            throw new MiException("Las contraseñas no coiciden.");
-        }
-
-    }
-
     @Transactional
     public void usuarioAdmin() throws MiException {
-        try {
-            Usuario usuario = new Usuario();
-            usuario.setNombre("admin");
-            usuario.setApellido("admin");
-            usuario.setEmail("admin@admin");
-            usuario.setNombreUsuario("admin");
-            usuario.setTelefono("123456789");
-            usuario.setPassword(new BCryptPasswordEncoder().encode("123456"));
-            usuario.setRol(Rol.ADMIN);
-            usuario.setAlta(true);
-            Date fechaRegistro = new Date();
-            usuario.setFechaAlta(fechaRegistro);
-            usuario.setImagen(null);
-            ur.save(usuario);
-        } catch (Exception e) {
-            throw new MiException("Error al crear el admin");
-        }
 
+        Usuario usuario = new Usuario();
+        usuario.setNombre("admin");
+        usuario.setApellido("admin");
+        usuario.setEmail("admin@admin");
+        usuario.setNombreUsuario("admin");
+        usuario.setTelefono("123456789");
+        usuario.setPassword(new BCryptPasswordEncoder().encode("123456"));
+        usuario.setRol(Rol.ADMIN);
+        usuario.setAlta(true);
+        usuario.setFoto(null);
+        usuarioRepo.save(usuario);
     }
 
     public boolean authenticate(String email, String password) {
         try {
-            Usuario usuario = buscarPorEmail(email);
+            Usuario usuario = buscarUsuario(email);
             if (usuario != null) {
                 String hashedPassword = usuario.getPassword();
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -257,13 +188,10 @@ public class UsuarioServicio implements UserDetailsService {
         }
     }
 
-    @Autowired
-    private UsuarioRepositorio usuarioRepositorio;
-
     // Otros métodos de tu servicio
 
     public String getStoredPasswordByEmail(String email) {
-        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
+        Usuario usuario = usuarioRepo.buscarPorEmailONombreUsuarios(email);
         return usuario != null ? usuario.getPassword() : null;
     }
 }

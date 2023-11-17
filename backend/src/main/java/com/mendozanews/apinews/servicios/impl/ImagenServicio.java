@@ -5,9 +5,6 @@ import com.mendozanews.apinews.model.entidades.Imagen;
 import com.mendozanews.apinews.repositorios.ImagenRepositorio;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import com.mendozanews.apinews.servicios.interfaces.IImagen;
 import org.springframework.http.HttpHeaders;
@@ -18,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImagenServicio implements IImagen {
-
     private final ImagenRepositorio imagenRepo;
-
     public ImagenServicio(ImagenRepositorio imagenRepo) {
         this.imagenRepo = imagenRepo;
     }
@@ -39,73 +34,28 @@ public class ImagenServicio implements IImagen {
 
     // ACTUALIZA UNA IMAGEN
     @Transactional
-    public Imagen actualizar(MultipartFile archivo, String id) throws MiException {
+    public Imagen actualizarImagen(MultipartFile archivo, String id) throws IOException {
 
-        archivo = validar(archivo);
+        Imagen imagen = imagenRepo.findById(id).orElse(null);
+        if (imagen == null) return null;
 
-        if (archivo != null) {
+        imagen.setTipoMime(archivo.getContentType());
+        imagen.setNombre(archivo.getOriginalFilename());
+        imagen.setContenido(archivo.getBytes());
 
-            try {
-
-                Imagen imagen = new Imagen();
-
-                if (id != null) {
-
-                    Optional<Imagen> respuesta = imagenRepo.findById(id);
-
-                    if (respuesta.isPresent()) {
-                        imagen = respuesta.get();
-                    }
-                }
-
-                imagen.setTipoMime(archivo.getContentType());
-                imagen.setNombre(archivo.getName());
-                imagen.setContenido(archivo.getBytes());
-
-                return imagenRepo.save(imagen);
-
-            } catch (IOException e) {
-                throw new MiException("No se pudo actualizar la imagen" + e.getMessage());
-            }
-        }
-
-        if (id != null) {
-            imagenRepo.deleteById(id);
-        }
-
-        return null;
-    }
-
-    // GUARDA UNA LISTA DE ARCHIVOS IMG Y DEVUELVE UNA LISTA DE IMAGENES CON ID
-    @Transactional
-    public List<Imagen> guardarLista(List<MultipartFile> archivos) throws MiException {
-        List<Imagen> imagenesGuardadas = new ArrayList<>();
-
-        for (MultipartFile archivo : archivos) {
-
-            archivo = validar(archivo);
-
-            if (archivo != null) {
-                try {
-                    Imagen imagen = new Imagen();
-
-                    imagen.setTipoMime(archivo.getContentType());
-                    imagen.setNombre(archivo.getName());
-                    imagen.setContenido(archivo.getBytes());
-
-                    imagenesGuardadas.add(imagenRepo.save(imagen));
-                } catch (IOException e) {
-                    throw new MiException("No se pudo guardar la lista de imágenes: " + e.getMessage());
-                }
-            }
-        }
-
-        return imagenesGuardadas;
+        return imagenRepo.save(imagen);
     }
 
     // OBTIENE UNA IMAGEN POR ID
-    public Imagen getOne(String id) {
-        return imagenRepo.getReferenceById(id);
+    @Transactional(readOnly = true)
+    public Imagen buscarImagenPorId(String id) {
+        return imagenRepo.findById(id).orElse(null);
+    }
+
+    // ELIMINA IMAGEN POR ID
+    @Transactional
+    public void eliminarImagenPorId(String id) {
+        imagenRepo.deleteById(id);
     }
 
     // CONVERTIR IMAGEN A FORMATO ACEPTADO POR EL FRONT
@@ -115,48 +65,5 @@ public class ImagenServicio implements IImagen {
         headers.setContentLength(imagen.getContenido().length);
         headers.set("Content-Disposition", "inline; filename=" + imagen.getNombre());
         return headers;
-    }
-
-    // ELIMINA IMAGEN POR ID
-    @Transactional
-    public void eliminarImagenId(String id) throws MiException {
-        Optional<Imagen> respuesta = imagenRepo.findById(id);
-        if (respuesta.isPresent()) {
-            imagenRepo.deleteById(id);
-        } else {
-            throw new MiException("No se encontro la imagen" + (id));
-        }
-    }
-
-
-    // VALIDA QUE EL ARCHIVO NO SEA NULO O ESTE VACIO
-    public MultipartFile validar(MultipartFile archivo) {
-
-        // if (archivo != null && archivo.getBytes().length == 0) {
-        // return null;
-        // } // este es mas correcto //
-
-        return archivo;
-    }
-
-    // BUSCA UNA IMAGEN POR CONTENIDO, DEVUELVE UN ERROR SI NO FUNCIONA (NO PROBADA)
-    public Imagen buscarPorContenido(MultipartFile archivo) throws MiException {
-        try {
-            byte[] contenido = archivo.getBytes();
-            Imagen imagen = imagenRepo.buscarPorContenido(contenido);
-            return imagen;
-        } catch (IOException ex) {
-            throw new MiException("Error al buscar imagen por contenido" + ex.getMessage());
-        }
-    }
-
-    // Método validarExistencia
-    public Boolean validarExistencia(MultipartFile archivo) throws MiException {
-        MultipartFile archivoValidado = validar(archivo);
-        if (archivoValidado != null) {
-            Imagen imagen = buscarPorContenido(archivoValidado);
-            return imagen != null;
-        }
-        return false;
     }
 }

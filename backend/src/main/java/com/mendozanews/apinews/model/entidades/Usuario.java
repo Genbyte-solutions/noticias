@@ -4,12 +4,14 @@ import com.mendozanews.apinews.model.enums.Rol;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 @Data
@@ -25,36 +27,36 @@ public class Usuario {
     @Column(name = "usuario_id")
     private String usuarioId;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @Column(name = "apellido")
     private String apellido;
 
-    @Column(name = "nombre_usuario")
+    @Column(name = "nombre_usuario", nullable = false, unique = true)
     private String nombreUsuario;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "alta")
     private Boolean alta;
 
-    @Column(name = "telefono")
+    @Column(name = "telefono", unique = true)
     private String telefono;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "rol")
     private Rol rol;
 
-    @Column(name = "fecha_alta")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaAlta;
+    @CreationTimestamp
+    @Column(name = "fecha_registro", updatable = false)
+    private Timestamp fechaRegistro;
 
     @OneToOne
     @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
-    private Imagen imagen;
+    private Imagen foto;
 }

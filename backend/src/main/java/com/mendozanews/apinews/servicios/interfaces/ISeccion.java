@@ -11,6 +11,8 @@ public interface ISeccion {
 
     void crearSeccion(SeccionDto seccionDto, MultipartFile icono) throws IOException;
 
+    void editarSeccion(String seccionId, SeccionDto seccionDto, MultipartFile icono) throws IOException;
+
     Seccion buscarSeccion(String dato);
 
     List<Seccion> listarSecciones();

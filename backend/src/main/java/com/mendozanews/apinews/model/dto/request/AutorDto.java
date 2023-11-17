@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Data
 @Builder
 public class AutorDto implements Serializable {
-
     @NotNull
     private String nombre;
     @NotNull

@@ -16,18 +16,17 @@ import com.mendozanews.apinews.model.entidades.Noticia;
 @Repository
 public interface NoticiaRepositorio extends JpaRepository<Noticia, String> {
 
-    //Solo corregí algunos parámetros y añadí limit y offset a las querys
-    @Query("SELECT n FROM Noticia n WHERE n.titulo LIKE %:titulo% ORDER BY n.fechaPublicacion")
-    public List<Noticia> buscarPorTitulo(@Param("titulo") String titulo, Pageable pageable);
+    @Query("SELECT n FROM Noticia n ORDER BY n.fechaPublicacion DESC")
+    public List<Noticia> buscarRecientes(Pageable pageable);
 
-    @Query("SELECT n FROM Noticia n WHERE n.seccion.nombre = :seccion ORDER BY n.fechaPublicacion")
+    @Query("SELECT n FROM Noticia n WHERE n.titulo LIKE %:titulo% ORDER BY n.fechaPublicacion DESC")
+    public List<Noticia> buscarPorTitulo(@Param("titulo") String titulo);
+
+    @Query("SELECT n FROM Noticia n WHERE n.seccion.nombre = :seccion ORDER BY n.fechaPublicacion DESC")
     public List<Noticia> buscarPorSeccion(@Param("seccion") String seccion, Pageable pageable);
 
-    @Query("SELECT n FROM Noticia n WHERE n.autor.nombre = :nombre AND n.autor.apellido = :apellido ORDER BY n.fechaPublicacion")
+    @Query("SELECT n FROM Noticia n WHERE n.autor.nombre = :nombre AND n.autor.apellido = :apellido ORDER BY n.fechaPublicacion DESC")
     public List<Noticia> buscarPorAutor(@Param("nombre") String nombre, @Param("apellido") String apellido, Pageable pageable);
-
-    @Query("SELECT n FROM Noticia n ORDER BY n.fechaPublicacion")
-    public List<Noticia> buscarRecientes(Pageable pageable);
 
     //Querys sin función aparente//
     /*@Query("SELECT n FROM Noticia n WHERE n.seccion.id = :id")

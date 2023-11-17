@@ -1,25 +1,17 @@
 package com.mendozanews.apinews.servicios.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.mendozanews.apinews.model.dto.request.NoticiaDto;
 import com.mendozanews.apinews.model.entidades.*;
+import com.mendozanews.apinews.model.enums.Orden;
 import com.mendozanews.apinews.repositorios.*;
 import com.mendozanews.apinews.servicios.interfaces.INoticia;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.mendozanews.apinews.exception.MiException;
-import com.mendozanews.apinews.model.dto.response.NoticiaResponseDto;
-import scala.Int;
 
 @Service
 public class NoticiaServicio implements INoticia {
@@ -104,33 +96,31 @@ public class NoticiaServicio implements INoticia {
     // LISTA TODAS LAS NOTICIAS
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> listarNoticias(Integer offset, Integer limit) {
-
-        return noticiaRepo.buscarRecientes(PageRequest.of(offset,limit));
+    public List<Noticia> listarNoticias(Integer offset, Integer limit, Orden orden) {
+        return noticiaRepo.buscarRecientes(PageRequest.of(offset, limit));
     }
-
 
     // BUSCA NOTICIAS EN LAS QUE EL TITULO CONTENGA EL ARGUMENTO
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorTitulo(String titulo, Integer offset, Integer limit) {
-        return noticiaRepo.buscarPorTitulo(titulo, PageRequest.of(offset,limit));
+    public List<Noticia> buscarPorTitulo(String titulo) {
+        return noticiaRepo.buscarPorTitulo(titulo);
     }
 
     // BUSCA NOTICIAS POR SECCION
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorSeccion(String seccion,Integer offset, Integer limit) {
+    public List<Noticia> buscarPorSeccion(String seccion, Integer offset, Integer limit, Orden orden) {
 
-        return noticiaRepo.buscarPorSeccion(seccion, PageRequest.of(offset,limit));
+        return noticiaRepo.buscarPorSeccion(seccion, PageRequest.of(offset, limit));
     }
 
     // BUSCA NOTICIAS POR AUTOR
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorAutor(String nombre, String apellido,Integer offset, Integer limit) {
+    public List<Noticia> buscarPorAutor(String nombre, String apellido, Integer offset, Integer limit, Orden orden) {
 
-        return noticiaRepo.buscarPorAutor(nombre, apellido, PageRequest.of(offset,limit));
+        return noticiaRepo.buscarPorAutor(nombre, apellido, PageRequest.of(offset, limit));
     }
 
 /*    // BUSCA 6 NOTICIAS POR SECCION
