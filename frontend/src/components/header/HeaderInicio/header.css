@@ -73,6 +73,7 @@ header li a:hover {
   header{
     background-color: #ef850b;
     display: flex;
+    width: 100%;
   }
 
   .head {
@@ -110,6 +111,51 @@ header li a:hover {
   header li {
     margin: 0;
     height: 15px;
+  }
+
+  header li a {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .full-header{
+    width: 100vw;
+  }
+  .head {
+    padding: 10px 0; 
+  }
+  header{
+
+   width: 10%;
+  }
+  .head .logo img {
+    min-width: 20%; 
+    max-width:50%; 
+  }
+
+  header .barIco {
+    display: block;
+    /* margin-top: 10vw; */
+    margin-left: 10px;
+    z-index: 6;
+    cursor: pointer;
+  }
+
+  header .navbar {
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    top: 100%; 
+    padding: 10px 15px; 
+
+  }
+
+
+  header li {
+    margin: 0;
+    height: auto; 
   }
 
   header li a {

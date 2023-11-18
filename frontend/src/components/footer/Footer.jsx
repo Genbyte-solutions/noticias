@@ -7,8 +7,8 @@ import "./footer.css";
 
 export default function Footer() {
   return (
-    <>
-      <footer>
+    <div className='container__footer'>
+      <footer >
         <div className="container">
           <div className="box logo">
             <img src={banner} alt="" />
@@ -91,6 +91,6 @@ export default function Footer() {
         </div>
       </div>
 
-    </>
+    </div>
   );
 }

@@ -1,12 +1,15 @@
 .seccion-paginas {
   margin: auto 20px;
+
 }
 
 /* ------ CARROUSEL DOTS------ */
 .seccion-paginas .slick-dots {
+    
     display: flex !important;
     gap: 10px;
     justify-content: center;
+
 }
 
 .seccion-paginas .slick-dots div {
