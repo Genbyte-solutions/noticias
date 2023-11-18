@@ -28,6 +28,6 @@ public class IconoSeccion {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "imagen", columnDefinition = "LONGBLOB")
-    private byte[] imagen;
+    @Column(name = "contenido", columnDefinition = "LONGBLOB")
+    private byte[] contenido;
 }

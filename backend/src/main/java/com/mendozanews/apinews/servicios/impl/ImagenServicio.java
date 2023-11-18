@@ -26,7 +26,7 @@ public class ImagenServicio implements IImagen {
         return imagenRepo.save(
                 Imagen.builder()
                         .tipoMime(foto.getContentType())
-                        .nombre(foto.getOriginalFilename())
+                        .nombreArchivo(foto.getOriginalFilename())
                         .contenido(foto.getBytes())
                         .build()
         );
@@ -40,7 +40,7 @@ public class ImagenServicio implements IImagen {
         if (imagen == null) return null;
 
         imagen.setTipoMime(archivo.getContentType());
-        imagen.setNombre(archivo.getOriginalFilename());
+        imagen.setNombreArchivo(archivo.getOriginalFilename());
         imagen.setContenido(archivo.getBytes());
 
         return imagenRepo.save(imagen);
@@ -56,14 +56,5 @@ public class ImagenServicio implements IImagen {
     @Transactional
     public void eliminarImagenPorId(String id) {
         imagenRepo.deleteById(id);
-    }
-
-    // CONVERTIR IMAGEN A FORMATO ACEPTADO POR EL FRONT
-    public HttpHeaders buildImageResponseHeaders(Imagen imagen) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(imagen.getTipoMime()));
-        headers.setContentLength(imagen.getContenido().length);
-        headers.set("Content-Disposition", "inline; filename=" + imagen.getNombre());
-        return headers;
     }
 }

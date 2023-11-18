@@ -1,6 +1,7 @@
 package com.mendozanews.apinews.servicios.interfaces;
 
 import com.mendozanews.apinews.model.dto.request.SeccionDto;
+import com.mendozanews.apinews.model.entidades.IconoSeccion;
 import com.mendozanews.apinews.model.entidades.Seccion;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,11 @@ public interface ISeccion {
 
     Seccion buscarSeccion(String dato);
 
+    Seccion buscarSeccionPorId(String id);
+
     List<Seccion> listarSecciones();
 
     void eliminarSeccionPorId(String seccionId);
+
+    IconoSeccion buscarIconoPorSeccionId(String iconoId);
 }

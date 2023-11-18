@@ -32,7 +32,7 @@ public class SeccionServicio implements ISeccion {
         return iconoRepo.save(IconoSeccion.builder()
                 .tipoMime(icono.getContentType())
                 .nombreArchivo(icono.getOriginalFilename())
-                .imagen(icono.getBytes())
+                .contenido(icono.getBytes())
                 .build());
     }
 
@@ -63,7 +63,7 @@ public class SeccionServicio implements ISeccion {
             if (icono != null && iconoSeccion != null) {
                 iconoSeccion.setTipoMime(icono.getContentType());
                 iconoSeccion.setNombreArchivo(icono.getOriginalFilename());
-                iconoSeccion.setImagen(icono.getBytes());
+                iconoSeccion.setContenido(icono.getBytes());
                 iconoRepo.save(iconoSeccion);
             }
         }
@@ -82,6 +82,17 @@ public class SeccionServicio implements ISeccion {
     public Seccion buscarSeccion(String dato) {
         return seccionRepo.buscarSeccion(dato);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Seccion buscarSeccionPorId(String id) {return seccionRepo.findById(id).orElse(null);}
+
+    @Transactional(readOnly = true)
+    @Override
+    public IconoSeccion buscarIconoPorSeccionId(String iconoId){
+        return iconoRepo.findById(iconoId).orElse(null);
+    }
+
 
     // ELIMINA SECCION POR ID
     @Transactional

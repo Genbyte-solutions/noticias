@@ -3,6 +3,7 @@ package com.mendozanews.apinews.controllers;
 import com.mendozanews.apinews.model.dto.request.SeccionDto;
 import com.mendozanews.apinews.model.entidades.Seccion;
 import com.mendozanews.apinews.servicios.interfaces.ISeccion;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class SeccionControlador {
 
     @PostMapping("/seccion")
     public ResponseEntity<?> GuardarSeccion(
-            @RequestBody SeccionDto seccionDto,
+            @ModelAttribute @Valid SeccionDto seccionDto,
             @RequestPart(value = "icono") MultipartFile icono) throws IOException {
 
         this.seccionService.crearSeccion(seccionDto, icono);
@@ -33,7 +34,7 @@ public class SeccionControlador {
 
     @PutMapping("/seccion/{seccionId}")
     public ResponseEntity<?> editarSeccion(@PathVariable("seccionId") String seccionId,
-                                           @RequestBody SeccionDto seccionDto,
+                                           @ModelAttribute @Valid SeccionDto seccionDto,
                                            @RequestPart(value = "icono", required = false) MultipartFile icono) {
 
         try {

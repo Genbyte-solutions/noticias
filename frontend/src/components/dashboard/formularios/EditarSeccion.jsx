@@ -62,8 +62,8 @@ function EditarSeccion() {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/seccion/editar/${seccion.id}`, {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8080/api/v1/seccion/${seccion.id}`, {
+                method: 'PUT',
                 body: formData,
             });
 

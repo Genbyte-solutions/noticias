@@ -23,8 +23,8 @@ public class Imagen {
     @Column(name = "tipo_mime")
     private String tipoMime;
 
-    @Column(name = "nombre")
-    private String nombre;
+    @Column(name = "nombre_archivo")
+    private String nombreArchivo;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

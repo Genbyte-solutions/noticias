@@ -36,7 +36,7 @@ const CargarAutor = () => {
     formData.append("foto", data.foto[0]);
 
     try {
-      const response = await fetch("http://localhost:8080/api/autor/nuevo", {
+      const response = await fetch("http://localhost:8080/api/v1/autor", {
         method: "POST",
         body: formData,
       });

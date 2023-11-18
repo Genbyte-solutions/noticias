@@ -33,11 +33,11 @@ function ListaUsuarios() {
       const imagenesPorUsuario = {};
       for (const usuario of usuarios) {
         try {
-          const imagenData = await imagenPorIdUsuario(usuario.id);
-          imagenesPorUsuario[usuario.id] = imagenData;
+          const imagenData = await imagenPorIdUsuario(usuario.usuarioId);
+          imagenesPorUsuario[usuario.usuarioId] = imagenData;
         } catch (error) {
           console.error(
-            `Error al obtener la imagen para el usuario ${usuario.id}:`,
+            `Error al obtener la imagen para el usuario ${usuario.usuarioId}:`,
             error
           );
         }
@@ -59,7 +59,7 @@ function ListaUsuarios() {
           setShowNotification(true);
           // Actualizar la lista de usuarios después de eliminar
           setUsuarios((prevUsuarios) =>
-            prevUsuarios.filter((usuario) => usuario.id !== id)
+            prevUsuarios.filter((usuario) => usuario.usuarioId !== id)
           );
         } else {
           setNotificationMessage(
@@ -95,8 +95,8 @@ function ListaUsuarios() {
         </thead>
         <tbody>
           {usuarios.map((usuario) => (
-            <tr key={usuario.id} className="border-usuarios">
-              <td className="table-body-usuarios">{usuario.id}</td>
+            <tr key={usuario.usuarioId} className="border-usuarios">
+              <td className="table-body-usuarios">{usuario.usuarioId}</td>
               <td className="table-body-usuarios">{usuario.nombre}</td>
               <td className="table-body-usuarios">{usuario.apellido}</td>
               <td className="table-body-usuarios">{usuario.nombreUsuario}</td>
@@ -104,9 +104,9 @@ function ListaUsuarios() {
               <td className="table-body-usuarios">{usuario.email}</td>
               <td className="table-body-usuarios">{usuario.telefono}</td>
               <td className="table-body-usuarios">
-                {usuario.imagen && imagenes[usuario.id] && (
+                {usuario.imagen && imagenes[usuario.usuarioId] && (
                   <img
-                    src={[imagenes[usuario.id]]}
+                    src={[imagenes[usuario.usuarioId]]}
                     alt="Icono"
                     className="icono-image"
                   />
@@ -115,11 +115,11 @@ function ListaUsuarios() {
               <td className="button-usuarios-td">
                 <button
                   className="usuarios-button"
-                  onClick={() => handleEliminarUsuario(usuario.id)}
+                  onClick={() => handleEliminarUsuario(usuario.usuarioId)}
                 >
                   Eliminar
                 </button>
-                <Link to={`/administrador/usuario/editar/${usuario.id}`}>
+                <Link to={`/administrador/usuario/editar/${usuario.usuarioId}`}>
                   <button className="usuarios-button">Editar</button>
                 </Link>
               </td>

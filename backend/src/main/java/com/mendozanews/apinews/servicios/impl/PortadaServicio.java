@@ -21,7 +21,7 @@ public class PortadaServicio implements IPortada {
 
         return portadaRepositorio.save(
                 Portada.builder()
-                        .imagen(portada.getBytes())
+                        .contenido(portada.getBytes())
                         .tipoMime(portada.getContentType())
                         .nombreArchivo(portada.getOriginalFilename())
                         .build()
@@ -57,7 +57,7 @@ public class PortadaServicio implements IPortada {
                 }
                 portada.setTipoMime(archivo.getContentType());
                 portada.setNombreArchivo(archivo.getOriginalFilename());
-                portada.setImagen(archivo.getBytes());
+                portada.setContenido(archivo.getBytes());
                 portadaRepositorio.save(portada);
                 return portada.getPortadaId();
             } catch (IOException e) {

@@ -39,7 +39,7 @@ public class NoticiaServicio implements INoticia {
                 Portada.builder()
                         .tipoMime(portada.getContentType())
                         .nombreArchivo(portada.getOriginalFilename())
-                        .imagen(portada.getBytes())
+                        .contenido(portada.getBytes())
                         .build()
         );
     }

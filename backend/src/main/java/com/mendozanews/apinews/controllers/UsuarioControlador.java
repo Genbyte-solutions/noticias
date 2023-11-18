@@ -1,6 +1,8 @@
 package com.mendozanews.apinews.controllers;
 
+import com.mendozanews.apinews.mapper.UsuarioMapper;
 import com.mendozanews.apinews.model.dto.request.UsuarioDto;
+import com.mendozanews.apinews.model.dto.response.UsuarioResDto;
 import com.mendozanews.apinews.model.entidades.Usuario;
 import com.mendozanews.apinews.servicios.interfaces.IUsuario;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,9 +20,11 @@ import java.util.List;
 public class UsuarioControlador {
 
     private final IUsuario usuarioServicio;
+    private final UsuarioMapper usuarioMapper;
 
-    public UsuarioControlador(IUsuario usuarioServicio) {
+    public UsuarioControlador(IUsuario usuarioServicio, UsuarioMapper usuarioMapper) {
         this.usuarioServicio = usuarioServicio;
+        this.usuarioMapper = usuarioMapper;
     }
 
     @PostMapping("/usuario")
@@ -64,8 +68,9 @@ public class UsuarioControlador {
         if (usuarios.isEmpty()) {
             return new ResponseEntity<>("no se encontraron usuarios", HttpStatus.NOT_FOUND);
         }
+        List<UsuarioResDto> usuariosResDto = usuarioMapper.toDTOs(usuarios);
 
-        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+        return new ResponseEntity<>(usuariosResDto, HttpStatus.OK);
     }
 
     @GetMapping("/usuario/{usuarioId}")
@@ -76,7 +81,9 @@ public class UsuarioControlador {
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(usuario, HttpStatus.OK);
+        UsuarioResDto usuarioResDtoDto = usuarioMapper.toDTO(usuario);
+
+        return new ResponseEntity<>(usuarioResDtoDto, HttpStatus.OK);
     }
 
     @GetMapping("/usuario")
@@ -87,7 +94,9 @@ public class UsuarioControlador {
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(usuario, HttpStatus.OK);
+        UsuarioResDto usuarioResDtoDto = usuarioMapper.toDTO(usuario);
+
+        return new ResponseEntity<>(usuarioResDtoDto, HttpStatus.OK);
     }
 
     @PatchMapping("usuario/cambio_estado/{usuarioId}")

@@ -34,11 +34,11 @@ function ListaAutores() {
       const fotosPorAutor = {};
       for (const autor of autores) {
         try {
-          const fotoData = await imagenPorIdAutor(autor.id);
-          fotosPorAutor[autor.id] = fotoData;
+          const fotoData = await imagenPorIdAutor(autor.autorId);
+          fotosPorAutor[autor.autorId] = fotoData;
         } catch (error) {
           console.error(
-            `Error al obtener la foto para el autor ${autor.id}:`,
+            `Error al obtener la foto para el autor ${autor.autorId}:`,
             error
           );
         }
@@ -50,7 +50,7 @@ function ListaAutores() {
   }, [autores]);
 
   const handleEliminarAutor = (id) => {
-    fetch(`http://localhost:8080/api/autor/eliminar/${id}`, {
+    fetch(`http://localhost:8080/api/v1/autor/${id}`, {
       method: "DELETE",
     })
       .then(async (response) => {
@@ -59,7 +59,7 @@ function ListaAutores() {
           setNotificationMessage(responseData);
           setShowNotification(true);
           setAutores((prevAutores) =>
-            prevAutores.filter((autor) => autor.id !== id)
+            prevAutores.filter((autor) => autor.autorId !== id)
           );
         } else {
           setNotificationMessage(
@@ -89,14 +89,14 @@ function ListaAutores() {
         </thead>
         <tbody>
           {autores.map((autor) => (
-            <tr key={autor.id} className="border-autor">
-              <td className="table-body-seccion">{autor.id}</td>
+            <tr key={autor.autorId} className="border-autor">
+              <td className="table-body-seccion">{autor.autorId}</td>
               <td className="table-body-seccion">{autor.nombre}</td>
               <td className="table-body-seccion">{autor.apellido}</td>
               <td className="table-body-seccion">
-                {autor.foto && fotos[autor.id] && (
+                {autor.foto && fotos[autor.autorId] && (
                   <img
-                    src={fotos[autor.id]}
+                    src={fotos[autor.autorId]}
                     alt="Foto"
                     className="icono-image"
                   />
@@ -105,11 +105,11 @@ function ListaAutores() {
               <td className="button-autor-td">
                 <button
                   className="autor-button"
-                  onClick={() => handleEliminarAutor(autor.id)}
+                  onClick={() => handleEliminarAutor(autor.autorId)}
                 >
                   Eliminar
                 </button>
-                <Link to={`/administrador/autor/editar/${autor.id}`}>
+                <Link to={`/administrador/autor/editar/${autor.autorId}`}>
                   <button className="autor-button">Editar</button>
                 </Link>
               </td>
