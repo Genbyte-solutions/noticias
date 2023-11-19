@@ -19,7 +19,7 @@ export default function Header() {
         <div className="container">
           <nav>
             <ul
-              className={navbar ? "navbar" : "flexCT"}
+              className={`navbar ${navbar ? "open" : ""}`}
               onClick={() => setNavbar(false)}
             >
               <li>
@@ -67,10 +67,10 @@ export default function Header() {
                 <Link to="/seccion/astrologia">Alineando los planetas</Link>
               </li>
               <li>
-              <Link to="/login2">Iniciar sesión</Link>
+                <Link to="/login2">Iniciar sesión</Link>
               </li>
-             
-              
+
+
             </ul>
             <button className="barIco" onClick={() => setNavbar(!navbar)}>
               {navbar ? (
