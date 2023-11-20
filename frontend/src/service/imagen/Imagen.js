@@ -5,7 +5,7 @@ export const obtenerImagen = (imagen) => {
   try {
     // Crear una URL para la imagen
     const imageUrl = URL.createObjectURL(
-      new Blob([imagen.contenido], { type: imagen.mime })
+      new Blob([imagen.data], { type: imagen.headers['content-type'] })
     );
     return imageUrl;
   } catch (error) {
@@ -20,7 +20,7 @@ export const imagenPorId = async (id) => {
     const response = await axios.get(`http://localhost:8080/api/imagen/${id}`, {
       responseType: "arraybuffer",
     });
-    const imageUrl = URL.createObjectURL(new Blob([response.data]));
+    const imageUrl = URL.createObjectURL(new Blob([response.data], {type:response.headers['content-type']}));
     return imageUrl;
   } catch (error) {
     console.error("Error al obtener la imagen por ID: ", error);
@@ -35,7 +35,7 @@ export const imagenPorIdNoticia = async (id) => {
       `http://localhost:8080/api/imagen/noticia/${id}`,
       { responseType: "arraybuffer" }
     );
-    const imageUrl = URL.createObjectURL(new Blob([response.data]));
+    const imageUrl = URL.createObjectURL(new Blob([response.data], {type:response.headers['content-type']}));
     return imageUrl;
   } catch (error) {
     console.error("Error al obtener la imagen por ID de noticia: ", error);
@@ -50,7 +50,7 @@ export const imagenPorIdUsuario = async (id) => {
       `http://localhost:8080/api/imagen/usuario/${id}`,
       { responseType: "arraybuffer" }
     );
-    const imageUrl = URL.createObjectURL(new Blob([response.data]));
+    const imageUrl = URL.createObjectURL(new Blob([response.data], {type:response.headers['content-type']}));
     return imageUrl;
   } catch (error) {
     console.error("Error al obtener la imagen por ID de usuario: ", error);
@@ -65,7 +65,7 @@ export const imagenPorIdAutor = async (id) => {
       `http://localhost:8080/api/v1/imagen/autor/${id}`,
       { responseType: "arraybuffer" }
     );
-    const imageUrl = URL.createObjectURL(new Blob([response.data]));
+    const imageUrl = URL.createObjectURL(new Blob([response.data], {type:response.headers['content-type']}));
     return imageUrl;
   } catch (error) {
     console.error("Error al obtener la imagen por ID de autor: ", error);
@@ -80,7 +80,7 @@ export const imagenPorIdSeccion = async (id) => {
       `http://localhost:8080/api/v1/icono/seccion/${id}`,
       { responseType: "arraybuffer" }
     );
-    const imageUrl = URL.createObjectURL(new Blob([response.data]));
+    const imageUrl = URL.createObjectURL(new Blob([response.data], {type:response.headers['content-type']}));
     return imageUrl;
   } catch (error) {
     console.error("Error al obtener la imagen por ID de seccion: ", error);
