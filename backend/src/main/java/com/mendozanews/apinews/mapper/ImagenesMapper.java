@@ -1,12 +1,9 @@
 package com.mendozanews.apinews.mapper;
 
 import com.mendozanews.apinews.model.dto.request.ImagenDto;
-import com.mendozanews.apinews.model.dto.response.NoticiaResDto;
 import com.mendozanews.apinews.model.entidades.*;
 import org.mapstruct.Mapper;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public class ImagenesMapper {

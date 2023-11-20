@@ -16,16 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class NoticiaServicio implements INoticia {
     private final PortadaRepositorio portadaRepo;
     private final ImagenesNoticaRepositorio imagenesNoticiaRepo;
-    private final AutorRepositorio autorRepo;
-    private final SeccionRepositorio seccionRepo;
     private final NoticiaRepositorio noticiaRepo;
 
-    public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo, AutorRepositorio autorRepo,
-                           SeccionRepositorio seccionRepo, NoticiaRepositorio noticiaRepo) {
+    public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo,
+            NoticiaRepositorio noticiaRepo) {
         this.portadaRepo = portadaRepo;
         this.imagenesNoticiaRepo = imagenesNoticiaRepo;
-        this.autorRepo = autorRepo;
-        this.seccionRepo = seccionRepo;
         this.noticiaRepo = noticiaRepo;
     }
 
@@ -36,8 +32,7 @@ public class NoticiaServicio implements INoticia {
                         .tipoMime(portada.getContentType())
                         .nombreArchivo(portada.getOriginalFilename())
                         .contenido(portada.getBytes())
-                        .build()
-        );
+                        .build());
     }
 
     @Transactional
@@ -49,15 +44,14 @@ public class NoticiaServicio implements INoticia {
                             .nombreArchivo(imagen.getOriginalFilename())
                             .contenido(imagen.getBytes())
                             .noticia(noticia)
-                            .build()
-            );
+                            .build());
         }
     }
 
     @Transactional
     @Override
     public String crearNoticia(NoticiaDto noticiaDto, Autor autor, Seccion seccion,
-                               List<MultipartFile> imagenes, MultipartFile portada) throws IOException {
+            List<MultipartFile> imagenes, MultipartFile portada) throws IOException {
 
         Portada portadaGuardada = guardarPortada(portada);
         Noticia noticiaGuardada = noticiaRepo.save(Noticia.builder()
@@ -139,75 +133,81 @@ public class NoticiaServicio implements INoticia {
 
     @Transactional
     @Override
-    public Portada buscarPortadaPorId(String portadaId){
+    public Portada buscarPortadaPorId(String portadaId) {
         return portadaRepo.findById(portadaId).orElse(null);
     }
 
     @Transactional
     @Override
-    public ImagenesNoticia buscarImagenNoticiaPorId(String imagenNoticiaId){
+    public ImagenesNoticia buscarImagenNoticiaPorId(String imagenNoticiaId) {
         return imagenesNoticiaRepo.findById(imagenNoticiaId).orElse(null);
     }
-/*
-    // PRECARGA NOTICIAS SI LA BASE DE DATOS ESTA VACIA
-    @Transactional
-    public String iniciarPreloads(Integer cantidad) throws MiException {
-        if (cantidad <= 0) {
-            throw new MiException("La cantidad debe ser un número positivo mayor que cero");
-        }
-
-        long cantidadNoticias = noticiaRepositorio.count();
-        if (cantidadNoticias < cantidad) {
-            for (int i = 1; i <= cantidad; i++) {
-                Noticia noticia = new Noticia();
-
-                Autor autor = new Autor();
-                autor.setNombre("Autor");
-                autor.setApellido(Integer.toString(i));
-                autor.setAutorId("autor_" + i);
-                autor = autorRepositorio.save(autor);
-
-                Seccion seccion = new Seccion();
-                seccion.setSeccionId("seccion_" + i);
-                seccion.setNombre("Sección " + i);
-                seccion = seccionRepositorio.save(seccion);
-
-                noticia.setTitulo("titulo " + i);
-                noticia.setSubtitulo("subtitulo " + i);
-
-                List<String> parrafos = new ArrayList<>();
-                parrafos.add("parrafo 1 de noticia " + i);
-                parrafos.add("parrafo 2 de noticia " + i);
-                noticia.setParrafos(parrafos);
-
-                List<String> etiquetas = new ArrayList<>();
-                etiquetas.add("etiquetas 1 N" + i);
-                etiquetas.add("etiquetas 2 N" + i);
-                noticia.setEtiquetas(etiquetas);
-
-                noticia.setSeccion(seccion);
-                noticia.setAutor(autor);
-                noticia.setFechaPublicacion(new Date()); // Utiliza LocalDateTime.now() para la fecha actual
-                noticia.setActiva(true);
-
-                noticiaRepositorio.save(noticia);
-            }
-            return "Se cargó la lista porque ingresaste un número de noticias mayor al existente en la base de datos";
-        } else {
-            return "Error al cargar: Ya hay más noticias guardadas de las que deseas";
-        }
-    }
-
-    public Noticia obtenerNoticiaPorPortadaId(String id) {
-        Optional<Portada> portada = portadaRepositorio.findById(id);
-        if (portada.isPresent()) {
-            Portada portadaEncontrada = portada.get();
-            // Accede al campo noticia en la entidad Portada
-            Noticia noticiaRelacionada = portadaEncontrada.getNoticia();
-            return noticiaRelacionada;
-        } else {
-            // Manejo en caso de que no se encuentre la portada con el ID especificado
-            return null;
-        }
-    }*/
+    /*
+     * // PRECARGA NOTICIAS SI LA BASE DE DATOS ESTA VACIA
+     * 
+     * @Transactional
+     * public String iniciarPreloads(Integer cantidad) throws MiException {
+     * if (cantidad <= 0) {
+     * throw new
+     * MiException("La cantidad debe ser un número positivo mayor que cero");
+     * }
+     * 
+     * long cantidadNoticias = noticiaRepositorio.count();
+     * if (cantidadNoticias < cantidad) {
+     * for (int i = 1; i <= cantidad; i++) {
+     * Noticia noticia = new Noticia();
+     * 
+     * Autor autor = new Autor();
+     * autor.setNombre("Autor");
+     * autor.setApellido(Integer.toString(i));
+     * autor.setAutorId("autor_" + i);
+     * autor = autorRepositorio.save(autor);
+     * 
+     * Seccion seccion = new Seccion();
+     * seccion.setSeccionId("seccion_" + i);
+     * seccion.setNombre("Sección " + i);
+     * seccion = seccionRepositorio.save(seccion);
+     * 
+     * noticia.setTitulo("titulo " + i);
+     * noticia.setSubtitulo("subtitulo " + i);
+     * 
+     * List<String> parrafos = new ArrayList<>();
+     * parrafos.add("parrafo 1 de noticia " + i);
+     * parrafos.add("parrafo 2 de noticia " + i);
+     * noticia.setParrafos(parrafos);
+     * 
+     * List<String> etiquetas = new ArrayList<>();
+     * etiquetas.add("etiquetas 1 N" + i);
+     * etiquetas.add("etiquetas 2 N" + i);
+     * noticia.setEtiquetas(etiquetas);
+     * 
+     * noticia.setSeccion(seccion);
+     * noticia.setAutor(autor);
+     * noticia.setFechaPublicacion(new Date()); // Utiliza LocalDateTime.now() para
+     * la fecha actual
+     * noticia.setActiva(true);
+     * 
+     * noticiaRepositorio.save(noticia);
+     * }
+     * return
+     * "Se cargó la lista porque ingresaste un número de noticias mayor al existente en la base de datos"
+     * ;
+     * } else {
+     * return "Error al cargar: Ya hay más noticias guardadas de las que deseas";
+     * }
+     * }
+     * 
+     * public Noticia obtenerNoticiaPorPortadaId(String id) {
+     * Optional<Portada> portada = portadaRepositorio.findById(id);
+     * if (portada.isPresent()) {
+     * Portada portadaEncontrada = portada.get();
+     * // Accede al campo noticia en la entidad Portada
+     * Noticia noticiaRelacionada = portadaEncontrada.getNoticia();
+     * return noticiaRelacionada;
+     * } else {
+     * // Manejo en caso de que no se encuentre la portada con el ID especificado
+     * return null;
+     * }
+     * }
+     */
 }

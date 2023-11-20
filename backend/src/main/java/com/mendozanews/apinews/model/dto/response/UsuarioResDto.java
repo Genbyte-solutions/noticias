@@ -2,7 +2,6 @@ package com.mendozanews.apinews.model.dto.response;
 
 import com.mendozanews.apinews.model.entidades.Imagen;
 import com.mendozanews.apinews.model.enums.Rol;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 

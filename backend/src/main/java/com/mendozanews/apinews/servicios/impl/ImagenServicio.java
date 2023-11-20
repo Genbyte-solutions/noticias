@@ -1,14 +1,11 @@
 package com.mendozanews.apinews.servicios.impl;
 
-import com.mendozanews.apinews.exception.MiException;
 import com.mendozanews.apinews.model.entidades.Imagen;
 import com.mendozanews.apinews.repositorios.ImagenRepositorio;
 
 import java.io.IOException;
 
 import com.mendozanews.apinews.servicios.interfaces.IImagen;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImagenServicio implements IImagen {
     private final ImagenRepositorio imagenRepo;
+
     public ImagenServicio(ImagenRepositorio imagenRepo) {
         this.imagenRepo = imagenRepo;
     }
@@ -28,8 +26,7 @@ public class ImagenServicio implements IImagen {
                         .tipoMime(foto.getContentType())
                         .nombreArchivo(foto.getOriginalFilename())
                         .contenido(foto.getBytes())
-                        .build()
-        );
+                        .build());
     }
 
     // ACTUALIZA UNA IMAGEN
@@ -37,7 +34,8 @@ public class ImagenServicio implements IImagen {
     public Imagen actualizarImagen(MultipartFile archivo, String id) throws IOException {
 
         Imagen imagen = imagenRepo.findById(id).orElse(null);
-        if (imagen == null) return null;
+        if (imagen == null)
+            return null;
 
         imagen.setTipoMime(archivo.getContentType());
         imagen.setNombreArchivo(archivo.getOriginalFilename());

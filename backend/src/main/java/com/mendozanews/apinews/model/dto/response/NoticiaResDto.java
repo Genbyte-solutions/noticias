@@ -1,8 +1,6 @@
 package com.mendozanews.apinews.model.dto.response;
 
 import com.mendozanews.apinews.model.entidades.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 

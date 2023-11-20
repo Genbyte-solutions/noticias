@@ -23,16 +23,14 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class NoticiaControlador {
     private final INoticia noticiaService;
-    private final IPortada portadaService;
     private final ISeccion seccionService;
     private final IAutor autorService;
     private final NoticiaMapper noticiaMapper;
 
-    public NoticiaControlador(INoticia noticiaService, IPortada portadaService,
-                              ISeccion seccionService, IAutor autorService,
-                              NoticiaMapper noticiaMapper) {
+    public NoticiaControlador(INoticia noticiaService,
+            ISeccion seccionService, IAutor autorService,
+            NoticiaMapper noticiaMapper) {
         this.noticiaService = noticiaService;
-        this.portadaService = portadaService;
         this.seccionService = seccionService;
         this.autorService = autorService;
         this.noticiaMapper = noticiaMapper;
@@ -40,18 +38,20 @@ public class NoticiaControlador {
 
     @PostMapping(value = "/noticia")
     public ResponseEntity<?> crearNoticia(@ModelAttribute @Valid NoticiaDto noticiaDto,
-                                          @RequestPart(value = "imagenes", required = false) List<MultipartFile> imagenes,
-                                          @RequestPart(value = "portada", required = false) MultipartFile portada) {
+            @RequestPart(value = "imagenes", required = false) List<MultipartFile> imagenes,
+            @RequestPart(value = "portada", required = false) MultipartFile portada) {
         try {
             Seccion seccion = this.seccionService.buscarSeccion(noticiaDto.getSeccionId());
             Autor autor = this.autorService.buscarAutorPorId(noticiaDto.getAutorId());
 
-            if (autor == null || seccion == null) return new ResponseEntity<>(
-                    "Autor o seccion no encontrada",
-                    HttpStatus.NOT_FOUND);
-            if (imagenes.isEmpty() || portada == null) return new ResponseEntity<>(
-                    "Debe proporcionar la portada y almenos 1 imagen sobre la noticia",
-                    HttpStatus.BAD_REQUEST);
+            if (autor == null || seccion == null)
+                return new ResponseEntity<>(
+                        "Autor o seccion no encontrada",
+                        HttpStatus.NOT_FOUND);
+            if (imagenes.isEmpty() || portada == null)
+                return new ResponseEntity<>(
+                        "Debe proporcionar la portada y almenos 1 imagen sobre la noticia",
+                        HttpStatus.BAD_REQUEST);
 
             String noticiaId = noticiaService.crearNoticia(noticiaDto, autor, seccion, imagenes, portada);
 
@@ -68,9 +68,10 @@ public class NoticiaControlador {
     public ResponseEntity<?> obtenerPortada(@PathVariable("noticiaId") String noticiaId) {
 
         Portada portada = noticiaService.buscarNoticiaPorId(noticiaId).getPortada();
-        if (portada == null) return new ResponseEntity<>(
-                "Noticia no encontrada",
-                HttpStatus.NOT_FOUND);
+        if (portada == null)
+            return new ResponseEntity<>(
+                    "Noticia no encontrada",
+                    HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(portada, HttpStatus.OK);
     }
@@ -83,9 +84,10 @@ public class NoticiaControlador {
 
         List<Noticia> noticias = noticiaService.buscarNoticiasRecientes(offset, limit);
 
-        if (noticias.isEmpty()) return new ResponseEntity<>(
-                "No se encontraron noticias",
-                HttpStatus.NOT_FOUND);
+        if (noticias.isEmpty())
+            return new ResponseEntity<>(
+                    "No se encontraron noticias",
+                    HttpStatus.NOT_FOUND);
         List<NoticiaResDto> noticiasDtos = noticiaMapper.toDTOs(noticias);
         return new ResponseEntity<>(noticiasDtos, HttpStatus.OK);
     }
@@ -108,49 +110,55 @@ public class NoticiaControlador {
     public ResponseEntity<?> buscarNoticiaPorTitulo(@RequestParam("titulo") String titulo) {
 
         List<Noticia> noticias = this.noticiaService.buscarNoticiaPorTitulo(titulo);
-        if (noticias.isEmpty()) return new ResponseEntity<>(
-                "No se encontraron noticias",
-                HttpStatus.NOT_FOUND);
+        if (noticias.isEmpty())
+            return new ResponseEntity<>(
+                    "No se encontraron noticias",
+                    HttpStatus.NOT_FOUND);
         List<NoticiaResDto> noticiasDtos = noticiaMapper.toDTOs(noticias);
         return new ResponseEntity<>(noticiasDtos, HttpStatus.OK);
     }
 
     @GetMapping("/noticias/{seccion}")
     public ResponseEntity<?> buscarNoticiasPorSeccion(@PathVariable("seccion") String seccion,
-                                                     @RequestParam("offset") Integer offset,
-                                                     @RequestParam("limit") Integer limit) {
+            @RequestParam("offset") Integer offset,
+            @RequestParam("limit") Integer limit) {
 
         List<Noticia> noticias = noticiaService.buscarNoticiasPorSeccion(seccion, offset, limit);
 
-        if (noticias.isEmpty()) return new ResponseEntity<>(
-                "No se encontraron noticias",
-                HttpStatus.NOT_FOUND);
+        if (noticias.isEmpty())
+            return new ResponseEntity<>(
+                    "No se encontraron noticias",
+                    HttpStatus.NOT_FOUND);
         List<NoticiaResDto> noticiasDtos = noticiaMapper.toDTOs(noticias);
         return new ResponseEntity<>(noticiasDtos, HttpStatus.OK);
     }
 
     @GetMapping("/noticias/autor")
     public ResponseEntity<?> buscarNoticiasPorAutor(@RequestParam AutorDto autorDto,
-                                                   @RequestParam("offset") Integer offset,
-                                                   @RequestParam("limit") Integer limit) {
+            @RequestParam("offset") Integer offset,
+            @RequestParam("limit") Integer limit) {
 
-        List<Noticia> noticias = noticiaService.buscarNoticiasPorAutor(autorDto.getNombre(), autorDto.getApellido(), offset, limit);
+        List<Noticia> noticias = noticiaService.buscarNoticiasPorAutor(autorDto.getNombre(), autorDto.getApellido(),
+                offset, limit);
 
-        if (noticias.isEmpty()) return new ResponseEntity<>(
-                "No se encontraron noticias",
-                HttpStatus.NOT_FOUND);
+        if (noticias.isEmpty())
+            return new ResponseEntity<>(
+                    "No se encontraron noticias",
+                    HttpStatus.NOT_FOUND);
         List<NoticiaResDto> noticiasDtos = noticiaMapper.toDTOs(noticias);
         return new ResponseEntity<>(noticiasDtos, HttpStatus.OK);
     }
 
     @GetMapping("/noticias_populares/{seccion}")
     public ResponseEntity<?> buscarPopularesPorSeccion(@PathVariable("seccion") String seccion,
-                                                       @RequestParam("offset") Integer offset,
-                                                       @RequestParam("limit") Integer limit) {
+            @RequestParam("offset") Integer offset,
+            @RequestParam("limit") Integer limit) {
 
         List<Noticia> noticias = noticiaService.buscarPopularesPorSeccion(seccion, offset, limit);
         if (noticias.isEmpty())
-            return new ResponseEntity<>(String.format("No hay noticias populares en la seccion %s en ultimos 14 dias", seccion), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    String.format("No hay noticias populares en la seccion %s en ultimos 14 dias", seccion),
+                    HttpStatus.NOT_FOUND);
 
         List<NoticiaResDto> noticiaDtos = noticiaMapper.toDTOs(noticias);
         return new ResponseEntity<>(noticiaDtos, HttpStatus.OK);
@@ -158,7 +166,7 @@ public class NoticiaControlador {
 
     @GetMapping("/noticias_populares")
     public ResponseEntity<?> buscarNoticiasMasPopulares(@RequestParam("offset") Integer offset,
-                                                        @RequestParam("limit") Integer limit) {
+            @RequestParam("limit") Integer limit) {
         List<Noticia> noticias = noticiaService.buscarNoticiasMasPopulares(offset, limit);
         if (noticias.isEmpty())
             return new ResponseEntity<>("No hay noticias populares de los ultimos 14 dias", HttpStatus.NOT_FOUND);

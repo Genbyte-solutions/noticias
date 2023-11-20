@@ -5,7 +5,6 @@ import com.mendozanews.apinews.model.dto.request.UsuarioDto;
 import com.mendozanews.apinews.model.dto.response.UsuarioResDto;
 import com.mendozanews.apinews.model.entidades.Usuario;
 import com.mendozanews.apinews.servicios.interfaces.IUsuario;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

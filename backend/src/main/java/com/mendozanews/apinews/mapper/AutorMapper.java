@@ -1,6 +1,5 @@
 package com.mendozanews.apinews.mapper;
 
-import com.mendozanews.apinews.model.dto.request.AutorDto;
 import com.mendozanews.apinews.model.dto.response.AutorResDto;
 import com.mendozanews.apinews.model.entidades.Autor;
 import org.mapstruct.Mapper;

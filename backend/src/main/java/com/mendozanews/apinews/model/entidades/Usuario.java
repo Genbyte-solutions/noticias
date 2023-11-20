@@ -5,7 +5,6 @@ import com.mendozanews.apinews.model.enums.Rol;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
