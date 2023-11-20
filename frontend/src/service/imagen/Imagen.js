@@ -62,7 +62,7 @@ export const imagenPorIdUsuario = async (id) => {
 export const imagenPorIdAutor = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/imagen/autor/${id}`,
+      `http://localhost:8080/api/v1/imagen/autor/${id}`,
       { responseType: "arraybuffer" }
     );
     const imageUrl = URL.createObjectURL(new Blob([response.data]));
@@ -77,7 +77,7 @@ export const imagenPorIdAutor = async (id) => {
 export const imagenPorIdSeccion = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/imagen/seccion/${id}`,
+      `http://localhost:8080/api/v1/icono/seccion/${id}`,
       { responseType: "arraybuffer" }
     );
     const imageUrl = URL.createObjectURL(new Blob([response.data]));

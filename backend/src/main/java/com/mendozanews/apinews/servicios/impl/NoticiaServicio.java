@@ -16,17 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class NoticiaServicio implements INoticia {
     private final PortadaRepositorio portadaRepo;
     private final ImagenesNoticaRepositorio imagenesNoticiaRepo;
-    private final ImagenRepositorio imagenRepo;
     private final AutorRepositorio autorRepo;
     private final SeccionRepositorio seccionRepo;
     private final NoticiaRepositorio noticiaRepo;
 
-    public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo,
-                           ImagenRepositorio imagenRepo, AutorRepositorio autorRepo,
+    public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo, AutorRepositorio autorRepo,
                            SeccionRepositorio seccionRepo, NoticiaRepositorio noticiaRepo) {
         this.portadaRepo = portadaRepo;
         this.imagenesNoticiaRepo = imagenesNoticiaRepo;
-        this.imagenRepo = imagenRepo;
         this.autorRepo = autorRepo;
         this.seccionRepo = seccionRepo;
         this.noticiaRepo = noticiaRepo;
@@ -138,6 +135,18 @@ public class NoticiaServicio implements INoticia {
     @Override
     public List<Noticia> buscarNoticiasMasPopulares(Integer offset, Integer limit) {
         return noticiaRepo.buscarNoticiasMasPopulares(PageRequest.of(offset, limit));
+    }
+
+    @Transactional
+    @Override
+    public Portada buscarPortadaPorId(String portadaId){
+        return portadaRepo.findById(portadaId).orElse(null);
+    }
+
+    @Transactional
+    @Override
+    public ImagenesNoticia buscarImagenNoticiaPorId(String imagenNoticiaId){
+        return imagenesNoticiaRepo.findById(imagenNoticiaId).orElse(null);
     }
 /*
     // PRECARGA NOTICIAS SI LA BASE DE DATOS ESTA VACIA

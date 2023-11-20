@@ -14,6 +14,9 @@ public interface INoticia {
     Noticia buscarNoticiaPorId(String id);
 
     void eliminarNoticiaPorId(String id);
+    Portada buscarPortadaPorId(String portadaId);
+
+    ImagenesNoticia buscarImagenNoticiaPorId(String imagenNoticiaId);
 
     List<Noticia> buscarNoticiasRecientes(Integer offset, Integer limit);
 
