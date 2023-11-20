@@ -42,6 +42,9 @@ public class Noticia {
     @Column(name = "etiqueta", length = 30)
     private List<String> etiquetas;
 
+    @Column(name = "vistas")
+    private Integer vistas;
+
     @Column(name = "activa")
     private boolean activa;
 

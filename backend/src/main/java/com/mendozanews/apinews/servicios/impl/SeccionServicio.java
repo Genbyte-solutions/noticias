@@ -79,8 +79,8 @@ public class SeccionServicio implements ISeccion {
     // OBTIENE UNA SECCION POR ID, NOMBRE O CODIGO
     @Transactional(readOnly = true)
     @Override
-    public Seccion buscarSeccion(String dato) {
-        return seccionRepo.buscarSeccion(dato);
+    public Seccion buscarSeccion(String buscar) {
+        return seccionRepo.buscarSeccion(buscar);
     }
 
     @Transactional(readOnly = true)

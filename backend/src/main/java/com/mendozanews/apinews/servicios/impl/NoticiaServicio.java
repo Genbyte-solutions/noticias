@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mendozanews.apinews.model.dto.request.NoticiaDto;
 import com.mendozanews.apinews.model.entidades.*;
-import com.mendozanews.apinews.model.enums.Orden;
 import com.mendozanews.apinews.repositorios.*;
 import com.mendozanews.apinews.servicios.interfaces.INoticia;
 import org.springframework.data.domain.PageRequest;
@@ -69,6 +68,7 @@ public class NoticiaServicio implements INoticia {
                 .subtitulo(noticiaDto.getSubtitulo())
                 .parrafos(noticiaDto.getParrafos())
                 .etiquetas(noticiaDto.getEtiquetas())
+                .vistas(0)
                 .portada(portadaGuardada)
                 .seccion(seccion)
                 .autor(autor)
@@ -80,10 +80,17 @@ public class NoticiaServicio implements INoticia {
     }
 
     // BUSCA NOTICIA POR ID
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public Noticia buscarNoticiaPorId(String noticiaId) {
-        return noticiaRepo.findById(noticiaId).orElse(null);
+
+        Noticia noticia = noticiaRepo.findById(noticiaId).orElse(null);
+        if (noticia != null) {
+            noticia.setVistas(noticia.getVistas() + 1);
+            noticiaRepo.save(noticia);
+        }
+
+        return noticia;
     }
 
     // ELIMINA NOTICIA POR ID
@@ -96,49 +103,43 @@ public class NoticiaServicio implements INoticia {
     // LISTA TODAS LAS NOTICIAS
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> listarNoticias(Integer offset, Integer limit, Orden orden) {
-        return noticiaRepo.buscarRecientes(PageRequest.of(offset, limit));
+    public List<Noticia> buscarNoticiasRecientes(Integer offset, Integer limit) {
+        return noticiaRepo.buscarNoticiasRecientes(PageRequest.of(offset, limit));
     }
 
     // BUSCA NOTICIAS EN LAS QUE EL TITULO CONTENGA EL ARGUMENTO
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorTitulo(String titulo) {
-        return noticiaRepo.buscarPorTitulo(titulo);
+    public List<Noticia> buscarNoticiaPorTitulo(String titulo) {
+        return noticiaRepo.buscarNoticiaPorTitulo(titulo);
     }
 
     // BUSCA NOTICIAS POR SECCION
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorSeccion(String seccion, Integer offset, Integer limit, Orden orden) {
-
-        return noticiaRepo.buscarPorSeccion(seccion, PageRequest.of(offset, limit));
+    public List<Noticia> buscarNoticiasPorSeccion(String seccion, Integer offset, Integer limit) {
+        return noticiaRepo.buscarNoticiasPorSeccion(seccion, PageRequest.of(offset, limit));
     }
 
     // BUSCA NOTICIAS POR AUTOR
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarPorAutor(String nombre, String apellido, Integer offset, Integer limit, Orden orden) {
-
-        return noticiaRepo.buscarPorAutor(nombre, apellido, PageRequest.of(offset, limit));
+    public List<Noticia> buscarNoticiasPorAutor(String nombre, String apellido, Integer offset, Integer limit) {
+        return noticiaRepo.buscarNoticiasPorAutor(nombre, apellido, PageRequest.of(offset, limit));
     }
 
-/*    // BUSCA 6 NOTICIAS POR SECCION
-    public List<Noticia> buscar6PorSeccion(String idSeccion) {
-        List<Noticia> noticias = noticiaRepositorio.findTop6BySeccionId(idSeccion);
-        return noticias;
+    @Transactional(readOnly = true)
+    @Override
+    public List<Noticia> buscarPopularesPorSeccion(String seccion, Integer offset, Integer limit) {
+        return noticiaRepo.buscarPopularesPorSeccion(seccion, PageRequest.of(offset, limit));
     }
 
-    // LISTA LAS 3 NOTICIAS PRINCIPALES
-    public List<Noticia> listarPrincipales() throws MiException {
-        try {
-            List<Noticia> noticias = noticiaRepositorio.listar3principales();
-            return noticias;
-        } catch (Exception e) {
-            throw new MiException("Error al listar las 3 noticias principales");
-        }
+    @Transactional(readOnly = true)
+    @Override
+    public List<Noticia> buscarNoticiasMasPopulares(Integer offset, Integer limit) {
+        return noticiaRepo.buscarNoticiasMasPopulares(PageRequest.of(offset, limit));
     }
-
+/*
     // PRECARGA NOTICIAS SI LA BASE DE DATOS ESTA VACIA
     @Transactional
     public String iniciarPreloads(Integer cantidad) throws MiException {

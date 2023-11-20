@@ -8,24 +8,27 @@ import com.mendozanews.apinews.servicios.impl.AutorServicio;
 import com.mendozanews.apinews.servicios.impl.ImagenServicio;
 import com.mendozanews.apinews.servicios.impl.SeccionServicio;
 import com.mendozanews.apinews.servicios.impl.UsuarioServicio;
+import com.mendozanews.apinews.servicios.interfaces.IAutor;
+import com.mendozanews.apinews.servicios.interfaces.IImagen;
+import com.mendozanews.apinews.servicios.interfaces.ISeccion;
+import com.mendozanews.apinews.servicios.interfaces.IUsuario;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/imagen")
-public class ControllerImagen {
-
-    private final AutorServicio autorServicio;
-    private final UsuarioServicio usuarioServicio;
-    private final ImagenServicio imagenServicio;
-    private final SeccionServicio seccionServicio;
+@RequestMapping("/api/v1/imagen")
+public class ImagenControlador {
+    private final IAutor autorServicio;
+    private final IUsuario usuarioServicio;
+    private final IImagen imagenServicio;
+    private final ISeccion seccionServicio;
     private final ImagenesToHeaders imagenesToHeaders;
     private final ImagenesMapper imagenesMapper;
 
-    public ControllerImagen (AutorServicio autorServicio, ImagenServicio imagenServicio, SeccionServicio seccionServicio,
-                             ImagenesToHeaders imagenesToHeaders, ImagenesMapper imagenesMapper, UsuarioServicio usuarioServicio){
+    public ImagenControlador(AutorServicio autorServicio, ImagenServicio imagenServicio, SeccionServicio seccionServicio,
+                             ImagenesToHeaders imagenesToHeaders, ImagenesMapper imagenesMapper, UsuarioServicio usuarioServicio) {
         this.imagenServicio = imagenServicio;
         this.autorServicio = autorServicio;
         this.seccionServicio = seccionServicio;
@@ -35,9 +38,9 @@ public class ControllerImagen {
     }
 
     @GetMapping("/autor/{id}")
-    public ResponseEntity<?> obtenerImagenPorAutor(@PathVariable String id){
+    public ResponseEntity<?> obtenerImagenPorAutor(@PathVariable("id") String id) {
         Autor autor = this.autorServicio.buscarAutorPorId(id);
-        if(autor==null){
+        if (autor == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -50,11 +53,12 @@ public class ControllerImagen {
                 .body(imagenDto.getContenido());
     }
 
+    // No entiendo que hace esto
     @GetMapping("/seccion/{id}")
-    public ResponseEntity<?> obtenerImagenPorSeccion(@PathVariable String id){
+    public ResponseEntity<?> obtenerImagenPorSeccion(@PathVariable("id") String id) {
         Seccion seccion = this.seccionServicio.buscarSeccionPorId(id);
-        if(seccion==null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (seccion == null) {
+            return new ResponseEntity<>("Seccion no encontrada", HttpStatus.NOT_FOUND);
         }
 
         IconoSeccion iconoSeccion = this.seccionServicio.buscarIconoPorSeccionId(seccion.getIcono().getIconoSeccionId());
@@ -67,13 +71,13 @@ public class ControllerImagen {
     }
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<?> obtenerImagenPorUsuario(@PathVariable String id){
-        Usuario uusuario = this.usuarioServicio.buscarUsuarioPorId(id);
-        if(uusuario==null){
+    public ResponseEntity<?> obtenerImagenPorUsuario(@PathVariable("id") String id) {
+        Usuario usuario = this.usuarioServicio.buscarUsuarioPorId(id);
+        if (usuario == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Imagen imagen = imagenServicio.buscarImagenPorId(uusuario.getFoto().getImagenId());
+        Imagen imagen = imagenServicio.buscarImagenPorId(usuario.getFoto().getImagenId());
         ImagenDto imagenDto = imagenesMapper.toDTO(imagen);
         HttpHeaders headers = imagenesToHeaders.generarHeaders(imagenDto);
 

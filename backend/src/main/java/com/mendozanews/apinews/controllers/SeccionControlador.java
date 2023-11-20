@@ -57,7 +57,7 @@ public class SeccionControlador {
     }
 
     @GetMapping("/secciones")
-    public ResponseEntity<?> obtenerSecciones() {
+    public ResponseEntity<?> Secciones() {
 
         List<Seccion> secciones = this.seccionService.listarSecciones();
         if (secciones.isEmpty())

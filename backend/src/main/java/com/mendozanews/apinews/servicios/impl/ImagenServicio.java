@@ -48,6 +48,7 @@ public class ImagenServicio implements IImagen {
 
     // OBTIENE UNA IMAGEN POR ID
     @Transactional(readOnly = true)
+    @Override
     public Imagen buscarImagenPorId(String id) {
         return imagenRepo.findById(id).orElse(null);
     }

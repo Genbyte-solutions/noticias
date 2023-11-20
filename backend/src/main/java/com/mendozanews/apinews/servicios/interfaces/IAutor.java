@@ -14,7 +14,7 @@ public interface IAutor {
 
     void editarAutor(Autor autor, AutorDto autorDto, MultipartFile foto) throws IOException;
 
-    Autor buscarAutorPorId(String autorId);
+    Autor buscarAutorPorId(String id);
 
     Autor buscarAutor(AutorDto autorDto);
 

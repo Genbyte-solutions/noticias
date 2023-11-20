@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.List;
 
 import com.mendozanews.apinews.servicios.interfaces.IAutor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,24 +60,24 @@ public class AutorServicio implements IAutor {
 
     // OBTIENE UN AUTOR POR ID
     @Transactional(readOnly = true)
-    public Autor buscarAutorPorId(String idAutor) {
-        return autorRepositorio.findById(idAutor).orElse(null);
+    public Autor buscarAutorPorId(String id) {
+        return autorRepositorio.findById(id).orElse(null);
     }
 
     // OBTIENE UN AUTOR POR NOMBRE COMPLETO
     @Transactional(readOnly = true)
     public Autor buscarAutor(AutorDto autorDto) {
-        return autorRepositorio.findByNombreCompleto(autorDto.getNombre(), autorDto.getApellido());
+        return autorRepositorio.buscarPorNombreCompleto(autorDto.getNombre(), autorDto.getApellido());
     }
 
     // ELIMINA AUTOR POR ID
     @Transactional
-    public void eliminarAutorPorId(String autorId) {
+    public void eliminarAutorPorId(String id) {
 
-        Autor autor = autorRepositorio.findById(autorId).orElse(null);
+        Autor autor = autorRepositorio.findById(id).orElse(null);
         if (autor != null && autor.getFoto().getImagenId() != null) {
             imagenServicio.eliminarImagenPorId(autor.getFoto().getImagenId());
         }
-        autorRepositorio.deleteById(autorId);
+        autorRepositorio.deleteById(id);
     }
 }
