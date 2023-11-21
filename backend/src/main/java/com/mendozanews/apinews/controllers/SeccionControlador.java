@@ -1,6 +1,8 @@
 package com.mendozanews.apinews.controllers;
 
+import com.mendozanews.apinews.mapper.SeccionMapper;
 import com.mendozanews.apinews.model.dto.request.SeccionDto;
+import com.mendozanews.apinews.model.dto.response.SeccionResDto;
 import com.mendozanews.apinews.model.entidades.Seccion;
 import com.mendozanews.apinews.servicios.interfaces.ISeccion;
 import jakarta.validation.Valid;
@@ -17,9 +19,11 @@ import java.util.List;
 public class SeccionControlador {
 
     private final ISeccion seccionService;
+    private final SeccionMapper seccionMapper;
 
-    public SeccionControlador(ISeccion seccionService) {
+    public SeccionControlador(ISeccion seccionService, SeccionMapper seccionMapper) {
         this.seccionService = seccionService;
+        this.seccionMapper = seccionMapper;
     }
 
     @PostMapping("/seccion")
@@ -52,8 +56,8 @@ public class SeccionControlador {
         Seccion seccion = this.seccionService.buscarSeccion(buscar);
         if (seccion == null)
             return new ResponseEntity<>("Seccion no encontrada", HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(seccion, HttpStatus.OK);
+        SeccionResDto seccionResDto = seccionMapper.toDTO(seccion);
+        return new ResponseEntity<>(seccionResDto, HttpStatus.OK);
     }
 
     @GetMapping("/secciones")
@@ -62,8 +66,8 @@ public class SeccionControlador {
         List<Seccion> secciones = this.seccionService.listarSecciones();
         if (secciones.isEmpty())
             return new ResponseEntity<>("No se encontraron secciones", HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(secciones, HttpStatus.OK);
+        List<SeccionResDto> seccionesResDto = seccionMapper.toDTOs(secciones);
+        return new ResponseEntity<>(seccionesResDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/seccion/{id}")

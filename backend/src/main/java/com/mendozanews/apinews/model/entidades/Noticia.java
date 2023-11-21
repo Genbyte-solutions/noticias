@@ -1,5 +1,6 @@
 package com.mendozanews.apinews.model.entidades;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,6 +69,7 @@ public class Noticia {
     @JoinColumn(name = "autor", referencedColumnName = "autor_id", nullable = false)
     private Autor autor;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "noticia")
     private List<ImagenesNoticia> imagenesNoticia;
 }

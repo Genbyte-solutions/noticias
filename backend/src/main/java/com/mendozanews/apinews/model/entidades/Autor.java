@@ -2,6 +2,7 @@ package com.mendozanews.apinews.model.entidades;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,7 @@ public class Autor {
     @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
     private Imagen foto;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "autor")
     private List<Noticia> noticias;
 

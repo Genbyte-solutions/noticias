@@ -64,18 +64,6 @@ public class NoticiaControlador {
         }
     }
 
-    @GetMapping(value = "/noticia/{noticiaId}/portada")
-    public ResponseEntity<?> obtenerPortada(@PathVariable("noticiaId") String noticiaId) {
-
-        Portada portada = noticiaService.buscarNoticiaPorId(noticiaId).getPortada();
-        if (portada == null)
-            return new ResponseEntity<>(
-                    "Noticia no encontrada",
-                    HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(portada, HttpStatus.OK);
-    }
-
     @GetMapping(value = "/noticias/recientes")
     public ResponseEntity<?> buscarNoticiasRecientes(
             @RequestParam("offset") Integer offset,
@@ -134,7 +122,7 @@ public class NoticiaControlador {
     }
 
     @GetMapping("/noticias/autor")
-    public ResponseEntity<?> buscarNoticiasPorAutor(@RequestParam AutorDto autorDto,
+    public ResponseEntity<?> buscarNoticiasPorAutor(@ModelAttribute @Valid AutorDto autorDto,
             @RequestParam("offset") Integer offset,
             @RequestParam("limit") Integer limit) {
 

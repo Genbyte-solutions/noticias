@@ -14,7 +14,6 @@ public class AutorMapper {
                 .AutorId(autor.getAutorId())
                 .nombre(autor.getNombre())
                 .apellido(autor.getApellido())
-                .foto(autor.getFoto())
                 .build();
     }
 

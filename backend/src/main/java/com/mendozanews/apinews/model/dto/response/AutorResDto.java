@@ -12,12 +12,10 @@ public class AutorResDto implements Serializable {
     private String AutorId;
     private String nombre;
     private String apellido;
-    private Imagen foto;
 
-    public AutorResDto(String autorId, String nombre, String apellido, Imagen foto) {
+    public AutorResDto(String autorId, String nombre, String apellido) {
         AutorId = autorId;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.foto = foto;
     }
 }
