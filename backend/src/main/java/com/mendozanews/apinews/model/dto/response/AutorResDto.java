@@ -1,6 +1,5 @@
 package com.mendozanews.apinews.model.dto.response;
 
-import com.mendozanews.apinews.model.entidades.Imagen;
 import lombok.Builder;
 import lombok.Data;
 

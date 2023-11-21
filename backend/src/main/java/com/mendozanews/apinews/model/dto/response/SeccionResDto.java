@@ -1,7 +1,6 @@
 package com.mendozanews.apinews.model.dto.response;
 
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Data;
 
