@@ -65,11 +65,11 @@ public class Noticia {
     @JoinColumn(name = "seccion", referencedColumnName = "seccion_id", nullable = false)
     private Seccion seccion;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "autor", referencedColumnName = "autor_id", nullable = false)
     private Autor autor;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "noticia")
     private List<ImagenesNoticia> imagenesNoticia;
 }
