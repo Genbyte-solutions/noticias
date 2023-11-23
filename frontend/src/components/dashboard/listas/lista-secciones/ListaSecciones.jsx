@@ -34,8 +34,8 @@ function ListaSecciones() {
       const iconosPorSeccion = {};
       for (const seccion of secciones) {
         try {
-          const iconoData = await imagenPorIdSeccion(seccion.id);
-          iconosPorSeccion[seccion.id] = iconoData;
+          const iconoData = await imagenPorIdSeccion(seccion.seccionId);
+          iconosPorSeccion[seccion.seccionId] = iconoData;
         } catch (error) {
           console.error(
             `Error al obtener el icono de la seccion ${seccion.nombre}:`,
@@ -50,8 +50,8 @@ function ListaSecciones() {
   }, [secciones]);
 
   const handleEliminarSeccion = (id) => {
-    fetch(`http://localhost:8080/api/seccion/eliminar/${id}`, {
-      method: "POST",
+    fetch(`http://localhost:8080/api/v1/seccion/${id}`, {
+      method: "DELETE",
     })
       .then(async (response) => {
         if (response.ok) {
@@ -60,7 +60,7 @@ function ListaSecciones() {
           setShowNotification(true);
           // Actualizar la lista de secciones después de eliminar
           setSecciones((prevSecciones) =>
-            prevSecciones.filter((seccion) => seccion.id !== id)
+            prevSecciones.filter((seccion) => seccion.seccionId !== id)
           );
         } else {
           setNotificationMessage(
@@ -92,27 +92,27 @@ function ListaSecciones() {
         </thead>
         <tbody>
           {secciones.map((seccion) => (
-            <tr key={seccion.id} className="border-seccion">
-              <td className="table-body-seccion">{seccion.id}</td>
+            <tr key={seccion.seccionId} className="border-seccion">
+              <td className="table-body-seccion">{seccion.seccionId}</td>
               <td className="table-body-seccion">{seccion.codigo}</td>
               <td className="table-body-seccion">{seccion.nombre}</td>
               <td className="table-body-seccion">
-                {seccion.icono && iconos[seccion.id] && (
+                {seccion.icono && iconos[seccion.seccionId] && (
                   <img
-                    src={[iconos[seccion.id]]}
+                    src={[iconos[seccion.seccionId]]}
                     alt="Foto"
-                    className="icono-image "
+                    className="icono-image"
                   />
                 )}
               </td>
               <td className="button-seccion-td">
                 <button
                   className="seccion-button"
-                  onClick={() => handleEliminarSeccion(seccion.id)}
+                  onClick={() => handleEliminarSeccion(seccion.seccionId)}
                 >
                   Eliminar
                 </button>
-                <Link to={`/administrador/seccion/editar/${seccion.codigo}`}>
+                <Link to={`/administrador/seccion/editar/${seccion.seccionId}`}>
                   <button className="seccion-button">Editar</button>
                 </Link>
               </td>

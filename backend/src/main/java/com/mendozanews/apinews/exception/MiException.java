@@ -1,4 +1,4 @@
-package com.mendozanews.apinews.excepciones;
+package com.mendozanews.apinews.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

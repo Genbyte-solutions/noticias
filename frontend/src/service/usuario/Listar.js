@@ -4,7 +4,7 @@ import axios from "axios";
 export const listaUsuarios = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/usuario/listar"
+      "http://localhost:8080/api/v1/usuarios"
     );
     return response.data;
   } catch (error) {

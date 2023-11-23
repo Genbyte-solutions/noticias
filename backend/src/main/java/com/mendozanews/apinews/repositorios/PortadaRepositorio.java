@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.mendozanews.apinews.model.entidades.Portada;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PortadaRepositorio extends JpaRepository<Portada, String> {
-    @Query("SELECT p FROM Portada p WHERE p.imagen = :contenido")
+    @Query("SELECT p FROM Portada p WHERE p.contenido = :contenido")
     public Portada buscarPorContenido(@Param("contenido") byte[] contenido);
 }

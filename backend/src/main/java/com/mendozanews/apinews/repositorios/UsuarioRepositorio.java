@@ -9,9 +9,6 @@ import com.mendozanews.apinews.model.entidades.Usuario;
 
 @Repository
 public interface UsuarioRepositorio extends JpaRepository<Usuario, String> {
-    @Query("SELECT u FROM Usuario u WHERE u.email LIKE :email")
-    public Usuario buscarPorEmail(@Param("email") String email);
-
-    @Query("SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario")
-    public Usuario buscarPorNombreUsuario(@Param("nombreUsuario") String nombreUsuario);
+    @Query("SELECT u FROM Usuario u WHERE u.email = :entrada OR u.nombreUsuario = :entrada")
+    public Usuario buscarPorEmailONombreUsuarios(@Param("entrada") String entrada);
 }

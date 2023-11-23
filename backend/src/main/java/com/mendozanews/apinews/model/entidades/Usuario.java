@@ -1,53 +1,61 @@
 package com.mendozanews.apinews.model.entidades;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mendozanews.apinews.model.enums.Rol;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import java.util.Date;
+import jakarta.persistence.*;
+
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({ "hibernateLazyInitializer" })
+@Builder
+@Entity
+@Table(name = "usuario")
 public class Usuario {
-
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @Column(name = "usuario_id")
+    private String usuarioId;
 
+    @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @Column(name = "apellido")
     private String apellido;
 
-    @Column(name = "nombre_usuario")
+    @Column(name = "nombre_usuario", nullable = false, unique = true)
     private String nombreUsuario;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "alta")
     private Boolean alta;
+
+    @Column(name = "telefono", unique = true)
     private String telefono;
 
-    @Column(name = "fecha_alta")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaAlta;
-
     @Enumerated(EnumType.STRING)
+    @Column(name = "rol")
     private Rol rol;
 
-    @OneToOne
-    private Imagen imagen;
+    @CreationTimestamp
+    @Column(name = "fecha_registro", updatable = false)
+    private Timestamp fechaRegistro;
 
-} // end Usuario
+    @OneToOne
+    @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
+    private Imagen foto;
+}

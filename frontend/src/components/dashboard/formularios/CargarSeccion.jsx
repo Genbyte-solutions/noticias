@@ -38,7 +38,7 @@ function CargarSeccion() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/seccion/nueva", {
+      const response = await fetch("http://localhost:8080/api/v1/seccion", {
         method: "POST",
         body: formData,
       });
