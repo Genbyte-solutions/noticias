@@ -1,3 +1,4 @@
+
 /* .head {
   cursor: pointer;
   background-color: #ef850b;
@@ -132,3 +133,234 @@ header li a:hover {
   color: #ff7a01;
   cursor: pointer;
 } */
+
+.full-header {
+  width: 100vw;
+}
+.head {
+  cursor: pointer;
+  background-color: #ef850b;
+  padding: 40px 0px;
+  position: relative;
+}
+
+.head a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.head .logo img {
+  min-width: 10%;
+  max-width: 50%;
+}
+
+/* HEADER */
+
+header {
+  padding: 0 0;
+}
+header nav .navbar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+header nav {
+  display: flex;
+  justify-content: center;
+}
+
+header ul {
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.panel__admin{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.panel__admin__dos{
+  display: none;
+}
+header li {
+  margin: 7px 0;
+}
+
+header li a {
+  margin: 0px 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #333;
+  transition: 0.3s;
+  display: flex;
+  text-align: center;
+}
+
+header li a:hover {
+  color: #b6943a;
+}
+
+
+/* Bar Ico */
+.barIco {
+  font-size: 25px;
+  background-color: #ef850b;
+  color: #333;
+  border: none;
+  display: none;
+  margin-right: 20px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .full-header {
+    display: flex;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+  }
+
+  header {
+    background-color: #ef850b;
+    display: flex;
+    width: 100%;
+  }
+
+  .head {
+    padding: 20px 0px !important;
+  }
+
+  header .flexCT {
+    display: none;
+  }
+
+  .barIco {
+    display: block;
+    margin-left: 10px;
+    z-index: 6;
+    cursor: pointer;
+  }
+
+  header .navbar {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    left: 0px;
+    top: 12vw;
+    /* ??? */
+    width: 100%;
+    z-index: 5;
+    padding: 20px 30px;
+    padding-bottom: 30px;
+    /* overflow-y: scroll; */
+    background-color: #fff;
+  }
+/* Estilos comunes para la transición */
+header .navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  top: 100%;
+  padding: 10px 15px;
+  transform: translateY(-10px);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+/* Cuando .navbar está abierto, ajusta las propiedades para mostrarlo */
+.navbar.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+  header li {
+    margin: 0;
+    height: 15px;
+  }
+
+  header li a {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .full-header {
+    width: 100vw; 
+    
+
+  }
+
+  .head {
+    padding: 10px 0;
+  }
+
+  header {
+     
+    width: 20%;
+  }
+
+  .head .logo img {
+    min-width: 20%;
+    max-width: 50%;
+  }
+
+  header .barIco {
+    display: block;
+    cursor: pointer;
+  }
+/* Estilos comunes para la transición */
+header .navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  top: 100%;
+  padding: 10px 15px;
+  transform: translateY(-10px);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+/* Cuando .navbar está abierto, ajusta las propiedades para mostrarlo */
+.navbar.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+  /* header .navbar {
+
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    top: 100%;
+    padding: 10px 15px;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+
+
+  } */
+
+
+  header li {
+    margin: 0;
+    height: auto;
+  }
+  .panel__admin__dos{
+    text-align: center;
+    /* color: #9c2e2e; */
+    margin-top: 90px;
+    display: block;
+    /* background-color: #000000; */
+  }
+  .panel__admin{
+    display: none;
+  }
+  header li a {
+    margin: 0;
+  }
+}

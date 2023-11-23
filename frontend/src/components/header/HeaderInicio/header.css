@@ -1,3 +1,7 @@
+
+.full-header {
+  width: 100vw;
+}
 .head {
   cursor: pointer;
   background-color: #ef850b;
