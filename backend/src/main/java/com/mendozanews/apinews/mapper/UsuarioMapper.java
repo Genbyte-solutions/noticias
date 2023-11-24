@@ -1,7 +1,7 @@
 package com.mendozanews.apinews.mapper;
 
 import com.mendozanews.apinews.model.dto.response.UsuarioResDto;
-import com.mendozanews.apinews.model.entidades.Usuario;
+import com.mendozanews.apinews.model.entity.Usuario;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;

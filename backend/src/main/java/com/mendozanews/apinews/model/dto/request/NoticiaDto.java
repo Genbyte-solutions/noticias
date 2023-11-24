@@ -7,6 +7,7 @@ import java.util.List;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,17 +15,25 @@ import lombok.Data;
 @Builder
 public class NoticiaDto implements Serializable {
 
-    @NotNull
+    @NotEmpty(message = "Requerido")
+    @Size(min = 2, message = "Minimo 2 Caracteres")
     private String titulo;
-    @NotNull
+
+    @NotEmpty(message = "Requerido")
+    @Size(min = 2, message = "Minimo 2 Caracteres")
     private String subtitulo;
-    @NotEmpty
+
+    @NotEmpty(message = "Requeridos")
     private List<String> parrafos;
-    @NotEmpty
+
     private List<String> etiquetas;
-    @NotNull
+
+    @NotEmpty(message = "Requerida")
+    @Size(min = 36, max = 36, message = "Debe tener 36 caracteres")
     private String seccionId;
-    @NotNull
+
+    @NotEmpty(message = "Requerido")
+    @Size(min = 36, max = 36, message = "Debe tener 36 caracteres")
     private String autorId;
 
     public NoticiaDto(String titulo, String subtitulo, List<String> parrafos, List<String> etiquetas, String seccionId, String autorId) {

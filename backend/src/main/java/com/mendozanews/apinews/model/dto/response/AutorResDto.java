@@ -8,12 +8,12 @@ import java.io.Serializable;
 @Data
 @Builder
 public class AutorResDto implements Serializable {
-    private String AutorId;
+    private String autorId;
     private String nombre;
     private String apellido;
 
     public AutorResDto(String autorId, String nombre, String apellido) {
-        AutorId = autorId;
+        this.autorId = autorId;
         this.nombre = nombre;
         this.apellido = apellido;
     }

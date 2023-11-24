@@ -1,9 +1,11 @@
 package com.mendozanews.apinews.model.dto.request;
 
 import com.mendozanews.apinews.model.enums.Rol;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,23 +14,32 @@ import java.io.Serializable;
 @Data
 @Builder
 public class UsuarioDto implements Serializable {
-    @NotNull
+
+    @NotEmpty(message = "Requerido")
+    @Size(min = 2, message = "Minimo 2 caracteres")
     private String nombre;
-    @NotNull
+
     private String apellido;
-    @NotNull
+
+    @NotEmpty(message = "Requerido")
+    @Size(min = 2, message = "Minimo 2 caracteres")
     private String nombreUsuario;
-    @NotNull
+
+    @NotEmpty(message = "Requerido")
     @Email
     private String email;
-    @NotNull
+
+    @NotEmpty(message = "Requerido")
+    @Size(min = 6, message = "Minimo 6 caracteres")
     private String password;
-    @NotNull
+
+    @NotEmpty(message = "Requerido")
+    @Size(min = 6, message = "Minimo 6 caracteres")
     private String confirmPassword;
-    @NotNull
-    @Enumerated
+
+    @Enumerated(EnumType.STRING)
     private Rol rol;
-    @NotNull
+
     private String telefono;
 
     public UsuarioDto(String nombre, String apellido, String nombreUsuario, String email, String password, String confirmPassword, Rol rol, String telefono) {

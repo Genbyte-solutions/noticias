@@ -9,12 +9,10 @@ import java.io.Serializable;
 @Builder
 public class SeccionResDto implements Serializable {
     private String seccionId;
-    private String codigo;
     private String nombre;
 
-    public SeccionResDto(String seccionId, String codigo, String nombre) {
+    public SeccionResDto(String seccionId, String nombre) {
         this.seccionId = seccionId;
-        this.codigo = codigo;
         this.nombre = nombre;
     }
 }
