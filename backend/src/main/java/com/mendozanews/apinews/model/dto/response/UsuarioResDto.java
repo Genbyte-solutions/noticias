@@ -17,9 +17,8 @@ public class UsuarioResDto implements Serializable {
     private Rol rol;
     private String email;
     private String telefono;
-    private Imagen foto;
 
-    public UsuarioResDto(String usuarioId, String nombre, String apellido, String nombreUsuario, Rol rol, String email, String telefono, Imagen foto) {
+    public UsuarioResDto(String usuarioId, String nombre, String apellido, String nombreUsuario, Rol rol, String email, String telefono) {
         this.usuarioId = usuarioId;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -27,6 +26,5 @@ public class UsuarioResDto implements Serializable {
         this.rol = rol;
         this.email = email;
         this.telefono = telefono;
-        this.foto = foto;
     }
 }

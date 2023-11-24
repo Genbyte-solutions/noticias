@@ -8,6 +8,7 @@ import com.mendozanews.apinews.servicios.interfaces.IUsuario;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,10 +21,13 @@ public class UsuarioControlador {
 
     private final IUsuario usuarioServicio;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioControlador(IUsuario usuarioServicio, UsuarioMapper usuarioMapper) {
+    public UsuarioControlador(IUsuario usuarioServicio, UsuarioMapper usuarioMapper,
+                              PasswordEncoder passwordEncoder) {
         this.usuarioServicio = usuarioServicio;
         this.usuarioMapper = usuarioMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/usuario")
@@ -45,12 +49,20 @@ public class UsuarioControlador {
     @PutMapping("/usuario/{usuarioId}")
     public ResponseEntity<?> editarUsuario(@PathVariable("usuarioId") String usuarioId,
                                            @ModelAttribute @Valid UsuarioDto usuarioDto,
+                                           @RequestParam("currentPassword") String currentPassword,
                                            @RequestPart(value = "foto", required = false) MultipartFile foto) {
+
+        if (!usuarioDto.getPassword().equals(usuarioDto.getConfirmPassword())) {
+            return new ResponseEntity<>("Las contraseñas no coinciden", HttpStatus.BAD_REQUEST);}
+
         try {
 
             Usuario usuario = usuarioServicio.buscarUsuarioPorId(usuarioId);
             if (usuario == null) {
                 return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+            }
+            if (!passwordEncoder.matches(currentPassword, usuario.getPassword())) {
+                return new ResponseEntity<>("Contraseña actual no válida", HttpStatus.NOT_FOUND);
             }
 
             usuarioServicio.editarUsuario(usuario, usuarioDto, foto);
@@ -103,6 +115,12 @@ public class UsuarioControlador {
 
         usuarioServicio.cambiarEstadoDeAlta(usuarioId);
 
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("usuario/{usuarioId}")
+    public ResponseEntity<?> eliminarUsuarioPorId(@PathVariable("usuarioId") String usuarioId){
+        usuarioServicio.eliminarUsuarioPorId(usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

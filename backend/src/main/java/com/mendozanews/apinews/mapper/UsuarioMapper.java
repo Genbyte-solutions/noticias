@@ -19,7 +19,6 @@ public class UsuarioMapper {
                 .rol(usuario.getRol())
                 .email(usuario.getEmail())
                 .telefono(usuario.getTelefono())
-                .foto(usuario.getFoto())
                 .build();
     }
 

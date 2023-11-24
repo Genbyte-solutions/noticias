@@ -64,6 +64,33 @@ public class NoticiaControlador {
         }
     }
 
+    @PutMapping("/noticia/{noticiaId}")
+    public ResponseEntity<?> actualizarNoticia(@PathVariable("noticiaId") String noticiaId,
+                                               @ModelAttribute @Valid NoticiaDto noticiaDto,
+                                               @RequestPart(value = "imagenes", required = false) List<MultipartFile> imagenes,
+                                               @RequestPart(value = "portada", required = false) MultipartFile portada) {
+        try {
+            Noticia noticiaExistente = noticiaService.buscarNoticiaPorId(noticiaId);
+
+            if (noticiaExistente == null) {
+                return new ResponseEntity<>("Noticia no encontrada", HttpStatus.NOT_FOUND);
+            }
+
+            Seccion seccion = seccionService.buscarSeccion(noticiaDto.getSeccionId());
+            Autor autor = autorService.buscarAutorPorId(noticiaDto.getAutorId());
+
+            if (autor == null || seccion == null) {
+                return new ResponseEntity<>("Autor o seccion no encontrada", HttpStatus.NOT_FOUND);
+            }
+
+            noticiaService.actualizarNoticia(noticiaExistente, noticiaDto, autor, seccion, imagenes, portada);
+
+            return new ResponseEntity<>("Noticia actualizada con éxito", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error al actualizar la noticia: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping(value = "/noticias/recientes")
     public ResponseEntity<?> buscarNoticiasRecientes(
             @RequestParam("offset") Integer offset,

@@ -10,6 +10,8 @@ import java.util.List;
 public interface INoticia {
 
     String crearNoticia(NoticiaDto noticia, Autor autor, Seccion seccion, List<MultipartFile> imagenes, MultipartFile portada) throws IOException;
+    public void actualizarNoticia(Noticia noticia, NoticiaDto noticiaDto, Autor autor, Seccion seccion,
+                                  List<MultipartFile> imagenes, MultipartFile portada) throws IOException;
 
     Noticia buscarNoticiaPorId(String id);
 

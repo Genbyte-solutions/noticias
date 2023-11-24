@@ -1,8 +1,12 @@
 package com.mendozanews.apinews.servicios.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.mendozanews.apinews.exception.MiException;
 import com.mendozanews.apinews.model.dto.request.NoticiaDto;
 import com.mendozanews.apinews.model.entidades.*;
 import com.mendozanews.apinews.repositorios.*;
@@ -15,14 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class NoticiaServicio implements INoticia {
     private final PortadaRepositorio portadaRepo;
+
+    private final PortadaServicio portadaServicio;
     private final ImagenesNoticaRepositorio imagenesNoticiaRepo;
     private final NoticiaRepositorio noticiaRepo;
 
     public NoticiaServicio(PortadaRepositorio portadaRepo, ImagenesNoticaRepositorio imagenesNoticiaRepo,
-            NoticiaRepositorio noticiaRepo) {
+            NoticiaRepositorio noticiaRepo, PortadaServicio portadaServicio) {
         this.portadaRepo = portadaRepo;
         this.imagenesNoticiaRepo = imagenesNoticiaRepo;
         this.noticiaRepo = noticiaRepo;
+        this.portadaServicio = portadaServicio;
     }
 
     @Transactional
@@ -68,6 +75,35 @@ public class NoticiaServicio implements INoticia {
         guardarImagenesNoticia(imagenes, noticiaGuardada);
 
         return noticiaGuardada.getNoticiaId();
+    }
+
+    @Transactional
+    @Override
+    public void actualizarNoticia(Noticia noticia, NoticiaDto noticiaDto, Autor autor, Seccion seccion,
+                               List<MultipartFile> imagenes, MultipartFile portada) throws IOException {
+        Portada portadaActualizada = portadaServicio.actualizarPortada(portada, noticia.getPortada().getPortadaId());
+        noticia.setTitulo(noticiaDto.getTitulo());
+        noticia.setSubtitulo(noticiaDto.getSubtitulo());
+        noticia.setParrafos(noticiaDto.getParrafos());
+        noticia.setEtiquetas(noticiaDto.getEtiquetas());
+        if (portada != null) noticia.setPortada(portadaActualizada);
+        noticia.setSeccion(seccion);
+        noticia.setAutor(autor);
+        if (imagenes!=null){
+            eliminarImagenesNoticia(noticia.getImagenesNoticia());
+            guardarImagenesNoticia(imagenes, noticia);
+        }
+
+
+        noticiaRepo.save(noticia);
+    }
+
+
+    @Transactional
+    public void eliminarImagenesNoticia(List<ImagenesNoticia> imagenesNoticia) {
+        for (ImagenesNoticia imagen : imagenesNoticia) {
+            imagenesNoticiaRepo.delete(imagen);
+        }
     }
 
     // BUSCA NOTICIA POR ID
@@ -142,72 +178,9 @@ public class NoticiaServicio implements INoticia {
     public ImagenesNoticia buscarImagenNoticiaPorId(String imagenNoticiaId) {
         return imagenesNoticiaRepo.findById(imagenNoticiaId).orElse(null);
     }
-    /*
-     * // PRECARGA NOTICIAS SI LA BASE DE DATOS ESTA VACIA
-     * 
-     * @Transactional
-     * public String iniciarPreloads(Integer cantidad) throws MiException {
-     * if (cantidad <= 0) {
-     * throw new
-     * MiException("La cantidad debe ser un número positivo mayor que cero");
-     * }
-     * 
-     * long cantidadNoticias = noticiaRepositorio.count();
-     * if (cantidadNoticias < cantidad) {
-     * for (int i = 1; i <= cantidad; i++) {
-     * Noticia noticia = new Noticia();
-     * 
-     * Autor autor = new Autor();
-     * autor.setNombre("Autor");
-     * autor.setApellido(Integer.toString(i));
-     * autor.setAutorId("autor_" + i);
-     * autor = autorRepositorio.save(autor);
-     * 
-     * Seccion seccion = new Seccion();
-     * seccion.setSeccionId("seccion_" + i);
-     * seccion.setNombre("Sección " + i);
-     * seccion = seccionRepositorio.save(seccion);
-     * 
-     * noticia.setTitulo("titulo " + i);
-     * noticia.setSubtitulo("subtitulo " + i);
-     * 
-     * List<String> parrafos = new ArrayList<>();
-     * parrafos.add("parrafo 1 de noticia " + i);
-     * parrafos.add("parrafo 2 de noticia " + i);
-     * noticia.setParrafos(parrafos);
-     * 
-     * List<String> etiquetas = new ArrayList<>();
-     * etiquetas.add("etiquetas 1 N" + i);
-     * etiquetas.add("etiquetas 2 N" + i);
-     * noticia.setEtiquetas(etiquetas);
-     * 
-     * noticia.setSeccion(seccion);
-     * noticia.setAutor(autor);
-     * noticia.setFechaPublicacion(new Date()); // Utiliza LocalDateTime.now() para
-     * la fecha actual
-     * noticia.setActiva(true);
-     * 
-     * noticiaRepositorio.save(noticia);
-     * }
-     * return
-     * "Se cargó la lista porque ingresaste un número de noticias mayor al existente en la base de datos"
-     * ;
-     * } else {
-     * return "Error al cargar: Ya hay más noticias guardadas de las que deseas";
-     * }
-     * }
-     * 
-     * public Noticia obtenerNoticiaPorPortadaId(String id) {
-     * Optional<Portada> portada = portadaRepositorio.findById(id);
-     * if (portada.isPresent()) {
-     * Portada portadaEncontrada = portada.get();
-     * // Accede al campo noticia en la entidad Portada
-     * Noticia noticiaRelacionada = portadaEncontrada.getNoticia();
-     * return noticiaRelacionada;
-     * } else {
-     * // Manejo en caso de que no se encuentre la portada con el ID especificado
-     * return null;
-     * }
-     * }
-     */
+
+    @Transactional
+    public Portada actualizarPortada(MultipartFile portada, String portadaId) throws IOException {
+        return (portada != null) ? portadaServicio.actualizarPortada(portada, portadaId) : null;
+    }
 }

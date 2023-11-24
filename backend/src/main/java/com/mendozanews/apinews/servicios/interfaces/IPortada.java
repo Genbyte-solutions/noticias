@@ -9,4 +9,5 @@ public interface IPortada {
 
     Portada guardarPortada(MultipartFile portada) throws IOException;
 
+    Portada actualizarPortada(MultipartFile portada, String id) throws IOException;
 }
