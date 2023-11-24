@@ -282,3 +282,10 @@
   text-align: center;
   margin-bottom: 20px;
 }
+/* ---- VistaPrueba ---- */
+.imagen-portada {
+  max-width: 65%;   /* Asegura que la imagen no sea más ancha que su contenedor */
+  height: auto;      /* Mantiene la relación de aspecto de la imagen */
+  display: block;    /* Evita que la imagen tenga espacio extra debajo (espacio blanco) */
+  margin: 0 auto;    /* Centra la imagen si es más estrecha que su contenedor */
+}
