@@ -36,8 +36,8 @@ public class ImagenControlador {
         this.noticiaServicio = noticiaServicio;
     }
 
-    @GetMapping("imagen/autor/{id}")
-    public ResponseEntity<?> obtenerImagenPorAutor(@PathVariable("id") String id) {
+    @GetMapping("imagen/autor/{autorId}")
+    public ResponseEntity<?> obtenerImagenPorAutor(@PathVariable("autorId") String id) {
         Autor autor = this.autorServicio.buscarAutorPorId(id);
         if (autor == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,8 +53,8 @@ public class ImagenControlador {
     }
 
     // No entiendo que hace esto
-    @GetMapping("icono/seccion/{id}")
-    public ResponseEntity<?> obtenerIconoPorSeccion(@PathVariable("id") String id) {
+    @GetMapping("icono/seccion/{seccionId}")
+    public ResponseEntity<?> obtenerIconoPorSeccion(@PathVariable("seccionId") String id) {
         Seccion seccion = this.seccionServicio.buscarSeccionPorId(id);
         if (seccion == null) {
             return new ResponseEntity<>("Seccion no encontrada", HttpStatus.NOT_FOUND);
@@ -69,8 +69,8 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
-    @GetMapping("imagen/usuario/{id}")
-    public ResponseEntity<?> obtenerImagenPorUsuario(@PathVariable("id") String id) {
+    @GetMapping("imagen/usuario/{usuarioId}")
+    public ResponseEntity<?> obtenerImagenPorUsuario(@PathVariable("usuarioId") String id) {
         Usuario usuario = this.usuarioServicio.buscarUsuarioPorId(id);
         if (usuario == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -85,8 +85,8 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
-    @GetMapping("portada/noticia/{id}")
-    public ResponseEntity<?> obtenerPortadaPorNoticia(@PathVariable("id") String id) {
+    @GetMapping("portada/noticia/{noticiaId}")
+    public ResponseEntity<?> obtenerPortadaPorNoticia(@PathVariable("noticiaId") String id) {
         Noticia noticia = noticiaServicio.buscarNoticiaPorId(id);
         if (noticia == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -101,8 +101,8 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
-    @GetMapping("imagen/noticia/{id}")
-    public ResponseEntity<?> obtenerImagenPorNoticia(@PathVariable("id") String id) {
+    @GetMapping("imagen/noticia/{imagenNoticiaId}")
+    public ResponseEntity<?> obtenerImagenPorNoticia(@PathVariable("imagenNoticiaId") String id) {
 
         ImagenesNoticia imagenesNoticia = noticiaServicio.buscarImagenNoticiaPorId(id);
         ImagenDto imagenDto = imagenesMapper.toDTO(imagenesNoticia);
@@ -113,8 +113,8 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
-    @GetMapping("imagenes/noticia/{id}")
-    public ResponseEntity<?> obtenerImagenesPorNoticia(@PathVariable("id") String id) {
+    @GetMapping("imagenes/noticia/{noticiaId}")
+    public ResponseEntity<?> obtenerImagenesPorNoticia(@PathVariable("noticiaId") String id) {
         Noticia noticia = noticiaServicio.buscarNoticiaPorId(id);
         if (noticia == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
