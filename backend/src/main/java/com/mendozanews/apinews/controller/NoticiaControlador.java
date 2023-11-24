@@ -170,6 +170,8 @@ public class NoticiaControlador {
     @DeleteMapping("/noticia/{noticiaId}")
     public ResponseEntity<?> eliminarNoticiaPorId(@PathVariable("noticiaId") String noticiaId) {
         noticiaService.eliminarNoticiaPorId(noticiaId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(ResponseMessage.builder()
+                .mensaje("Noticia eliminada")
+                .build(), HttpStatus.OK);
     }
 }

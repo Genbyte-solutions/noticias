@@ -93,6 +93,8 @@ public class AutorControlador {
     @DeleteMapping("/autor/{autorId}")
     public ResponseEntity<?> eliminarAutor(@PathVariable("autorId") String autorId) {
         autorServicio.eliminarAutorPorId(autorId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(ResponseMessage.builder()
+                .mensaje("Autor eliminado")
+                .build(), HttpStatus.OK);
     }
 }

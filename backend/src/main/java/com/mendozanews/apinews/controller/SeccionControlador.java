@@ -99,6 +99,8 @@ public class SeccionControlador {
     @DeleteMapping("/seccion/{seccionId}")
     public ResponseEntity<?> eliminarSeccionPorId(@PathVariable("seccionId") String seccionId) {
         seccionService.eliminarSeccionPorId(seccionId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(ResponseMessage.builder()
+                .mensaje("Seccion eliminada")
+                .build(), HttpStatus.OK);
     }
 }

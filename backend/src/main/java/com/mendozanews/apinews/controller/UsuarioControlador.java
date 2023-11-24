@@ -125,6 +125,8 @@ public class UsuarioControlador {
     @DeleteMapping("usuario/{usuarioId}")
     public ResponseEntity<?> eliminarUsuarioPorId(@PathVariable("usuarioId") String usuarioId) {
         usuarioServicio.eliminarUsuarioPorId(usuarioId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(ResponseMessage.builder()
+                .mensaje("Usuario eliminado")
+                .build(), HttpStatus.OK);
     }
 }
