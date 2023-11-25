@@ -66,21 +66,17 @@ public class SeccionControlador {
         }
     }
 
-    @GetMapping("/seccion/{seccionId}")
-    public ResponseEntity<?> buscarSeccionPorId(@PathVariable("seccionId") String seccionId) {
+    @GetMapping("/seccion/{buscar}")
+    public ResponseEntity<?> buscarSeccion(@PathVariable(value = "buscar") String buscar) {
 
-        Seccion seccion = seccionService.buscarSeccionPorId(seccionId);
-        if (seccion == null) throw new ResourceNotFoundException("seccion", "id", seccionId);
-
-        SeccionResDto seccionResDto = seccionMapper.toDTO(seccion);
-        return new ResponseEntity<>(seccionResDto, HttpStatus.OK);
-    }
-
-    @GetMapping("/seccion/{nombre}")
-    public ResponseEntity<?> buscarSeccionPorNombre(@PathVariable("nombre") String nombre) {
-
-        Seccion seccion = seccionService.buscarSeccionPorNombre(nombre);
-        if (seccion == null) throw new ResourceNotFoundException("seccion", "nombre", nombre);
+        Seccion seccion = null;
+        if (buscar.length() == 36) {
+            seccion = seccionService.buscarSeccionPorId(buscar);
+            if (seccion == null) throw new ResourceNotFoundException("seccion", "id", buscar);
+        } else {
+            seccion = seccionService.buscarSeccionPorNombre(buscar);
+            if (seccion == null) throw new ResourceNotFoundException("seccion", "nombre", buscar);
+        }
 
         SeccionResDto seccionResDto = seccionMapper.toDTO(seccion);
         return new ResponseEntity<>(seccionResDto, HttpStatus.OK);

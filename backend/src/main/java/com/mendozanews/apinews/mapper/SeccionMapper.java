@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-@Mapper(componentModel = "spring")
 
+@Mapper(componentModel = "spring")
 public class SeccionMapper {
     public SeccionResDto toDTO(Seccion seccion) {
         return SeccionResDto.builder()
