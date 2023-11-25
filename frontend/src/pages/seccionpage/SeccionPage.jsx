@@ -1,12 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import SeccionPaginas from "../../components/seccion/SeccionPaginas.jsx";
 import SinglePageSlider from "../../components/singlePage/SinglePageSlider.jsx";
-import { popular } from "../../service/noticia/Principales.js";
+import { noticiasPorSeccion } from "../../service/noticia/Principales.js";
 import "./seccion-page.css";
+import { popular } from "../../service/noticia/Principales.js";
+import { useEffect, useState } from "react";
 
 export default function SeccionPage() {
-  /* const [lista, setLista] = useState(popular); */
+  const [lista, setLista] = useState([]); 
+  const [portada, setPortada] = useState(null)
   const { seccion } = useParams();
+
+  useEffect(()=>{
+    noticiasPorSeccion(seccion)
+      .then(data => setLista(data))
+  },[])
 
   window.scrollTo(0, 0);
 
@@ -23,7 +31,7 @@ export default function SeccionPage() {
             </h3>
           </div>
         </div>
-        <SeccionPaginas lista={popular} />
+        <SeccionPaginas lista={lista} portada={portada}/>
       </main>
     </>
   );

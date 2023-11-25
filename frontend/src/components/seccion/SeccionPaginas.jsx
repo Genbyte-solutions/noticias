@@ -5,8 +5,12 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import "./seccion-paginas.css";
+import { imagenPorId } from "../../service/imagen/Imagen";
+import { useState } from "react";
 
 export default function SeccionPaginas({ lista }) {
+  const [portada, setPortada] = useState(null)
+
   const settings = {
     className: "center",
     centerMode: false,
@@ -32,16 +36,25 @@ export default function SeccionPaginas({ lista }) {
     ],
   };
 
+  const setImage = async (id) =>{
+     imagenPorId(id).then(data => console.log(data, "data"))
+     
+  }
+
   return (
     <section className="seccion-paginas">
       <Slider {...settings}>
         {lista.map((val) => {
+
+        setImage(val.noticiaId)
+        console.log(portada)
+
           return (
             <div className="items">
               <div className="box shadow">
                 <div className="images">
                   <div className="img">
-                    <img src={val.imagen} alt="" />
+                    <img src={portada} alt="" />
                   </div>
                   <div className="categoria categoria1">
                     <Link to={`/seccion/${val.categoria}`}>
@@ -52,7 +65,8 @@ export default function SeccionPaginas({ lista }) {
                 <div className="text">
                   <Link to={`/noticia/${val.titulo}`}>
                     <h1 className="titulo">{val.titulo}</h1>
-                    <p className="desc">{val.desc.slice(0, 250)}...</p>
+                    <p className="desc">{val.parrafos}</p>
+                    <p className="desc">{val.autorResDto.nombre} {val.autorResDto.apellido}</p>
                   </Link>
                   <div className="fecha">
                     <i className="fas fa-calendar-days"></i>

@@ -226,10 +226,10 @@ export const noticiasPorAutor = async (id) => {
 };
 
 // Obtener noticias por ID de sección
-export const noticiasPorSeccion = async (id) => {
+export const noticiasPorSeccion = async (seccion) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/noticia/seccion/${id}`
+      `http://localhost:8080/api/v1/noticias/${seccion}?offset=0&limit=10`
     );
     return response.data;
   } catch (error) {
