@@ -1,7 +1,7 @@
 package com.mendozanews.apinews.mapper;
 
 import com.mendozanews.apinews.model.dto.response.SeccionResDto;
-import com.mendozanews.apinews.model.entidades.Seccion;
+import com.mendozanews.apinews.model.entity.Seccion;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -13,7 +13,6 @@ public class SeccionMapper {
         return SeccionResDto.builder()
                 .seccionId(seccion.getSeccionId())
                 .nombre(seccion.getNombre())
-                .codigo(seccion.getCodigo())
                 .build();
     }
 

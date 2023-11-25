@@ -128,9 +128,9 @@ const CargarNoticia = () => {
       }
       setShowNotification(true);
     } catch (error) {
-      setNotificationMessage(`Error al enviar el formulario: ${error.message}`);
+      setNotificationMessage(`Error al enviar el formulario: ${error.response.data.mensaje}`);
       setShowNotification(true);
-      //console.log(error.response.data);
+      console.log(error);
     }
   };
 

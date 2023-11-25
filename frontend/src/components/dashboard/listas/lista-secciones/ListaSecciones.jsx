@@ -4,6 +4,7 @@ import Notification from "../../../../components/notificacion/Notificacion.jsx";
 import { imagenPorIdSeccion } from "../../../../service/imagen/Imagen.js";
 import { listaSecciones } from "../../../../service/seccion/Listar.js";
 import "./lista-secciones.css";
+import axios from "axios";
 
 function ListaSecciones() {
   const [secciones, setSecciones] = useState([]);
@@ -49,42 +50,29 @@ function ListaSecciones() {
     cargarIconos();
   }, [secciones]);
 
-  const handleEliminarSeccion = (id) => {
-    fetch(`http://localhost:8080/api/v1/seccion/${id}`, {
-      method: "DELETE",
-    })
-      .then(async (response) => {
-        if (response.ok) {
-          const responseData = await response.text();
-          setNotificationMessage(responseData);
-          setShowNotification(true);
-          // Actualizar la lista de secciones después de eliminar
-          setSecciones((prevSecciones) =>
-            prevSecciones.filter((seccion) => seccion.seccionId !== id)
-          );
-        } else {
-          setNotificationMessage(
-            "Error, una o mas noticias utilizan esta seccion" +
-              response.statusText
-          );
-          setShowNotification(true);
-        }
-      })
-      .catch((error) => {
-        setNotificationMessage(
-          "Error al eliminar la seccion: " + error.message
-        );
-        setShowNotification(true);
-      });
+  const handleEliminarSeccion = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/v1/seccion/${id}`);
+      if (response.status === 201) {
+        setNotificationMessage("Sección eliminada con éxito");
+        setSecciones(secciones.filter((seccion) => seccion.seccionId !== id));
+      } else {
+        setNotificationMessage("Error al eliminar la sección: " + response.statusText);
+      }
+    } catch (error) {
+      setNotificationMessage("Error al eliminar la sección: " + error.message);
+    }
+    setShowNotification(true);
   };
+
 
   return (
     <div className="lista-secciones-container">
       <table className="lista-secciones-table">
         <thead>
           <tr>
-            <th className="table-header">ID</th>
-            <th className="table-header">Codigo</th>
+            
+            
             <th className="table-header">Nombre</th>
             <th className="table-header">Icono</th>
             <th className="table-header">Acciones</th>
@@ -93,11 +81,11 @@ function ListaSecciones() {
         <tbody>
           {secciones.map((seccion) => (
             <tr key={seccion.seccionId} className="border-seccion">
-              <td className="table-body-seccion">{seccion.seccionId}</td>
-              <td className="table-body-seccion">{seccion.codigo}</td>
+             
+             
               <td className="table-body-seccion">{seccion.nombre}</td>
               <td className="table-body-seccion">
-                {seccion.icono && iconos[seccion.seccionId] && (
+                {iconos[seccion.seccionId] && (
                   <img
                     src={[iconos[seccion.seccionId]]}
                     alt="Foto"

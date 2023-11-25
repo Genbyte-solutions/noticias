@@ -1,7 +1,7 @@
 package com.mendozanews.apinews.mapper;
 
 import com.mendozanews.apinews.model.dto.response.AutorResDto;
-import com.mendozanews.apinews.model.entidades.Autor;
+import com.mendozanews.apinews.model.entity.Autor;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 public class AutorMapper {
     public AutorResDto toDTO(Autor autor) {
         return AutorResDto.builder()
-                .AutorId(autor.getAutorId())
+                .autorId(autor.getAutorId())
                 .nombre(autor.getNombre())
                 .apellido(autor.getApellido())
                 .build();
