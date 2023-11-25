@@ -8,6 +8,9 @@ import com.mendozanews.apinews.model.dto.response.UsuarioResDto;
 import com.mendozanews.apinews.model.entity.Usuario;
 import com.mendozanews.apinews.model.payload.ResponseMessage;
 import com.mendozanews.apinews.service.interfaces.IUsuario;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/api/v1")
+@Tag(name = "Usuario")
 public class UsuarioControlador {
 
     private final IUsuario usuarioServicio;
@@ -35,6 +39,17 @@ public class UsuarioControlador {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Operation(
+            summary = "Crea un usuario",
+            responses = {
+                    @ApiResponse(responseCode = "201",
+                            description = "La solicitud ha tenido éxito y se ha creado un nuevo recurso como resultado de ello"),
+                    @ApiResponse(responseCode = "400",
+                            description = "El servidor no pudo interpretar la solicitud dada una sintaxis inválida"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @PostMapping("/usuario")
     public ResponseEntity<?> crearUsuario(@ModelAttribute @Valid UsuarioDto usuarioDto,
                                           @RequestPart(value = "foto", required = false) MultipartFile foto) {
@@ -46,18 +61,42 @@ public class UsuarioControlador {
         }
 
         try {
-            usuarioServicio.crearUsuario(usuarioDto, foto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            Usuario usuario = usuarioServicio.crearUsuario(usuarioDto, foto);
+            UsuarioResDto usuarioResDto = usuarioMapper.toDTO(usuario);
+
+            return new ResponseEntity<>(ResponseMessage.builder()
+                    .mensaje("usuario añadido")
+                    .recurso(usuarioResDto)
+                    .build(), HttpStatus.CREATED);
         } catch (IOException ioException) {
             throw new ResourceBadRequestException(ioException.getMessage());
         }
     }
 
+    @Operation(
+            summary = "Edita un usuario por ID",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "400",
+                            description = "El servidor no pudo interpretar la solicitud dada una sintaxis inválida"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @PutMapping("/usuario/{usuarioId}")
     public ResponseEntity<?> editarUsuario(@PathVariable("usuarioId") String usuarioId,
                                            @ModelAttribute @Valid UsuarioDto usuarioDto,
                                            @RequestParam("currentPassword") String currentPassword,
                                            @RequestPart(value = "foto", required = false) MultipartFile foto) {
+
+        if (!usuarioDto.getPassword().equals(usuarioDto.getConfirmPassword())) {
+            return new ResponseEntity<>(ResponseMessage.builder()
+                    .mensaje("Las contraseñas no coinciden")
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
 
         try {
             Usuario usuario = usuarioServicio.buscarUsuarioPorId(usuarioId);
@@ -69,29 +108,26 @@ public class UsuarioControlador {
                         .build(), HttpStatus.BAD_REQUEST);
             }
 
-            if (!usuarioDto.getPassword().equals(usuarioDto.getConfirmPassword())) {
-                return new ResponseEntity<>(ResponseMessage.builder()
-                        .mensaje("Las contraseñas no coinciden")
-                        .build(), HttpStatus.BAD_REQUEST);
-            }
+            Usuario usuarioEditado = usuarioServicio.editarUsuario(usuario, usuarioDto, foto);
+            UsuarioResDto usuarioResDto = usuarioMapper.toDTO(usuarioEditado);
 
-            usuarioServicio.editarUsuario(usuario, usuarioDto, foto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (IOException ioException) {
             throw new ResourceBadRequestException(ioException.getMessage());
         }
     }
 
-    @GetMapping("/usuarios")
-    public ResponseEntity<?> obtenerUsuarios() {
-
-        List<Usuario> usuarios = usuarioServicio.listarUsuarios();
-        if (usuarios.isEmpty()) throw new ResourceNotFoundException("Usuarios");
-
-        List<UsuarioResDto> usuariosResDto = usuarioMapper.toDTOs(usuarios);
-        return new ResponseEntity<>(usuariosResDto, HttpStatus.OK);
-    }
-
+    @Operation(
+            summary = "Busca un usuario por ID",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<?> buscarUsuarioPorId(@PathVariable("usuarioId") String usuarioId) {
 
@@ -102,6 +138,17 @@ public class UsuarioControlador {
         return new ResponseEntity<>(usuarioResDtoDto, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Busca un usuario por Email o Nombre de usuario",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("/usuario")
     public ResponseEntity<?> buscarUsuarioPorEmailONombreUsuario(@RequestParam("buscar") String buscar) {
 
@@ -112,6 +159,38 @@ public class UsuarioControlador {
         return new ResponseEntity<>(usuarioResDtoDto, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Lista de usuarios",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
+    @GetMapping("/usuarios")
+    public ResponseEntity<?> listarUsuarios() {
+
+        List<Usuario> usuarios = usuarioServicio.listarUsuarios();
+        if (usuarios.isEmpty()) throw new ResourceNotFoundException("usuarios");
+
+        List<UsuarioResDto> usuariosResDto = usuarioMapper.toDTOs(usuarios);
+        return new ResponseEntity<>(usuariosResDto, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Cambia estado de usuario (activo - inactivo) por ID",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @PatchMapping("usuario/cambio_estado/{usuarioId}")
     public ResponseEntity<?> cambiarEstadoDeAlta(@PathVariable("usuarioId") String usuarioId) {
 
@@ -122,6 +201,15 @@ public class UsuarioControlador {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(
+            summary = "Elimina un usuario por ID",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @DeleteMapping("usuario/{usuarioId}")
     public ResponseEntity<?> eliminarUsuarioPorId(@PathVariable("usuarioId") String usuarioId) {
         usuarioServicio.eliminarUsuarioPorId(usuarioId);

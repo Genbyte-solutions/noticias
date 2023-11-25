@@ -128,7 +128,7 @@ public class NoticiaServicio implements INoticia {
     // LISTA TODAS LAS NOTICIAS
     @Transactional(readOnly = true)
     @Override
-    public List<Noticia> buscarNoticiasRecientes(Integer offset, Integer limit) {
+    public List<Noticia> buscarNoticias(Integer offset, Integer limit) {
         return noticiaRepo.buscarNoticias(PageRequest.of(offset, limit));
     }
 
@@ -156,7 +156,7 @@ public class NoticiaServicio implements INoticia {
     @Transactional(readOnly = true)
     @Override
     public List<Noticia> buscarPopularesPorSeccion(String seccion, Integer offset, Integer limit) {
-        return noticiaRepo.buscarPopularesPorSeccion(seccion, PageRequest.of(offset, limit));
+        return noticiaRepo.buscarNoticiasPopularesPorSeccion(seccion, PageRequest.of(offset, limit));
     }
 
     @Transactional(readOnly = true)
