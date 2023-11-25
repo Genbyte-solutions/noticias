@@ -66,7 +66,7 @@ public class SeccionControlador {
         }
     }
 
-    @GetMapping("/seccion/porid/{seccionId}")
+    @GetMapping("/seccion/{seccionId}")
     public ResponseEntity<?> buscarSeccionPorId(@PathVariable("seccionId") String seccionId) {
 
         Seccion seccion = seccionService.buscarSeccionPorId(seccionId);
