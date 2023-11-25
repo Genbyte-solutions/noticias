@@ -3,7 +3,7 @@ package com.mendozanews.apinews.mapper;
 import com.mendozanews.apinews.model.dto.response.AutorResDto;
 import com.mendozanews.apinews.model.dto.response.NoticiaResDto;
 import com.mendozanews.apinews.model.dto.response.SeccionResDto;
-import com.mendozanews.apinews.model.entidades.Noticia;
+import com.mendozanews.apinews.model.entity.Noticia;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -18,14 +18,16 @@ public class NoticiaMapper {
                 .subtitulo(noticia.getSubtitulo())
                 .parrafos(noticia.getParrafos())
                 .etiquetas(noticia.getEtiquetas())
+                .vistas(noticia.getVistas())
                 .seccionResDto(SeccionResDto.builder()
                         .seccionId(noticia.getSeccion().getSeccionId())
                         .nombre(noticia.getSeccion().getNombre())
-                        .codigo(noticia.getSeccion().getCodigo()).build())
+                        .build())
                 .autorResDto(AutorResDto.builder()
-                        .AutorId(noticia.getAutor().getAutorId())
+                        .autorId(noticia.getAutor().getAutorId())
                         .nombre(noticia.getAutor().getNombre())
-                        .apellido(noticia.getAutor().getApellido()).build())
+                        .apellido(noticia.getAutor().getApellido())
+                        .build())
                 .build();
     }
 

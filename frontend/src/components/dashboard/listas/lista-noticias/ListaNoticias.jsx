@@ -15,9 +15,9 @@ function ListaNoticias() {
       try {
         const offset = 0;
         const limit = 10;
-        const orden = 'ASC'; // o 'ASC'
+        
 
-        const response = await axios.get(`http://localhost:8080/api/v1/noticias/recientes?offset=${offset}&limit=${limit}&orden=${orden}`);
+        const response = await axios.get(`http://localhost:8080/api/v1/noticias?offset=${offset}&limit=${limit}`);
         const noticiasData = response.data;
 
         setNoticias(noticiasData);

@@ -25,10 +25,10 @@ export const seccionPorId = async (id) => {
 };
 
 //  SECCION POR CODIGO
-export const seccionPorCodigo = async (codigo) => {
+export const seccionPorCodigo = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/seccion/codigo/${codigo}`
+      `http://localhost:8080/api/v1/seccion/porid/${id}`
     );
     return response.data;
   } catch (error) {

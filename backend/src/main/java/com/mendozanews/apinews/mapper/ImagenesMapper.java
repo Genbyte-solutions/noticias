@@ -1,7 +1,7 @@
 package com.mendozanews.apinews.mapper;
 
 import com.mendozanews.apinews.model.dto.request.ImagenDto;
-import com.mendozanews.apinews.model.entidades.*;
+import com.mendozanews.apinews.model.entity.*;
 import org.mapstruct.Mapper;
 
 
