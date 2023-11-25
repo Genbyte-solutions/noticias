@@ -8,13 +8,13 @@ import { useEffect, useState } from "react";
 
 export default function SeccionPage() {
   const [lista, setLista] = useState([]); 
-  const [portada, setPortada] = useState(null)
+  const [portada , setPortada] = useState(null)
   const { seccion } = useParams();
 
   useEffect(()=>{
     noticiasPorSeccion(seccion)
       .then(data => setLista(data))
-  },[])
+  },[seccion])       
 
   window.scrollTo(0, 0);
 

@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function SeccionPaginas({ lista }) {
   const [portadas, setPortadas] = useState([]);
+  
 
   const settings = {
     className: "center",
@@ -57,40 +58,54 @@ export default function SeccionPaginas({ lista }) {
         });
 
         const portadasUrls = await Promise.all(portadasPromises);
+        // console.log("estas son las urls" , portadasUrls);
         setPortadas(portadasUrls);
       } catch (error) {
         console.error("Error al cargar las portadas: ", error);
       }
     };
 
+    setPortadas([]);
+
     loadPortadas();
   }, [lista]);
+
+console.log("esto es portada" , portadas);
 
   return (
     <section className="seccion-paginas">
       <Slider {...settings}>
-        {portadas.map((url, index) => (
-          <div className="items" key={index}>
+
+        {lista.map((val, index) => (
+
+          <div className="items" key={val.noticiaId}>
             <div className="box shadow">
               <div className="images">
-                <div className="img">
-                  <img src={url} alt="" />
-                </div>
+
+
+                  <div className="img">
+                    <img src={portadas[index]} alt="" />
+                    {/* <img src={`http://localhost:8080/api/v1/portada/noticia/${portadas}`} alt="" /> */}
+                  </div>
+               
                 <div className="categoria categoria1">
-                  <Link to={`/seccion/${lista[index].categoria}`}>
-                    <span>{lista[index].categoria}</span>
+
+                  <Link to={`/seccion/${val.categoria}`}>
+                    <span>{val.categoria}</span>
                   </Link>
+
+
                 </div>
               </div>
               <div className="text">
-                <Link to={`/noticia/${lista[index].titulo}`}>
-                  <h1 className="titulo">{lista[index].titulo}</h1>
-                  <p className="desc">{lista[index].parrafos}</p>
-                  <p className="desc">{lista[index].autorResDto.nombre} {lista[index].autorResDto.apellido}</p>
+                <Link to={`/noticia/${val.titulo}`}>
+                  <h1 className="titulo">{val.titulo}</h1>
+                  <p className="desc">{val.parrafos}</p>
+                  <p className="desc">{val.autorResDto.nombre} {val.autorResDto.apellido}</p>
                 </Link>
                 <div className="fecha">
                   <i className="fas fa-calendar-days"></i>
-                  <label htmlFor="">{lista[index].fecha}</label>
+                  <label htmlFor="">{val.fecha}</label>
                 </div>
               </div>
             </div>

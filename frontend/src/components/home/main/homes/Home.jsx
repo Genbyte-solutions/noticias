@@ -16,8 +16,8 @@ export default function Home() {
                 <section className="mainContent">
             
                     <Recientes />
-         
                     <PNews />
+         
                     <Seccion lista={popular} seccion='San Rafael' />
                     <SeccionRow lista={popular} seccion='Mendoza' />
 
