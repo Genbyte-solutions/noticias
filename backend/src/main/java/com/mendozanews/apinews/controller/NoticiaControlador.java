@@ -70,7 +70,6 @@ public class NoticiaControlador {
                                                @RequestPart(value = "portada", required = false) MultipartFile portada) {
         try {
             Noticia noticiaExistente = noticiaService.buscarNoticiaPorId(noticiaId);
-
             if (noticiaExistente == null) throw new ResourceNotFoundException("Noticia", "id", noticiaId);
 
             Seccion seccion = seccionService.buscarSeccionPorId(noticiaDto.getSeccionId());
