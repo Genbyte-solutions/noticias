@@ -5,6 +5,9 @@
     background-size: contain;
 
 }
+.hover{
+    width: 100%;
+}
 
 .heading-title {
     display: flex;
@@ -54,5 +57,10 @@
 
     &:hover {
         transform: skew(-10deg);
+    }
+}
+@media screen and(max-width:1030px) { 
+    .hover{
+        background-color: #333;
     }
 }

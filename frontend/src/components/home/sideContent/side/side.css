@@ -3,6 +3,9 @@
 }
  */
 /* ------------- Social ------------- */
+/* .side{
+  border: 1px solid red;
+} */
 .social .socBox {
   padding: 10px 20px;
   margin-bottom: 10px;
@@ -38,4 +41,8 @@
   position: relative;
   margin-bottom: 20px;
   padding: 5px;
+}
+.radio .flexCT iframe{
+  width: 100%;
+  
 }

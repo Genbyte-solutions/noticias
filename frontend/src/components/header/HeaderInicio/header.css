@@ -82,7 +82,7 @@ header li a:hover {
   header {
     background-color: #ef850b;
     display: flex;
-    width: 100%;
+    width: 10%;
   }
 
   .head {
