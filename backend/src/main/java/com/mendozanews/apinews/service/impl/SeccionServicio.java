@@ -54,7 +54,6 @@ public class SeccionServicio implements ISeccion {
     public Seccion editarSeccion(Seccion seccion, SeccionDto seccionDto, MultipartFile icono) throws IOException {
 
         IconoSeccion iconoSeccion;
-
         seccion.setNombre(seccionDto.getNombre());
 
         if (icono != null) {
