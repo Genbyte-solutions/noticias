@@ -3,11 +3,13 @@ import { useForm } from "react-hook-form";
 import Notification from "../../../components/notificacion/Notificacion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImage } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 const CargarAutor = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm();
   const [fotoName, setFotoName] = useState("Subir foto");
   const dataRef = useRef(null);
@@ -36,19 +38,20 @@ const CargarAutor = () => {
     formData.append("foto", data.foto[0]);
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/autor", {
-        method: "POST",
-        body: formData,
+      const response = await axios.post("http://localhost:8080/api/v1/autor", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
-      if (response.ok) {
-        const responseData = await response.text();
-        setNotificationMessage(responseData);
+      if (response.status === 201) {
+        // const responseData = await response.text();
+        setNotificationMessage('Se enviaron los datos correctamente');
         setShowNotification(true);
       } else {
         setNotificationMessage(
           "Error al enviar el formulario. Response not ok: " +
-            response.statusText
+            response.status
         );
         setShowNotification(true);
       }
@@ -56,6 +59,7 @@ const CargarAutor = () => {
       setNotificationMessage("Error al enviar el formulario: " + error.message);
       setShowNotification(true);
     }
+    reset();
   };
 
   return (
