@@ -7,6 +7,8 @@ import com.mendozanews.apinews.model.dto.request.ImagenDto;
 import com.mendozanews.apinews.model.entity.*;
 import com.mendozanews.apinews.service.impl.*;
 import com.mendozanews.apinews.service.interfaces.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,18 @@ public class ImagenControlador {
         this.noticiaServicio = noticiaServicio;
     }
 
+
+    @Operation(
+            summary = "Busca la foto del autor por ID del autor",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("imagen/autor/{autorId}")
     public ResponseEntity<?> obtenerImagenPorAutor(@PathVariable("autorId") String autorId) {
         Autor autor = autorServicio.buscarAutorPorId(autorId);
@@ -51,6 +65,17 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
+    @Operation(
+            summary = "Busca el icono de la seccion por ID de seccion",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("icono/seccion/{seccionId}")
     public ResponseEntity<?> obtenerIconoPorSeccion(@PathVariable("seccionId") String seccionId) {
         Seccion seccion = seccionServicio.buscarSeccionPorId(seccionId);
@@ -65,6 +90,17 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
+    @Operation(
+            summary = "Busca la foto del usuario por ID de usuario",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("imagen/usuario/{usuarioId}")
     public ResponseEntity<?> obtenerImagenPorUsuario(@PathVariable("usuarioId") String usuarioId) {
         Usuario usuario = usuarioServicio.buscarUsuarioPorId(usuarioId);
@@ -79,6 +115,17 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
+    @Operation(
+            summary = "Busca la portada de la noticia por ID de noticia",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("portada/noticia/{noticiaId}")
     public ResponseEntity<?> obtenerPortadaPorNoticia(@PathVariable("noticiaId") String noticiaId) {
         Noticia noticia = noticiaServicio.buscarNoticiaPorId(noticiaId);
@@ -93,6 +140,17 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
+    @Operation(
+            summary = "Busca una noticia por ID de la imagen",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("imagen/noticia/{imagenNoticiaId}")
     public ResponseEntity<?> obtenerImagenPorNoticia(@PathVariable("imagenNoticiaId") String imagenNoticiaId) {
 
@@ -107,6 +165,17 @@ public class ImagenControlador {
                 .body(imagenDto.getContenido());
     }
 
+    @Operation(
+            summary = "Busca las imagenes de la noticia por el ID de noticia",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("imagenes/noticia/{noticiaId}")
     public ResponseEntity<?> obtenerImagenesPorNoticia(@PathVariable("noticiaId") String noticiaId) {
         Noticia noticia = noticiaServicio.buscarNoticiaPorId(noticiaId);
