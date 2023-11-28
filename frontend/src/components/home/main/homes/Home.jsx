@@ -33,7 +33,8 @@ export default function Home() {
                                     </>
                                 ) 
                                 : (
-                                    <Seccion seccion={seccion.nombre} />
+                                        <Seccion seccion={seccion.nombre}  />
+                                        
                                 )
                                 }
                                 {style = !style}
