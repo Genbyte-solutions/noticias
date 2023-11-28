@@ -124,13 +124,13 @@ function CargarUsuario() {
           <div>
             <label htmlFor="rol">Rol</label>
             <input type="text" 
-              placeholder="ADMIN or USUARIO"
+              placeholder="ADMIN or USER"
               id="rol"
               className="input"
               {...register('rol', {
                 required: 'Debe indicar el rol',
-                minLength: {value: 5, message: 'Debe ser ADMIN or USUARIO'},
-                maxLength: {value: 7, message: 'Debe ser ADMIN or USUARIO'}
+                minLength: {value: 4, message: 'Debe ser ADMIN or USER'},
+                maxLength: {value: 5, message: 'Debe ser ADMIN or USER'}
               })}/>
               {errors.rol && (<span className="error-msg">{errors.rol.message}</span>)}
           </div>
@@ -168,7 +168,7 @@ function CargarUsuario() {
               type="file"
               id="foto"
               {...register("foto", {
-                // required: "Por favor, sube una imagen.",
+                required: "Por favor, sube una imagen.",
               })}
             />
           </div>
@@ -194,7 +194,6 @@ function CargarUsuario() {
               id="telefono"
               {...register("telefono", {
                 // required: "Por favor, completa este campo.",
-                pattern: {value: /^\d+$/, message: 'Ingrese solo números'},
               })}
               className="input"
             />
