@@ -12,7 +12,7 @@ export default function Recientes() {
     try {
       const apiUrl = 'http://localhost:8080/api/v1/noticias_populares';
       const params = {
-        offset: 1,
+        offset: 0,
         limit: 3,
       };
       const response = await axios.get(apiUrl, { params });
@@ -79,7 +79,7 @@ export default function Recientes() {
                 </Link>
                 <div className="fecha">
                   <i className="fas fa-calendar-days"></i>
-                  <label>{new Date(val.fechaPublicacion).toLocaleDateString()}</label>
+                  <label>{new Date().toLocaleDateString()}</label>
                 </div>
               </div>
             </div>

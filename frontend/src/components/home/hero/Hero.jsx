@@ -11,7 +11,7 @@ export default function Hero() {
     try {
       const apiUrl = 'http://localhost:8080/api/v1/noticias_populares';
       const params = {
-        offset: 0,
+        offset: Math.floor(Math.random() * 11),
         limit: 3,
       };
       const response = await axios.get(apiUrl, { params });

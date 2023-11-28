@@ -70,7 +70,8 @@ export default function SeccionPaginas({ lista }) {
     loadPortadas();
   }, [lista]);
 
-console.log("esto es portada" , portadas);
+console.log("LONGITUD DE PORTADAS", portadas.length);
+console.log("LONGITUD DE LISTAS", lista.length);
 
   return (
     <section className="seccion-paginas">
@@ -105,7 +106,7 @@ console.log("esto es portada" , portadas);
                 </Link>
                 <div className="fecha">
                   <i className="fas fa-calendar-days"></i>
-                  <label htmlFor="">{val.fecha}</label>
+                  <label htmlFor="">FECHA</label>
                 </div>
               </div>
             </div>

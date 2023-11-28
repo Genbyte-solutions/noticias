@@ -1,16 +1,30 @@
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Head from "./Head";
 import "./header.css";
+import axios from "axios";
 
 
 
 
 export default function Header() {
   const [navbar, setNavbar] = useState(false);
+  const [secciones, setSecciones] = useState([])
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const response = await axios.get("http://localhost:8080/api/v1/secciones")
+        setSecciones(response.data)
+      }
 
+      fetchData()
+    } catch (e) {
+      console.log("este es el error", e);
+    }
+    console.log("esto es secciones", secciones);
+  }, [])
   return (
     <div className="full-header">
       <Head />
@@ -33,10 +47,14 @@ export default function Header() {
               {/* <li>
                 <Link to="/administrador">Administrador</Link>
               </li> */}
-              <li>
-                <Link to="/seccion/sanrafael">San Rafael</Link>
-              </li>
-              <li>
+              {secciones.map((seccion) => {
+                return (
+                  <li key={seccion.id}>
+                    <Link to={`/seccion/${seccion.nombre}`}>{seccion.nombre}</Link>
+                  </li>
+                );
+              })}
+              {/* <li>
                 <Link to="/seccion/mendoza">Mendoza</Link>
               </li>
               <li>
@@ -65,7 +83,7 @@ export default function Header() {
               </li>
               <li>
                 <Link to="/seccion/astrologia">Alineando los planetas</Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/login2">Iniciar sesión</Link>
               </li>

@@ -1,6 +1,6 @@
 import { popular } from '../../../../service/noticia/Principales.js';
 import Side from '../../sideContent/side/Side.jsx';
-import PNews from '../pnews/PNews.jsx';
+// import PNews from '../pnews/PNews.jsx';
 
 import PubliSimple from '../publicidad/PubliSimple.jsx';
 import SeccionRow from '../seccion-row/SeccionRow.jsx';
@@ -16,7 +16,7 @@ export default function Home() {
                 <section className="mainContent">
             
                     <Recientes />
-                    <PNews />
+        
          
                     <Seccion lista={popular} seccion='San Rafael' />
                     <SeccionRow lista={popular} seccion='Mendoza' />
