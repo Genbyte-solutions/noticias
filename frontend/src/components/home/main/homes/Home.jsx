@@ -7,40 +7,41 @@ import SeccionRow from '../seccion-row/SeccionRow.jsx';
 import Seccion from '../seccion/Seccion.jsx';
 import './home.css';
 import Recientes from '../Recientes/Recientes.jsx';
+import { useSecciones } from '../../../../hooks/useSecciones.jsx';
 
 
 export default function Home() {
+    const {secciones, setSecciones} = useSecciones() 
+    let style = true
+
     return (
         <main>
             <div className="container">
                 <section className="mainContent">
             
                     <Recientes />
-        
+                    
+                    {secciones.map((seccion)=>{
+                        
+                        return(
+                            <>
+                                {style === true 
+                                ? (
+                                    <>
+                                        <Seccion seccion={seccion.nombre} />
+                                        <PubliSimple p={5} />
+                                    </>
+                                ) 
+                                : (
+                                    <Seccion seccion={seccion.nombre} />
+                                )
+                                }
+                                {style = !style}
+                            </>
+
+                        )
+                    })}
          
-                    <Seccion lista={popular} seccion='San Rafael' />
-                    <SeccionRow lista={popular} seccion='Mendoza' />
-
-                    <PubliSimple p={5} />
-                    <Seccion lista={popular} seccion='Política' />
-
-                    <PubliSimple p={4} />
-                    <Seccion lista={popular} seccion='Nacionales' />
-                    <SeccionRow lista={popular} seccion='Internacionales' />
-
-                    <PubliSimple p={3} />
-                    <Seccion lista={popular} seccion='Deportes' />
-                    <SeccionRow lista={popular} seccion='Editorial' />
-
-                    <PubliSimple p={2} />
-                    <Seccion lista={popular} seccion='Espectáculos' />
-                    <SeccionRow lista={popular} seccion='Tecnología' />
-
-                    <PubliSimple p={1} />
-                    <Seccion lista={popular} seccion='Gastronomía' />
-                    <SeccionRow lista={popular} seccion='Astrología' />
-
-                    <PubliSimple p={0} />
                 </section>
                 <section className="sideContent">
                     <Side />

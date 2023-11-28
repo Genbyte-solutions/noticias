@@ -20,7 +20,7 @@ export default function SeccionPaginas({ lista }) {
     centerPadding: "",
     slidesToShow: 1,
     speed: 500,
-    rows: 3,
+    rows: 1,
     arrows: false,
     draggable: false,
     slidesPerRow: 3,

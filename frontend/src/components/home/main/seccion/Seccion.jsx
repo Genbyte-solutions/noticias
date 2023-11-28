@@ -6,8 +6,29 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import Heading from '../../../../components/heading/Heading.jsx';
 import './seccion.css';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function Seccion(props) {
+  const [lista, setLista] = useState([])
+  console.log("AFUERA DE USE EFFECT")
+  useEffect(()=>{
+    try{
+      const fetchData = async () => {
+        console.log("ANTES DEL AWAITTTTTTTTTTTTTT")
+        const response = await axios.get(`http://localhost:8080/api/v1/noticias_populares/${props.seccion}?offset=0&limit=3`)
+        const data = response.data
+        console.log(response.data, "DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        setLista(data)
+      }
+  
+      fetchData()
+    }catch(error){
+      console.log(error, "ERRORRRRRRRRRRRRRRRRRRRRRRRRRR")
+    }
+  }, [])
+
+
   const settings = {
     className: "center",
     centerMode: false,
@@ -33,17 +54,20 @@ export default function Seccion(props) {
     ]
   };
 
+
   return (
+    
     <section className='seccion'>
-      <Heading title={props.seccion} />
+      {console.log(lista, "lista actual")}
+      <Heading title={props.seccion} /> {/*Cambiar heading */}
       <Slider {...settings}>
-        {props.lista.map((val) => {
+        {lista.map((val) => {
           return (
             <div className="items">
               <div className="box shadow">
                 <div className="images row">
                   <div className="img">
-                    <img src={val.imagen} alt="" />
+                    {/* <img src={val.imagen} alt="" /> */}
                   </div>
 
                   {/* ESTO ES CON FINES ILUSTRATIVOS */}

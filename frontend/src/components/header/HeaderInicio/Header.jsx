@@ -5,26 +5,15 @@ import { Link } from "react-router-dom";
 import Head from "./Head";
 import "./header.css";
 import axios from "axios";
+import { useSecciones } from "../../../hooks/useSecciones";
 
 
 
 
 export default function Header() {
   const [navbar, setNavbar] = useState(false);
-  const [secciones, setSecciones] = useState([])
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const response = await axios.get("http://localhost:8080/api/v1/secciones")
-        setSecciones(response.data)
-      }
+  const {secciones, setSecciones } = useSecciones()
 
-      fetchData()
-    } catch (e) {
-      console.log("este es el error", e);
-    }
-    console.log("esto es secciones", secciones);
-  }, [])
   return (
     <div className="full-header">
       <Head />

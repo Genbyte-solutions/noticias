@@ -21,6 +21,8 @@ export default function SeccionRow(props) {
                 pauseOnHover: true, */
     };
 
+    
+
     return (
         <section className='seccion-row'>
             <Heading title={props.seccion} />
