@@ -5,8 +5,8 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function Card(props) {
-  console.log("este es el url" , props.imagen);
-  console.log("estos son los items", props.item);
+  // console.log("este es el url" , props.imagen);
+  // console.log("estos son los items", props.item);
   /* --USE EFFECT AOS-- */
   useEffect(() => {
     Aos.init();

@@ -58,7 +58,7 @@ export default function SeccionPaginas({ lista }) {
         });
 
         const portadasUrls = await Promise.all(portadasPromises);
-        // console.log("estas son las urls" , portadasUrls);
+
         setPortadas(portadasUrls);
       } catch (error) {
         console.error("Error al cargar las portadas: ", error);
@@ -70,8 +70,6 @@ export default function SeccionPaginas({ lista }) {
     loadPortadas();
   }, [lista]);
 
-console.log("LONGITUD DE PORTADAS", portadas.length);
-console.log("LONGITUD DE LISTAS", lista.length);
 
   return (
     <section className="seccion-paginas">
