@@ -1,27 +1,31 @@
 /* eslint-disable react/jsx-key */
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Heading from "../../../../components/heading/Heading.jsx";
 import { publiVerticales } from "../../../../service/publicidad/Publicidad.js";
 import SocialMedia from "../social/SocialMedia.jsx";
 import "./side.css";
+import axios from "axios";
 
 export default function Side() {
-  const categoria = [
-    "San Rafael",
-    "Mendoza",
-    "Política",
-    "Nacionales",
-    "Internacionales",
-    "Deportes",
-    "Editorial",
-    "Espectáculos",
-    "Tecnología",
-    "Gastronomía",
-    "Astrología",
-  ];
+  const [secciones, setSecciones] = useState([])
+
+  useEffect(() => {
+    try {
+
+      const fetchData = async () => {
+        const response = await axios.get("http://localhost:8080/api/v1/secciones")
+        setSecciones(response.data);
+      }
+      fetchData()
+    } catch (e) {
+      console.log(e);
+    }
+  })
+console.log(secciones);
+  const categoria = secciones
 
   useEffect(() => {
     Aos.init();
@@ -69,9 +73,9 @@ export default function Side() {
         <Heading title="Categorias" />
         {categoria.map((cat) => {
           return (
-            <div className="categoria categoria1">
-              <Link to={`/seccion/${cat}`}>
-                <span>{cat}</span>
+            <div key={cat.nombre} className="categoria categoria1">
+              <Link to={`/seccion/${cat.nombre}`}>
+                <span>{cat.nombre}</span>
               </Link>
             </div>
           );

@@ -3,11 +3,13 @@
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+
 }
 
 .cotizacion div {
+
   width: 20%;
-  height: 52px;
+  height: 60px;
   overflow: hidden;
   display: flex;
   justify-content: space-around;
@@ -40,7 +42,7 @@
   .cotizacion div {
     width: 33%; 
 
-    
+    height: 40px;
 
     overflow: hidden;
     display: flex;
