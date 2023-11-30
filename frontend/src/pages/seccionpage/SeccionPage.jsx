@@ -7,32 +7,32 @@ import { popular } from "../../service/noticia/Principales.js";
 import { useEffect, useState } from "react";
 
 export default function SeccionPage() {
-  const [lista, setLista] = useState([]); 
-  const [portada , setPortada] = useState(null)
+  const [lista, setLista] = useState([]);
+  const [portada, setPortada] = useState()
   const { seccion } = useParams();
 
-  useEffect(()=>{
+  useEffect(() => {
     noticiasPorSeccion(seccion)
       .then(data => setLista(data))
-  },[seccion])       
+  }, [seccion])
 
   window.scrollTo(0, 0);
 
   return (
     <>
-      <SinglePageSlider />
+      {/* <SinglePageSlider /> */}
       <main className="seccion-page">
         <div className="encabezado">
           <h1 className="titulo-encabezado">{seccion}</h1>
           <div>
             <h3>
-              <Link to="/">Inicio / </Link>
-              {seccion.toString()}
+              <Link to="/">iNICIO</Link>
+              {seccion}
             </h3>
           </div>
         </div>
-        <SeccionPaginas lista={lista} portada={portada}/>
       </main>
+      <SeccionPaginas lista={lista} portada={portada} />
     </>
   );
 }

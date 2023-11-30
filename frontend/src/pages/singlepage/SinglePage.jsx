@@ -11,9 +11,7 @@ export default function SinglePage() {
   const { titulo, id } = useParams();
   const [item, setItem] = useState();
   const [imagenAutor, setImagenAutor] = useState("")
-  const [imagenNews, setImagenNews] = useState("")
-
-
+  const [imagenNews, setImagenNews] = useState([])
 
   //TRAYENDO LA NOTICIA POR EL ID
   useEffect(() => {
@@ -50,7 +48,6 @@ export default function SinglePage() {
 
   //TRAYENDO LAS IMAGENES DE LA NOTICIA (FALTA TERMINAR)
 
-
   useEffect(() => {
     const fetchImageNews = async () => {
       try {
@@ -60,13 +57,14 @@ export default function SinglePage() {
 
           const imagePromises = arrayDeImgs.map(async (img) => {
             const imageResponse = await axios.get(`http://localhost:8080/api/v1/imagen/noticia/${img}`);
-            const urlImg = URL.createObjectURL(new Blob([imageResponse.data], { type: imageResponse.headers['content-type'] }));
-            // console.log("estas son las url anasheiiiii ", urlImg);
-            setImagenNews(urlImg)
+            return URL.createObjectURL(new Blob([imageResponse.data], { type: imageResponse.headers['content-type'] }));
           });
-          return imagePromises
 
+          // Esperar a que todas las promesas se resuelvan
+          const imagenesResueltas = await Promise.all(imagePromises);
 
+          // Ahora puedes establecer el estado con todas las imágenes resueltas
+          setImagenNews(imagenesResueltas);
         }
       } catch (e) {
         console.log("error", e);
@@ -76,8 +74,7 @@ export default function SinglePage() {
     fetchImageNews();
   }, [item]);
 
-  // console.log("esto es la imagen en el set" ,typeof(imagenNews);
-
+// console.log(item.autorResDto.apellido, "esto es item");
   return (
     <>
       {item ? (
@@ -89,7 +86,7 @@ export default function SinglePage() {
               <div className="autor">
                 <span>por</span>
                 <img src={imagenAutor} alt="aqui va la foto del autor" />
-                <Link to={`/autor/${item.autorResDto.nombre}`}>
+                <Link to={`/autor/${item.autorResDto.nombre}/${item.autorResDto.apellido}`}>
                   <p>{item.autorResDto.nombre}</p>
                 </Link>
                 <label htmlFor="">{new Date().toLocaleDateString()}</label>
@@ -120,7 +117,13 @@ export default function SinglePage() {
               </div>
 
               {/* AQUI ES DONDE SE TIENE QUE VER LA IMAGEN  */}
-              <img src={imagenNews} alt="awdawdawd " />
+              {imagenNews.map((img, index) => 
+              
+              (
+                
+                <img src={img}  key={index}  alt="noticia" />
+             ))}
+
               {/*   /////////////////////////////////////////////////   */}
               <div className="descBot">
                 <h1>{item.titulo}</h1>
@@ -151,7 +154,7 @@ export default function SinglePage() {
                   <img src={imagenAutor} alt="" />
                   <div className="texto">
                     <span>Más de</span>
-                    <Link to={`/autor/${item.autorResDto.nombre}`}>
+                    <Link to={`/autor/${item.autorResDto.nombre}/${item.autorResDto.apellido}`}>
                       <p>{item.autorResDto.nombre}</p>
                     </Link>
                   </div>

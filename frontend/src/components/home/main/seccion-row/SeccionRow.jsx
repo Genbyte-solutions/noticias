@@ -55,7 +55,7 @@ export default function SeccionRow(props) {
         centerPadding: "",
         slidesToShow: 1,
         speed: 500,
-        rows: 2,
+        rows: 3,
         slidesPerRow: 1,
         dots: false,
         /*         autoplay: true,
@@ -106,6 +106,7 @@ export default function SeccionRow(props) {
             <div className="content">
                 <Slider {...settings}>
                     {lista.map((val, index) => {
+                        {console.log("esto es val" , );}
                         return (
                             <div className="items">
                                 <div className="box shadow flexSB">
@@ -123,15 +124,16 @@ export default function SeccionRow(props) {
                                         <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                                             <h1 className="titulo">{val.titulo}</h1>
                                         </Link>
-                                        <div className="fecha">
-                                            <i className='fas fa-calendar-days'></i>
-                                            <label htmlFor=''>{val.fecha}</label>
-                                        </div>
-                                        <p className='desc'>{val.desc ? val.desc.slice(0, 250) : ""}...</p>
-                                       
+                                        
+                                        <p className='desc'>{val.parrafos ? val.parrafos[0].slice(0, 250) : ""}...</p>
+
                                         <div className="share">
-                                            <i className="fas fa-share"></i>
-                                            <label>{new Date().toLocaleDateString()}</label>
+
+                                            <i className='fas fa-calendar-days'></i>
+                                            <label htmlFor=''>{new Date().toLocaleDateString()}</label>
+
+                                            {/* <i className="fas fa-share"></i>
+                                            <label> <p>  Por <strong>{val.autorResDto.nombre + " " + val.autorResDto.apellido}</strong></p></label> */}
                                         </div>
                                     </div>
                                 </div>

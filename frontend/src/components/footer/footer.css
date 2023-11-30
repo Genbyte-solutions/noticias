@@ -71,6 +71,7 @@ footer .container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 30px;
+
 }
 
 footer .logo img {
@@ -91,6 +92,8 @@ footer h3 {
 }
 
 footer .item {
+
+
   display: flex;
   align-items: center;
   margin-bottom: 30px;
@@ -98,8 +101,8 @@ footer .item {
 }
 
 footer .item img {
-  max-height: 80px;
-  min-width: 80px;
+  max-height: 40px;
+  min-width: 70px;
   object-fit: cover;
 }
 footer .item p {
@@ -228,6 +231,7 @@ width: 100vw;
     max-height: 40px;
     min-width: 40px;
   }
+
 
   footer ul li {
     margin-bottom: 10px;

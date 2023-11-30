@@ -100,11 +100,11 @@ export default function SeccionPaginas({ lista }) {
                 <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                   <h1 className="titulo">{val.titulo}</h1>
                   <p className="desc">{val.parrafos}</p>
-                  <p className="desc">{val.autorResDto.nombre} {val.autorResDto.apellido}</p>
+                  {/* <p className="desc">{val.autorResDto.nombre} {val.autorResDto.apellido}</p> */}
                 </Link>
                 <div className="fecha">
                   <i className="fas fa-calendar-days"></i>
-                  <label htmlFor="">FECHA</label>
+                  <label htmlFor=''>{new Date().toLocaleDateString()}</label>
                 </div>
               </div>
             </div>

@@ -114,7 +114,7 @@ export default function Seccion(props) {
       <Heading title={props.seccion} urlIconoSeccion={urlIconoSeccion} /> {/*Cambiar heading */}
       <Slider {...settings}>
         {lista.map((val, index) => {
-    //  console.log("esto es val" , val);
+          //  console.log("esto es val" , val);
 
           return (
             <div className="items">
@@ -137,9 +137,12 @@ export default function Seccion(props) {
                   <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                     <h1 className="titulo">{val.titulo}</h1>
                   </Link>
+
                   <div className="fecha">
-                    <i className='fas fa-calendar-days'></i>
-                    <label>{new Date().toLocaleDateString()}</label>
+
+                    <i className='fas fa-calendar-days'>
+                      <label htmlFor=''>{new Date().toLocaleDateString()} </label></i>
+                    <label> <p>  Por <strong>{val.autorResDto.nombre + " " + val.autorResDto.apellido}</strong></p></label>
                   </div>
                 </div>
               </div>

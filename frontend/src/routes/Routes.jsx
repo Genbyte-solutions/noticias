@@ -16,7 +16,7 @@ const MainRoutes = () => {
         <Route path="/" element={<Homepages />} />
         <Route path="/seccion/:seccion" element={<SeccionPage />} />
         <Route path="/noticia/:titulo/:id" element={<SinglePage />} />
-        <Route path="/autor/:autorName" element={<AutorPage />} />
+        <Route path="/autor/:autorName/:apellido" element={<AutorPage />} />
         <Route path="/privacidad/politica" element={<Privacidad />} />
         <Route path="/login2" element={<Login2 />} />
       
