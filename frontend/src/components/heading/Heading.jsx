@@ -7,7 +7,7 @@ import axios from "axios";
 import "./heading.css";
 
 const Heading = ({title,urlIconoSeccion}) => {
-  console.log("ESTA ES EL ICONO" ,urlIconoSeccion );
+  // console.log("ESTA ES EL ICONO" ,urlIconoSeccion );
 
 
 useEffect(() => {

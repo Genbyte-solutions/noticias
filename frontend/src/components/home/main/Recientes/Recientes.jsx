@@ -74,7 +74,7 @@ export default function Recientes() {
                 </div>
               </div>
               <div className="text row">
-                <Link to={`/noticia/${val.titulo}`}>
+                <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                   <h1>{val.titulo}</h1>
                 </Link>
                 <div className="fecha">

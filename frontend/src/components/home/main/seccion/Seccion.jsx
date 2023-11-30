@@ -114,7 +114,8 @@ export default function Seccion(props) {
       <Heading title={props.seccion} urlIconoSeccion={urlIconoSeccion} /> {/*Cambiar heading */}
       <Slider {...settings}>
         {lista.map((val, index) => {
-     console.log("esto es val" , val);
+    //  console.log("esto es val" , val);
+
           return (
             <div className="items">
               <div className="box shadow">
@@ -133,7 +134,7 @@ export default function Seccion(props) {
 
                 </div>
                 <div className="text row">
-                  <Link to={`/noticia/${val.titulo}`}>
+                  <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                     <h1 className="titulo">{val.titulo}</h1>
                   </Link>
                   <div className="fecha">

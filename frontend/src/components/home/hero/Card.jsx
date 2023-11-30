@@ -27,7 +27,7 @@ export default function Card(props) {
         <Link to={`/seccion/${props.item.seccionResDto.nombre}`}>
           <span className="categoria">{props.item.seccionResDto.nombre}</span>
         </Link>
-        <Link to={`/noticia/${props.item.titulo}`}>
+        <Link to={`/noticia/${props.item.titulo}/${props.item.noticiaId}`}>
           <h1 className="titleBG">{props.item.titulo}</h1>
         </Link>
       </div>

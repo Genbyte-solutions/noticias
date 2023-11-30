@@ -120,7 +120,7 @@ export default function SeccionRow(props) {
                                         </div>
                                     </div>
                                     <div className="text col-SA">
-                                        <Link to={`/noticia/${val.titulo}`}>
+                                        <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                                             <h1 className="titulo">{val.titulo}</h1>
                                         </Link>
                                         <div className="fecha">

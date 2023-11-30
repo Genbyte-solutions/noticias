@@ -97,7 +97,7 @@ export default function SeccionPaginas({ lista }) {
                 </div>
               </div>
               <div className="text">
-                <Link to={`/noticia/${val.titulo}`}>
+                <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                   <h1 className="titulo">{val.titulo}</h1>
                   <p className="desc">{val.parrafos}</p>
                   <p className="desc">{val.autorResDto.nombre} {val.autorResDto.apellido}</p>

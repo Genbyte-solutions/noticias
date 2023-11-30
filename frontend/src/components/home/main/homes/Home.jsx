@@ -22,7 +22,7 @@ export default function Home() {
                     <Recientes />
                     
                     {secciones.map((seccion,index)=>{
-                   console.log("esta es el log que estoy haciendo en la haome seccion par la seccion if" , seccion.seccionId);
+                //    console.log("esta es el log que estoy haciendo en la haome seccion par la seccion if" , seccion.seccionId);
                         return(
                             <>
                                 {style === true 

@@ -24,7 +24,7 @@ export default function Side() {
       console.log(e);
     }
   })
-console.log(secciones);
+// console.log(secciones);
   const categoria = secciones
 
   useEffect(() => {
