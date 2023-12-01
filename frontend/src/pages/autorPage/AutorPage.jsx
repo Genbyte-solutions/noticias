@@ -9,7 +9,7 @@ import "./autor-page.css"
 function AutorPage() {
   const { autorName, apellido } = useParams();
   const [autorNoticias, setAutorNoticias] = useState([]);
-  const [portadaNoticia,setPortada ]  = useState([])
+  const [portadaNoticia, setPortada] = useState([])
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -25,7 +25,7 @@ function AutorPage() {
 
     fetchNews();
   }, [autorName, apellido]);
-   
+
   useEffect(() => {
     const fetchData = async (id) => {
       try {
@@ -45,7 +45,7 @@ function AutorPage() {
         });
 
         const portadasUrls = await Promise.all(portadasPromises);
-    
+
         setPortada(portadasUrls);
       } catch (error) {
         console.error("Error al cargar las portadas: ", error);
@@ -56,33 +56,33 @@ function AutorPage() {
 
     loadPortadas();
   }, [autorNoticias]);
- 
-  
+
+
   // console.log(autorNoticias, "estas son todas las noticias");
   return (
     <>
       <SinglePageSlider />
       <main className="seccion-page">
         <div className="encabezado">
-          <h1 className="titulo-encabezado">{autorName + " " + apellido}</h1>
+          <h1 className="titulo-encabezado">AUTOR : {autorName + " " + apellido}</h1>
         </div>
         <h2>Noticias redactadas : {autorNoticias.length} </h2>
         <div className="todasLasNoticias">
           <ul>
-            {autorNoticias.map((noticia,index) => (
-              
+            {autorNoticias.map((noticia, index) => (
+
               <li key={noticia.id}>
                 <div>
 
-                <img  src={portadaNoticia[index]} alt="" />
+                  <img src={portadaNoticia[index]} alt="" />
 
                 </div>
-                <div>
+                <div className="noticias">
 
-                <h2>{noticia.titulo.slice(0, 50)}</h2>
-                <p>{noticia.subtitulo.slice(0, 250)}...</p>
-                <p>Publicado en : </p>
-                <h3>{noticia.seccionResDto.nombre}</h3>
+                  <h2>{noticia.titulo}</h2>
+                  <p>{noticia.subtitulo.slice(0, 100)}...</p>
+                  <p>Publicado en : </p>
+                  <h3>{noticia.seccionResDto.nombre}</h3>
                 </div>
 
               </li>

@@ -26,7 +26,7 @@ export default function SeccionPage() {
           <h1 className="titulo-encabezado">{seccion}</h1>
           <div>
             <h3>
-              <Link to="/">iNICIO</Link>
+              <Link to="/">iNICIO/</Link>
               {seccion}
             </h3>
           </div>

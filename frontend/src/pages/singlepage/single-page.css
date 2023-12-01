@@ -95,6 +95,7 @@
 .quote {
   margin-top: 30px;
   margin-bottom: 30px;
+  
   padding-left: 50px;
   border-left: 5px solid red;
 }
@@ -114,6 +115,8 @@
 .sobre-autor .autor {
   margin-top: 50px;
   display: flex;
+
+ 
   justify-content: center;
   gap: 30px;
 }
@@ -126,16 +129,22 @@
 .sobre-autor .autor .texto {
   height: 200px;
   display: flex;
+  flex-wrap: wrap;
+
   flex-direction: column;
   justify-content: center;
   gap: 20px;
+  width: 100%;
+}
+.etiqueta strong{
+  color: rgb(47, 47, 161);
+}
+.sobre-autor .autor .texto  p {
+  font-size: 30px;
+  
 }
 
-.sobre-autor .autor p {
-  font-size: 60px;
-}
-
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
 
   .singlePage .info {
     padding-right: 0px;
@@ -157,10 +166,45 @@
 
   .sobre-autor .autor {
     gap: 10px;
+    flex-wrap: wrap;
   }
 
   .sobre-autor .autor p {
     font-size: 40px;
   }
 
+}
+@media screen and (max-width: 480px){
+  .singlePage .info h1 {
+    font-size: 26px;
+  }
+ 
+  .sobre-autor .autor{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0px;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    margin-top: 0px;
+  }
+  .sobre-autor .autor .texto {
+    gap: 0px;
+    height: 80px;display: flex;
+    flex-wrap: wrap;
+
+  }
+  .sobre-autor .autor .texto p{
+    font-size: 23px;
+  }
+  .sobre-autor .autor img {
+    width: 100px !important;
+    height: 100px !important;
+   
+  }
+.quote{
+padding: 10px;
+
+}
 }

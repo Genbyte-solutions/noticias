@@ -69,15 +69,15 @@ export default function SeccionPaginas({ lista }) {
 
     loadPortadas();
   }, [lista]);
-
+console.log(lista , "esto ews val anashe");
 
   return (
     <section className="seccion-paginas">
       <Slider {...settings}>
 
-        {lista.map((val, index) => (
-
-          <div className="items" key={val.noticiaId}>
+        {lista.map((val, index) => 
+              
+        ( <div className="items" key={val.noticiaId}>
             <div className="box shadow">
               <div className="images">
 
@@ -103,7 +103,7 @@ export default function SeccionPaginas({ lista }) {
               <div className="text">
                 <Link to={`/noticia/${val.titulo}/${val.noticiaId}`}>
                   <h1 className="titulo">{val.titulo}</h1>
-                  <p className="desc">{val.parrafos}</p>
+                  <p className="desc">{val.subtitulo.slice(0,50) + "..."}</p>
                   {/* <p className="desc">{val.autorResDto.nombre} {val.autorResDto.apellido}</p> */}
                 </Link>
                 <div className="fecha">

@@ -4,7 +4,12 @@ import Side from "../../components/home/sideContent/side/Side.jsx";
 import SinglePageSlider from "../../components/singlePage/SinglePageSlider.jsx";
 import { principales } from "../../service/noticia/Principales.js";
 import "./single-page.css";
+import { FaFacebookF } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+import { FaTwitter } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
 import axios from "axios";
+
 import { imagenPorId } from "../../service/imagen/Imagen.js";
 
 export default function SinglePage() {
@@ -12,6 +17,7 @@ export default function SinglePage() {
   const [item, setItem] = useState();
   const [imagenAutor, setImagenAutor] = useState("")
   const [imagenNews, setImagenNews] = useState([])
+
 
   //TRAYENDO LA NOTICIA POR EL ID
   useEffect(() => {
@@ -43,7 +49,7 @@ export default function SinglePage() {
     } catch (e) {
       console.log(e);
     }
-  })
+  }, [item])
 
 
   //TRAYENDO LAS IMAGENES DE LA NOTICIA (FALTA TERMINAR)
@@ -51,19 +57,17 @@ export default function SinglePage() {
   useEffect(() => {
     const fetchImageNews = async () => {
       try {
-        if (item && item.noticiaId) {
-          const response = await axios.get(`http://localhost:8080/api/v1/imagenes/noticia/${item.noticiaId}`);
-          let arrayDeImgs = response.data
+        if (id) {
+          const response = await axios.get(`http://localhost:8080/api/v1/imagenes/noticia/${id}`);
+          let arrayDeImgs = response.data;
 
           const imagePromises = arrayDeImgs.map(async (img) => {
-            const imageResponse = await axios.get(`http://localhost:8080/api/v1/imagen/noticia/${img}`);
+            console.log(img, "este es el url de cada imagen");
+            const imageResponse = await axios.get(`http://localhost:8080/api/v1/imagen/noticia/${img}`, { responseType: "arraybuffer" });
             return URL.createObjectURL(new Blob([imageResponse.data], { type: imageResponse.headers['content-type'] }));
           });
 
-          // Esperar a que todas las promesas se resuelvan
           const imagenesResueltas = await Promise.all(imagePromises);
-
-          // Ahora puedes establecer el estado con todas las imágenes resueltas
           setImagenNews(imagenesResueltas);
         }
       } catch (e) {
@@ -72,9 +76,9 @@ export default function SinglePage() {
     };
 
     fetchImageNews();
-  }, [item]);
+  }, [id]);
 
-  console.log(item, "esto es item");
+  console.log(imagenNews, "estas son las imagenes ");
   return (
     <>
       {item ? (
@@ -85,7 +89,7 @@ export default function SinglePage() {
               <h1 className="titulo">{item.titulo}</h1>
               <div className="autor">
                 <span>por</span>
-                <img src={imagenAutor} alt="aqui va la foto del autor" />
+                <img src={imagenAutor} alt="foto del autor" />
                 <Link to={`/autor/${item.autorResDto.nombre}/${item.autorResDto.apellido}`}>
                   <p>{item.autorResDto.nombre}</p>
                 </Link>
@@ -94,18 +98,19 @@ export default function SinglePage() {
 
               <div className="social">
                 <div className="socBox">
-                  <i className="fab fa-facebook-f"></i>
+                  <FaFacebookF />
                 </div>
                 <div className="socBox">
-                  <i className="fab fa-instagram"></i>
+                  <FaInstagram />
                 </div>
                 <div className="socBox">
-                  <i className="fab fa-twitter"></i>
+                  <FaTwitter />
                 </div>
                 <div className="socBox">
-                  <i className="fab fa-youtube"></i>
+                  <FaYoutube />
                 </div>
               </div>
+
               <div className="descTop">
                 {item.parrafos.map((elemento, id) =>
                   id < 2 ? (
@@ -115,27 +120,24 @@ export default function SinglePage() {
                   ) : null
                 )}
               </div>
-              {item.parrafos.map((p) => {
-                return (
-                  <p>
-                    <strong>#{p}</strong>
-                  </p>
-                )
-              })}
 
-              {/* AQUI ES DONDE SE TIENE QUE VER LA IMAGEN  */}
-              {imagenNews.map((img, index) =>
-
-              (
-
-                <img src={img} key={index} alt="noticia" />
+              {item.etiquetas.map((p, i) => (
+                <p key={i} className="etiqueta">
+                  <strong>{p}</strong>
+                </p>
               ))}
+
+              {/* Primera imagen después de las etiquetas */}
+              {imagenNews.length > 0 && (
+                <img src={imagenNews[0]} alt={imagenNews[0]} />
+              )}
 
               {/*   /////////////////////////////////////////////////   */}
               <div className="descBot">
                 <h1>{item.titulo}</h1>
                 <p>{item.parrafos[0]}</p>
               </div>
+
               {item.subtitulo ? (
                 <div className="quote">
                   <i className="fa fa-quote-left"></i>
@@ -146,23 +148,31 @@ export default function SinglePage() {
               ) : (
                 <></>
               )}
+
               <div className="descTop">
                 {item.parrafos.map((elemento, id) =>
                   id > 1 ? (
                     <p key={id}>
                       {elemento}
-
                     </p>
                   ) : null
                 )}
               </div>
+         
+              {/* Segunda imagen después del subtitulo */}
+              {imagenNews.length > 1 && (
+                <img src={imagenNews[1]} alt={imagenNews[1]} />
+              )}
+
               <div className="sobre-autor">
                 <div className="autor">
-                  <img src={imagenAutor} alt="" />
+                  <div className="img__autor">
+                    <img src={imagenAutor} alt="" />
+                  </div>
                   <div className="texto">
                     <span>Más de</span>
                     <Link to={`/autor/${item.autorResDto.nombre}/${item.autorResDto.apellido}`}>
-                      <p>{item.autorResDto.nombre}</p>
+                      <p>{item.autorResDto.nombre + " " + item.autorResDto.apellido} </p>
                     </Link>
                   </div>
                 </div>
@@ -181,4 +191,4 @@ export default function SinglePage() {
       )}
     </>
   );
-}
+}  
