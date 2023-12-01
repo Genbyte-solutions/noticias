@@ -36,7 +36,7 @@ export default function SeccionRow(props) {
         try {
             const fetchData = async () => {
 
-                const response = await axios.get(`http://localhost:8080/api/v1/noticias_populares/${props.seccion}?offset=0&limit=3`)
+                const response = await axios.get(`http://localhost:8080/api/v1/noticias_populares/${props.seccion}?offset=0&limit=100`)
                 const data = response.data
 
                 setLista(data)

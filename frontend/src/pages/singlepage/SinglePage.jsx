@@ -74,7 +74,7 @@ export default function SinglePage() {
     fetchImageNews();
   }, [item]);
 
-// console.log(item.autorResDto.apellido, "esto es item");
+  console.log(item, "esto es item");
   return (
     <>
       {item ? (
@@ -115,14 +115,21 @@ export default function SinglePage() {
                   ) : null
                 )}
               </div>
+              {item.parrafos.map((p) => {
+                return (
+                  <p>
+                    <strong>#{p}</strong>
+                  </p>
+                )
+              })}
 
               {/* AQUI ES DONDE SE TIENE QUE VER LA IMAGEN  */}
-              {imagenNews.map((img, index) => 
-              
+              {imagenNews.map((img, index) =>
+
               (
-                
-                <img src={img}  key={index}  alt="noticia" />
-             ))}
+
+                <img src={img} key={index} alt="noticia" />
+              ))}
 
               {/*   /////////////////////////////////////////////////   */}
               <div className="descBot">

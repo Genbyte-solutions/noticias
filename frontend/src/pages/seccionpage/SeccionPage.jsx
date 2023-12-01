@@ -20,7 +20,7 @@ export default function SeccionPage() {
 
   return (
     <>
-      {/* <SinglePageSlider /> */}
+      <SinglePageSlider />
       <main className="seccion-page">
         <div className="encabezado">
           <h1 className="titulo-encabezado">{seccion}</h1>

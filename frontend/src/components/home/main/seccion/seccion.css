@@ -4,7 +4,7 @@ flex-direction: column;
 justify-content: center;
 }
 .seccion .box {
-  height: auto;
+  height: 400px;
     display: flex;
 
     flex-direction: column;
@@ -34,7 +34,7 @@ justify-content: center;
     text-overflow: ellipsis;
     word-wrap: break-word;
     overflow: hidden;
-    max-height: 5.6em;
+    max-height: 6.8em;
     line-height: 1.4em;
   }
   

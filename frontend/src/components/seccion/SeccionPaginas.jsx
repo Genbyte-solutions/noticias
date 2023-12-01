@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function SeccionPaginas({ lista }) {
   const [portadas, setPortadas] = useState([]);
-  
+
 
   const settings = {
     className: "center",
@@ -82,11 +82,15 @@ export default function SeccionPaginas({ lista }) {
               <div className="images">
 
 
-                  <div className="img">
-                    <img src={portadas[index]} alt="" />
-                    {/* <img src={`http://localhost:8080/api/v1/portada/noticia/${portadas}`} alt="" /> */}
+                <div className="img">
+                  <img src={portadas[index]} alt="" />
+                  {/* <img src={`http://localhost:8080/api/v1/portada/noticia/${portadas}`} alt="" /> */}
+                </div>
+                <div className="categoria categoria1">
+                    <Link to={`/seccion/${val.seccionResDto.nombre}`}>
+                      <span>{val.seccionResDto.nombre}</span>
+                    </Link>
                   </div>
-               
                 <div className="categoria categoria1">
 
                   <Link to={`/seccion/${val.categoria}`}>

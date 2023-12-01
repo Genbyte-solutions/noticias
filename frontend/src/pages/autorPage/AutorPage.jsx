@@ -9,7 +9,7 @@ import "./autor-page.css"
 function AutorPage() {
   const { autorName, apellido } = useParams();
   const [autorNoticias, setAutorNoticias] = useState([]);
-
+  const [portadaNoticia,setPortada ]  = useState([])
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -25,8 +25,40 @@ function AutorPage() {
 
     fetchNews();
   }, [autorName, apellido]);
+   
+  useEffect(() => {
+    const fetchData = async (id) => {
+      try {
+        const response = await axios.get(` http://localhost:8080/api/v1/portada/noticia/${id}`, { responseType: "arraybuffer" });
+        const imageUrl = URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
+        return imageUrl;
+      } catch (error) {
+        console.error("Error al obtener las portadas: ", error);
+        throw error;
+      }
+    };
 
-  console.log(autorNoticias, "estas son todas las noticias");
+    const loadPortadas = async () => {
+      try {
+        const portadasPromises = autorNoticias.map(async (val) => {
+          return fetchData(val.noticiaId);
+        });
+
+        const portadasUrls = await Promise.all(portadasPromises);
+    
+        setPortada(portadasUrls);
+      } catch (error) {
+        console.error("Error al cargar las portadas: ", error);
+      }
+    };
+
+    setPortada([]);
+
+    loadPortadas();
+  }, [autorNoticias]);
+ 
+  
+  // console.log(autorNoticias, "estas son todas las noticias");
   return (
     <>
       <SinglePageSlider />
@@ -34,20 +66,29 @@ function AutorPage() {
         <div className="encabezado">
           <h1 className="titulo-encabezado">{autorName + " " + apellido}</h1>
         </div>
-          <h2>Noticias redactadas : {autorNoticias.length} </h2>
+        <h2>Noticias redactadas : {autorNoticias.length} </h2>
         <div className="todasLasNoticias">
           <ul>
-            {autorNoticias.map((noticia) => (
+            {autorNoticias.map((noticia,index) => (
+              
               <li key={noticia.id}>
+                <div>
+
+                <img  src={portadaNoticia[index]} alt="" />
+
+                </div>
+                <div>
+
                 <h2>{noticia.titulo.slice(0, 50)}</h2>
                 <p>{noticia.subtitulo.slice(0, 250)}...</p>
                 <p>Publicado en : </p>
                 <h3>{noticia.seccionResDto.nombre}</h3>
+                </div>
 
               </li>
             ))}
           </ul>
-        <Side className= "side" />
+          {/* <Side className="side" /> */}
         </div>
       </main>
     </>
