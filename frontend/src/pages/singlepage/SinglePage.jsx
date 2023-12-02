@@ -103,10 +103,10 @@ export default function SinglePage() {
                 <div className="socBox">
                   <FaInstagram />
                 </div>
-                <div className="socBox">
+                <div className="socBox twitter">
                   <FaTwitter />
                 </div>
-                <div className="socBox">
+                <div className="socBox youtube">
                   <FaYoutube />
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function SinglePage() {
 
               {item.etiquetas.map((p, i) => (
                 <p key={i} className="etiqueta">
-                  <strong>{p}</strong>
+                  <strong>#{p}</strong>
                 </p>
               ))}
 

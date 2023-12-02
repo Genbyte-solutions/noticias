@@ -16,6 +16,13 @@
   line-height: 40px;
   font-weight: 700;
 }
+.socBox.twitter{
+  background-color: rgb(11, 231, 247);
+}
+
+.socBox.youtube{
+  background-color: red;
+}
 
 .singlePage .autor {
   display: flex;
