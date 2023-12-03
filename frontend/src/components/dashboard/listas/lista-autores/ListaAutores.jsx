@@ -4,6 +4,7 @@ import { listaAutores } from "../../../../service/autor/Listar.js";
 import { imagenPorIdAutor } from "../../../../service/imagen/Imagen.js";
 import Notification from "../../../notificacion/Notificacion.jsx";
 import "./lista-autores.css";
+import axios from "axios";
 
 function ListaAutores() {
   const [autores, setAutores] = useState([]);
@@ -50,13 +51,11 @@ function ListaAutores() {
   }, [autores]);
 
   const handleEliminarAutor = (id) => {
-    fetch(`http://localhost:8080/api/v1/autor/${id}`, {
-      method: "DELETE",
-    })
+    axios.delete(`http://localhost:8080/api/v1/autor/${id}`)
       .then(async (response) => {
-        if (response.ok) {
-          const responseData = await response.text();
-          setNotificationMessage(responseData);
+        if (response.status === 204) {
+          // const responseData = await response.text();
+          setNotificationMessage('Usuario eliminado correctamente');
           setShowNotification(true);
           setAutores((prevAutores) =>
             prevAutores.filter((autor) => autor.autorId !== id)
@@ -64,7 +63,7 @@ function ListaAutores() {
         } else {
           setNotificationMessage(
             "Error, una o mas noticias utilizan este autor" +
-            response.statusText
+            response.status
           );
           setShowNotification(true);
         }
@@ -80,7 +79,7 @@ function ListaAutores() {
       <table className="lista-autores-table">
         <thead>
           <tr>
-            <th className="table-header">ID</th>
+            
             <th className="table-header">Nombre</th>
             <th className="table-header">Apellido</th>
             <th className="table-header">Foto</th>
@@ -90,11 +89,11 @@ function ListaAutores() {
         <tbody>
           {autores.map((autor) => (
             <tr key={autor.autorId} className="border-autor">
-              <td className="table-body-seccion">{autor.autorId}</td>
+              
               <td className="table-body-seccion">{autor.nombre}</td>
               <td className="table-body-seccion">{autor.apellido}</td>
               <td className="table-body-seccion">
-                {autor.foto && fotos[autor.autorId] && (
+                {fotos[autor.autorId] && (
                   <img
                     src={fotos[autor.autorId]}
                     alt="Foto"

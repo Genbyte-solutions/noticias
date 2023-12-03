@@ -91,7 +91,10 @@ function EditarUsuario() {
             <div className='form-container'>
                 <form onSubmit={handleSubmit(onSubmit)} className='form'>
                     <span className="titulo">Editar Usuario</span>
-                    {imagen && <img src={imagen} alt="imagen" />}
+                    <div className='container-photo'>
+                    {imagen && <img className='photo' src={imagen} alt="imagen" />}
+
+                    </div>
                     <div>
                         <label htmlFor="nombre">Nombre</label>
                         <input

@@ -30,6 +30,17 @@
   text-align: center;
   margin-bottom: 20px;
 }
+.form-container .container-photo{
+  display: flex;
+  justify-content: center;
+  padding-bottom: 5px;
+}
+
+.container-photo .photo {
+  width: 150px;
+  box-sizing: border-box;
+  border-radius: 20px;
+}
 
 .form-container .form .input {
   color: white;
