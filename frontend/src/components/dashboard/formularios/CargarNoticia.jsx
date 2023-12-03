@@ -17,8 +17,8 @@ const CargarNoticia = () => {
 
   const [titulo, setTitulo] = useState("");
   const [subtitulo, setSubtitulo] = useState("");
-  const [parrafos, setParrafos] = useState("");
-  const [etiquetas, setEtiquetas] = useState("");
+  const [parrafos, setParrafos] = useState([]);
+  const [etiquetas, setEtiquetas] = useState([]);
   const [idSeccion, setIdSeccion] = useState("");
   const [idAutor, setIdAutor] = useState("");
   const [portada, setPortada] = useState(null);
@@ -28,63 +28,46 @@ const CargarNoticia = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
 
-  const handleNuevoParrafoChange = (e) => {
-    setParrafos(e.target.value);
+  const handleNuevoParrafoChange = (e, index) => {
+    const nuevosParrafos = [...parrafos];
+    nuevosParrafos[index] = e.target.value;
+    setParrafos(nuevosParrafos);
   };
 
   const handleAgregarParrafo = () => {
-    setParrafos(parrafos + "\n");
-  };
-
-  const handleNuevaEtiquetaChange = (e) => {
-    setEtiquetas(e.target.value);
-  };
-
-  const handleAgregarEtiqueta = () => {
-    setEtiquetas(etiquetas + " ");
+    setParrafos([...parrafos, ""]);
   };
 
   const handleEliminarParrafo = (index) => {
-    const updatedParrafos = parrafos.split("\n");
-    updatedParrafos.splice(index, 1);
-    setParrafos(updatedParrafos.join("\n"));
+    const nuevosParrafos = parrafos.filter((_, i) => i !== index);
+    setParrafos(nuevosParrafos);
+  };
+
+  const handleNuevaEtiquetaChange = (e, index) => {
+    const nuevasEtiquetas = [...etiquetas];
+    nuevasEtiquetas[index] = e.target.value;
+    setEtiquetas(nuevasEtiquetas);
+  };
+
+  const handleAgregarEtiqueta = () => {
+    setEtiquetas([...etiquetas, ""]);
   };
 
   const handleEliminarEtiqueta = (index) => {
-    const updatedEtiquetas = etiquetas.split(" ");
-    updatedEtiquetas.splice(index, 1);
-    setEtiquetas(updatedEtiquetas.join(" "));
+    const nuevasEtiquetas = etiquetas.filter((_, i) => i !== index);
+    setEtiquetas(nuevasEtiquetas);
   };
 
   const handlePortadaChange = (e) => {
-    try {
-      if (e.target.files && e.target.files.length > 0) {
-        console.log("Portada seleccionada:", e.target.files[0]); // Agregar este console log
-        setPortada(e.target.files[0]);
-      } else {
-        throw new Error("No se ha seleccionado ningún archivo de imagen.");
-      }
-    } catch (error) {
-      console.error("Error al actualizar la portada:", error);
-      setNotificationMessage(`Error al actualizar la portada: ${error.message}`);
-      setShowNotification(true);
+    if (e.target.files && e.target.files[0]) {
+      setPortada(e.target.files[0]);
     }
   };
-  
+
   const handleImagenesChange = (e) => {
-    try {
-      if (e.target.files && e.target.files.length > 0) {
-        console.log("Imagen seleccionada:", e.target.files[0]); // Agregar este console log
-        const newImages = [...imagenes];
-        newImages.push(e.target.files[0]);
-        setImagenes(newImages);
-      } else {
-        throw new Error("No se ha seleccionado ningún archivo de imagen.");
-      }
-    } catch (error) {
-      console.error("Error al actualizar las imágenes:", error); // Registrar el error en la consola
-      setNotificationMessage(`Error al actualizar las imágenes: ${error.message}`);
-      setShowNotification(true);
+    if (e.target.files) {
+      const nuevasImagenes = Array.from(e.target.files);
+      setImagenes([...imagenes, ...nuevasImagenes]);
     }
   };
 
@@ -93,9 +76,8 @@ const CargarNoticia = () => {
   };
 
   const handleAutorChange = (e) => {
-  const selectedAutorId = e.target.value;
-  setIdAutor(selectedAutorId);
-};
+    setIdAutor(e.target.value);
+  };
 
   const handleNotificationClose = () => {
     setShowNotification(false);
@@ -103,26 +85,31 @@ const CargarNoticia = () => {
   };
 
   const onSubmit = async (data) => {
-    if (!data.titulo || !data.subtitulo) {
+    if (!titulo || !subtitulo) {
       setNotificationMessage("Por favor, completa el título y el subtítulo.");
       setShowNotification(true);
       return;
     }
-  
+
+    const formData = new FormData();
+    formData.append("titulo", titulo);
+    formData.append("subtitulo", subtitulo);
+    formData.append("seccionId", idSeccion);
+    formData.append("autorId", idAutor);
+    formData.append("portada", portada);
+
+    parrafos.forEach((parrafo) => formData.append("parrafos", parrafo));
+    etiquetas.forEach((etiqueta) => formData.append("etiquetas", etiqueta));
+    imagenes.forEach((imagenes) =>
+      formData.append(`imagenes`, imagenes)
+    );
+
+    //console.log(data)
+    /*for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }*/
+
     try {
-      const formData = new FormData();
-      formData.append("titulo", data.titulo);
-      formData.append("subtitulo", data.subtitulo);
-      formData.append("idSeccion", idSeccion);
-      formData.append("idAutor", idAutor);
-      formData.append("portada", portada);
-      imagenes.forEach((imagen) => {
-        formData.append("imagenes", imagen);
-       
-      });
-      formData.append("parrafos", parrafos);
-      formData.append("etiquetas", etiquetas);
-      console.log("FormData enviado:", formData); // Agregar este console log
       const response = await axios.post(
         "http://localhost:8080/api/v1/noticia",
         formData,
@@ -132,19 +119,18 @@ const CargarNoticia = () => {
           },
         }
       );
-  
-      if (response.status !== 200) {
-        const errorText = response.data;
-        setNotificationMessage(`Error: ${errorText}`);
-        setShowNotification(true);
+
+      if (response.status !== 201) {
+        setNotificationMessage(`Error: ${response.statusText}`);
+      
       } else {
-        const data = response.data;
-        setNotificationMessage(data);
-        setShowNotification(true);
+        setNotificationMessage("Noticia guardada con éxito");
       }
-    } catch (error) {
-      setNotificationMessage(`Error al enviar el formulario: ${error.message}`);
       setShowNotification(true);
+    } catch (error) {
+      setNotificationMessage(`Error al enviar el formulario: ${error.response.data.mensaje}`);
+      setShowNotification(true);
+      console.log(error);
     }
   };
 
@@ -168,6 +154,7 @@ const CargarNoticia = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="form">
           <span className="titulo">Cargar Noticia</span>
 
+          {/* Título */}
           <div>
             <label htmlFor="titulo">Título</label>
             <input
@@ -185,6 +172,7 @@ const CargarNoticia = () => {
             )}
           </div>
 
+          {/* Subtítulo */}
           <div>
             <label htmlFor="subtitulo">Subtítulo</label>
             <input
@@ -202,6 +190,7 @@ const CargarNoticia = () => {
             )}
           </div>
 
+          {/* Portada */}
           <div>
             <label className="cargar-archivo input" htmlFor="portada">
               <div className="icono">
@@ -213,18 +202,17 @@ const CargarNoticia = () => {
             </label>
             <input
               type="file"
-            
               id="portada"
               name="portada"
               accept="image/*"
               onChange={handlePortadaChange}
             />
-
             {errors.portada && (
               <span className="error-msg">{errors.portada.message}</span>
             )}
           </div>
 
+          {/* Imágenes */}
           <div>
             <label className="cargar-archivo input" htmlFor="imagenes">
               <div className="icono">
@@ -236,9 +224,9 @@ const CargarNoticia = () => {
             </label>
             <input
               type="file"
-              id="imagen"
+              id="imagenes"
               onChange={handleImagenesChange}
-              name="imagen"
+              name="imagenes"
               accept="image/*"
               multiple
             />
@@ -247,6 +235,7 @@ const CargarNoticia = () => {
             )}
           </div>
 
+          {/* Sección */}
           <div>
             <label htmlFor="seccion">Seleccionar Sección:</label>
             <select
@@ -260,7 +249,7 @@ const CargarNoticia = () => {
             >
               <option value="">Seleccionar Sección</option>
               {secciones.map((seccion) => (
-                <option key={seccion.id} value={seccion.id}>
+                <option key={seccion.id} value={seccion.seccionId}>
                   {seccion.nombre}
                 </option>
               ))}
@@ -270,6 +259,7 @@ const CargarNoticia = () => {
             )}
           </div>
 
+          {/* Autor */}
           <div>
             <label htmlFor="autor">Seleccionar Autor:</label>
             <select
@@ -283,8 +273,8 @@ const CargarNoticia = () => {
             >
               <option value="">Seleccionar Autor</option>
               {autores.map((autor) => (
-                <option key={autor.id} value={autor.id}>
-                  {autor.nombre}
+                <option key={autor.id} value={autor.autorId}>
+                  {autor.nombre} {autor.apellido}
                 </option>
               ))}
             </select>
@@ -293,16 +283,17 @@ const CargarNoticia = () => {
             )}
           </div>
 
+          {/* Parrafos */}
           <div>
             <label>Parrafos:</label>
-            {parrafos.split("\n").map((parrafo, index) => (
+            {parrafos.map((parrafo, index) => (
               <div key={index}>
                 <textarea
                   value={parrafo}
-                  onChange={handleNuevoParrafoChange}
+                  onChange={(e) => handleNuevoParrafoChange(e, index)}
                   placeholder="Ingrese un párrafo"
                   className="textarea"
-                  id="parrafo"
+                  id={`parrafo-${index}`}
                 />
                 <button
                   type="button"
@@ -322,17 +313,18 @@ const CargarNoticia = () => {
             </button>
           </div>
 
+          {/* Etiquetas */}
           <div>
             <label>Etiquetas:</label>
-            {etiquetas.split(" ").map((etiqueta, index) => (
+            {etiquetas.map((etiqueta, index) => (
               <div key={index}>
                 <input
                   type="text"
                   value={etiqueta}
-                  onChange={handleNuevaEtiquetaChange}
+                  onChange={(e) => handleNuevaEtiquetaChange(e, index)}
                   placeholder="Ingrese una etiqueta"
                   className="textarea"
-                  id="etiqueta"
+                  id={`etiqueta-${index}`}
                 />
                 <button
                   type="button"
@@ -352,6 +344,7 @@ const CargarNoticia = () => {
             </button>
           </div>
 
+          {/* Botones de envío y reset */}
           <div className="button-container">
             <button type="submit" className="send-button">
               Guardar Noticia
@@ -360,7 +353,6 @@ const CargarNoticia = () => {
               <button id="reset-btn" className="reset-button" type="reset">
                 Resetear
               </button>
-              
             </div>
           </div>
         </form>
@@ -374,5 +366,4 @@ const CargarNoticia = () => {
     </section>
   );
 };
-
 export default CargarNoticia;

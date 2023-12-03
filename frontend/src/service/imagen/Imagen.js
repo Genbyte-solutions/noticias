@@ -32,7 +32,7 @@ export const imagenPorId = async (id) => {
 export const imagenPorIdNoticia = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/imagen/noticia/${id}`,
+      `http://localhost:8080/api/v1/portada/noticia/${id}`,
       { responseType: "arraybuffer" }
     );
     const imageUrl = URL.createObjectURL(new Blob([response.data], {type:response.headers['content-type']}));
@@ -47,7 +47,7 @@ export const imagenPorIdNoticia = async (id) => {
 export const imagenPorIdUsuario = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/imagen/usuario/${id}`,
+      `http://localhost:8080/api/v1/imagen/usuario/${id}`,
       { responseType: "arraybuffer" }
     );
     const imageUrl = URL.createObjectURL(new Blob([response.data], {type:response.headers['content-type']}));
