@@ -42,7 +42,7 @@ const CargarAutor = () => {
       });
 
       if (response.ok) {
-        const responseData = await response.text();
+        const responseData = await response.data.mensaje;
         setNotificationMessage(responseData);
         setShowNotification(true);
       } else {

@@ -47,7 +47,7 @@ function ListaNoticias() {
   const handleEliminarNoticia = async (id) => {
     try {
       const response = await axios.delete(`http://localhost:8080/api/v1/noticia/${id}`);
-      setNotificationMessage(response.data.message);
+      setNotificationMessage(response.data.mensaje);
       setShowNotification(true);
       setNoticias(noticias.filter(noticia => noticia.id !== id));
     } catch (error) {
