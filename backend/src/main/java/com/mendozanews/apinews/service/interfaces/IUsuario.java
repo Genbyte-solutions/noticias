@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface IUsuario {
 
-    Usuario crearUsuario(UsuarioDto usuarioDto, MultipartFile foto) throws IOException;
+    void crearUsuario(UsuarioDto usuarioDto, MultipartFile foto) throws IOException;
 
-    Usuario editarUsuario(Usuario usuario, UsuarioDto usuarioDto, MultipartFile foto) throws IOException;
+    void editarUsuario(Usuario usuario, UsuarioDto usuarioDto, MultipartFile foto) throws IOException;
 
     List<Usuario> listarUsuarios();
 

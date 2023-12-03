@@ -14,7 +14,7 @@ public interface INoticia {
     Noticia actualizarNoticia(Noticia noticia, NoticiaDto noticiaDto, Autor autor, Seccion seccion,
                               List<MultipartFile> imagenes, MultipartFile portada) throws IOException;
 
-    List<Noticia> buscarNoticias(Integer offset, Integer limit);
+    List<Noticia> buscarNoticiasRecientes(Integer offset, Integer limit);
 
     Noticia buscarNoticiaPorId(String id);
 

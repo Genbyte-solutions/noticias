@@ -27,7 +27,7 @@ public interface NoticiaRepositorio extends JpaRepository<Noticia, String> {
     public List<Noticia> buscarNoticiasPorAutor(@Param("nombre") String nombre, @Param("apellido") String apellido, Pageable pageable);
 
     @Query("SELECT n FROM Noticia n WHERE (n.seccion.seccionId = :seccion OR n.seccion.nombre = :seccion) AND n.fechaPublicacion >= CURRENT_DATE() -  14 ORDER BY n.vistas DESC")
-    public List<Noticia> buscarNoticiasPopularesPorSeccion(@Param("seccion") String seccion, Pageable pageable);
+    public List<Noticia> buscarPopularesPorSeccion(@Param("seccion") String seccion, Pageable pageable);
 
     @Query("SELECT n FROM Noticia n WHERE n.fechaPublicacion >= CURRENT_DATE() - 14 ORDER BY n.vistas DESC")
     List<Noticia> buscarNoticiasMasPopulares(Pageable pageable); //home

@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import scala.util.Using;
 
 @Service
 public class UsuarioServicio implements UserDetailsService, IUsuario {
@@ -41,11 +40,11 @@ public class UsuarioServicio implements UserDetailsService, IUsuario {
 
     @Transactional
     @Override
-    public Usuario crearUsuario(UsuarioDto usuarioDto, MultipartFile foto) throws IOException {
+    public void crearUsuario(UsuarioDto usuarioDto, MultipartFile foto) throws IOException {
 
         Imagen fotoGuardada = null;
         if (foto != null) fotoGuardada = imagenServicio.guardarImagen(foto);
-        return usuarioRepo.save(Usuario.builder()
+        usuarioRepo.save(Usuario.builder()
                 .nombre(usuarioDto.getNombre())
                 .apellido(usuarioDto.getApellido())
                 .nombreUsuario(usuarioDto.getNombreUsuario())
@@ -60,7 +59,7 @@ public class UsuarioServicio implements UserDetailsService, IUsuario {
 
     @Transactional
     @Override
-    public Usuario editarUsuario(Usuario usuario, UsuarioDto usuarioDto, MultipartFile foto) throws IOException {
+    public void editarUsuario(Usuario usuario, UsuarioDto usuarioDto, MultipartFile foto) throws IOException {
 
         Imagen fotoActualizada = null;
         if (foto != null) fotoActualizada = imagenServicio.actualizarImagen(foto, usuario.getFoto().getImagenId());
@@ -69,12 +68,13 @@ public class UsuarioServicio implements UserDetailsService, IUsuario {
         usuario.setApellido(usuarioDto.getApellido());
         usuario.setNombreUsuario(usuarioDto.getNombreUsuario());
         usuario.setEmail(usuarioDto.getEmail());
-        usuario.setPassword(new BCryptPasswordEncoder().encode(usuarioDto.getPassword()));
+        usuario.setPassword( new BCryptPasswordEncoder().encode(usuarioDto.getPassword()));
         usuario.setTelefono(usuarioDto.getTelefono());
         usuario.setRol(usuarioDto.getRol());
         usuario.setFoto(fotoActualizada);
 
-        return usuarioRepo.save(usuario);
+        usuarioRepo.save(usuario);
+
     }
 
     @Transactional(readOnly = true)
