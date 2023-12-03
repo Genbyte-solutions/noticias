@@ -94,6 +94,7 @@ public class SeccionControlador {
         }
     }
 
+
     @Operation(
             summary = "Busca una seccion por ID o Nombre",
             responses = {
@@ -105,6 +106,7 @@ public class SeccionControlador {
                             description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
             }
     )
+
     @GetMapping("/seccion/{buscar}")
     public ResponseEntity<?> buscarSeccion(@PathVariable(value = "buscar") String buscar) {
 
