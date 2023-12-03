@@ -1,90 +1,83 @@
-.seccion-paginas {
+/* NUEVOS ESTILOS */
+ /* .seccion-paginas {
   margin: auto 20px;
-
-}
-
-/* ------ CARROUSEL DOTS------ */
-.seccion-paginas .slick-dots {
-    
-    display: flex !important;
-    gap: 10px;
-    justify-content: center;
-
-}
-
-.seccion-paginas .slick-dots div {
-    text-align: center;
-    border: none;
-    width: 30px;
-    background-color: #ef850b;
-    border-radius: 10px;
-}
-
-.seccion-paginas .slick-dots .slick-active div {
-  background-color: #9e5603;
-}
-
-/* ------ CAJITAS ------ */
-
-.seccion-paginas .box {
-  background-color: #fff;
   display: flex;
-  flex-direction: column;
-  position: relative;
-  margin: 15px 15px 15px 10px;
+  flex-wrap: wrap;
+  
+  width: 100vw;
+ }
+.box{
+  
+  margin: 10px;
+  width: 33%;
 }
-
-.seccion-paginas .images {
-  position: relative;
-  height: 220px;
+.box .images{
+ 
+  display: flex;
+  height: 300px;
 }
-
-.seccion-paginas img {
+.box .images .img {
   width: 100%;
-  height: 220px;
-  object-fit: cover;
+}
+.box .images .img img{
+  width: 100%;
+} */
+.seccion-paginas {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+  justify-content: space-between;
 }
 
-.seccion-paginas .text{
-  height: 200px;
-  position:relative;
+.items {
+  width: 30%; /* Ajusta el ancho de los elementos según tu preferencia */
+  margin-bottom: 20px;
 }
 
-.seccion-paginas .text h1 {
-  padding: 20px 10px 0 20px;
-  margin: 0;
-  display: block; /* or inline-block */
-  text-overflow: ellipsis;
-  word-wrap: break-word;
-  overflow: hidden;
-  max-height: 5.6em;
-  line-height: 1.4em;
+
+
+.images {
+  position: relative;
+}
+.img{
+  width: 100%;
+}
+.img img {
+  width: 100%;
+  height: 310px; /* Establece la altura deseada */
+  object-fit: cover; /* Ajusta la forma en que la imagen se ajusta al contenedor */
 }
 
-.seccion-paginas .text p {
-  padding: 20px 10px 0 20px;
-  margin: 0;
-  display: block; /* or inline-block */
-  text-overflow: ellipsis;
-  word-wrap: break-word;
-  overflow: hidden;
-  max-height: 5.2em;
-  line-height: 1.4em;
+
+
+.text {
+  padding: 15px;
+
 }
 
-.seccion-paginas .fecha {
-  margin-top: 15px;
-  padding: 0 0 0 20px;
-  position: absolute;
-  bottom: 10px;
+.titulo {
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
-.seccion-paginas .fecha label {
-  padding-left: 10px;
+.desc {
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-@media screen and (width: 800px) {
-  .seccion-paginas .text h1 {
-    padding-top: 10px;
+.fecha {
+  margin-top: 10px;
+  font-size: 14px;
+}
+@media screen and (max-width: 768px) {
+  .items {
+    width: 100%; /* Para ocupar todo el ancho en dispositivos pequeños */
+  }
+ 
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .items {
+    width: 48%; /* Ajusta según tus necesidades para tabletas, por ejemplo */
   }
 }

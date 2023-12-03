@@ -26,6 +26,10 @@
 
 .singlePopular .text {
     position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
     bottom: 0px;
     left: 0;
     padding: 10px;

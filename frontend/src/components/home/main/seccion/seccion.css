@@ -4,7 +4,6 @@ flex-direction: column;
 justify-content: center;
 }
 .seccion .box {
-  height: 400px;
     display: flex;
 
     flex-direction: column;
