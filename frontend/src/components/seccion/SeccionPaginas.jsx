@@ -73,7 +73,7 @@ console.log(lista , "esto ews val anashe");
 
   return (
     <section className="seccion-paginas">
-      <Slider {...settings}>
+      
 
         {lista.map((val, index) => 
               
@@ -114,7 +114,7 @@ console.log(lista , "esto ews val anashe");
             </div>
           </div>
         ))}
-      </Slider>
+     
     </section>
   );
 }

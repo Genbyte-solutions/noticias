@@ -1,30 +1,15 @@
 .seccion-paginas {
-  margin: auto 20px;
-
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+  justify-content: space-between;
 }
 
-/* ------ CARROUSEL DOTS------ */
-.seccion-paginas .slick-dots {
-    
-    display: flex !important;
-    gap: 10px;
-    justify-content: center;
-
+.items {
+  width: 30%; /* Ajusta el ancho de los elementos según tu preferencia */
+  margin-bottom: 20px;
 }
 
-.seccion-paginas .slick-dots div {
-    text-align: center;
-    border: none;
-    width: 30px;
-    background-color: #ef850b;
-    border-radius: 10px;
-}
-
-.seccion-paginas .slick-dots .slick-active div {
-  background-color: #9e5603;
-}
-
-/* ------ CAJITAS ------ */
 
 .seccion-paginas .box {
   background-color: #fff;
@@ -83,8 +68,21 @@
   padding-left: 10px;
 }
 
-@media screen and (width: 800px) {
+
+@media screen and (max-width: 767px) {
+  
+  .items{
+    width: 100%;
+  }
   .seccion-paginas .text h1 {
-    padding-top: 10px;
+    padding-left: 10px;
+    
+  }
+  .seccion-paginas .text p {
+    padding: 10px;
+    font-size: 14px;
+  }
+  .seccion-paginas .fecha label{
+    padding-left: 0;
   }
 }
