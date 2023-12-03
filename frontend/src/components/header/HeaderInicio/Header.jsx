@@ -1,15 +1,18 @@
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Head from "./Head";
 import "./header.css";
+import axios from "axios";
+import { useSecciones } from "../../../hooks/useSecciones";
 
 
 
 
 export default function Header() {
   const [navbar, setNavbar] = useState(false);
+  const {secciones, setSecciones } = useSecciones()
 
   return (
     <div className="full-header">
@@ -19,7 +22,7 @@ export default function Header() {
         <div className="container">
           <nav>
             <ul
-              className={navbar ? "navbar" : "flexCT"}
+              className={`navbar ${navbar ? "open" : ""}`}
               onClick={() => setNavbar(false)}
             >
               <li>
@@ -33,10 +36,14 @@ export default function Header() {
               {/* <li>
                 <Link to="/administrador">Administrador</Link>
               </li> */}
-              <li>
-                <Link to="/seccion/sanrafael">San Rafael</Link>
-              </li>
-              <li>
+              {secciones.map((seccion) => {
+                return (
+                  <li key={seccion.id}>
+                    <Link to={`/seccion/${seccion.nombre}`}>{seccion.nombre}</Link>
+                  </li>
+                );
+              })}
+              {/* <li>
                 <Link to="/seccion/mendoza">Mendoza</Link>
               </li>
               <li>
@@ -65,12 +72,12 @@ export default function Header() {
               </li>
               <li>
                 <Link to="/seccion/astrologia">Alineando los planetas</Link>
-              </li>
+              </li> */}
               <li>
-              <Link to="/login2">Iniciar sesión</Link>
+                <Link to="/login2">Iniciar sesión</Link>
               </li>
-             
-              
+
+
             </ul>
             <button className="barIco" onClick={() => setNavbar(!navbar)}>
               {navbar ? (

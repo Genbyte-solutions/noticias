@@ -37,7 +37,7 @@ export default function Cotizacion() {
         ></iframe>
       </div>
 
-      <div
+      <div className="div__especial"
         data-aos="zoom-in"
         data-aos-easing="ease-out-cubic"
         data-aos-duration="1000"

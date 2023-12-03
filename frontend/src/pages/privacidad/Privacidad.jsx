@@ -14,7 +14,7 @@ function Privacidad(props) {
           <h1 className="titulo-encabezado">Política de Privacidad</h1>
           <div>
             <h3>
-              <Link to="/">Inicio / </Link>
+              <Link to="/">Inicio/ </Link>
               Política de privacidad
             </h3>
           </div>

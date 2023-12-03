@@ -1,14 +1,98 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import banner from "../../assets/image/Mendoza-News-Banner.png";
 import { popular } from '../../service/noticia/Principales.js';
 import "./footer.css";
-
-
+import axios from 'axios';
+import { imagenPorIdNoticia } from '../../service/imagen/Imagen.js';
+import { listaSecciones } from '../../service/seccion/Listar.js';
 export default function Footer() {
+  const [deportes, setDeportes] = useState([])
+  const [imagenDeporte, setImagenesDeportes] = useState({})
+  const [mendoza, setMendoza] = useState([])
+  const [imagenMendoza, setImagenMendoza] = useState([])
+  const [secciones, setSecciones] = useState([]);
+  useEffect(() => {
+    try {
+      const fetchNews = async () => {
+        const response = await axios.get("http://localhost:8080/api/v1/noticias_populares/deportes?offset=0&limit=3")
+        const noticiasDeportes = response.data;
+        setDeportes(noticiasDeportes);
+
+        // Obtén las imágenes para cada noticia de deportes
+        const imagenesPromises = noticiasDeportes.map(async (noticia) => {
+          try {
+            const imageUrl = await imagenPorIdNoticia(noticia.noticiaId);
+            return imageUrl;
+          } catch (error) {
+            console.error("Error al obtener imagen por ID de noticia: ", error);
+            return null;
+          }
+        });
+
+        // Espera a que todas las imágenes se carguen antes de actualizar el estado
+        const imagenes = await Promise.all(imagenesPromises);
+        setImagenesDeportes(imagenes);
+      }
+
+      fetchNews();
+    } catch (e) {
+      console.log(e, "errorrr");
+    }
+  }, [])
+
+  // TRAYENDO LA DE MENDOZA
+  useEffect(() => {
+    try {
+      const fetchNews = async () => {
+        const response = await axios.get("http://localhost:8080/api/v1/noticias_populares/mendoza?offset=0&limit=3")
+        const noticiasMendoza = response.data;
+        setMendoza(noticiasMendoza);
+
+        // Obtén las imágenes para cada noticia de deportes
+        const imagenesPromises = noticiasMendoza.map(async (noticia) => {
+          try {
+            const imageUrl = await imagenPorIdNoticia(noticia.noticiaId);
+            return imageUrl;
+          } catch (error) {
+            console.error("Error al obtener imagen por ID de noticia: ", error);
+            return null;
+          }
+        });
+
+        // Espera a que todas las imágenes se carguen antes de actualizar el estado
+        const imagenes = await Promise.all(imagenesPromises);
+        setImagenMendoza(imagenes)
+      }
+
+      fetchNews();
+    } catch (e) {
+      console.log(e, "errorrr");
+    }
+  }, [])
+
+  // Obtén la lista de secciones
+
+  useEffect(() => {
+    try {
+      const obtenerSecciones = async () => {
+        try {
+          const seccionesData = await listaSecciones();
+          setSecciones(seccionesData);
+        } catch (error) {
+          console.error("Error al obtener la lista de secciones: ", error);
+        }
+      };
+
+      obtenerSecciones();
+    } catch (e) {
+      console.log(e, "errorrr");
+    }
+  }, []);
+
   return (
-    <>
-      <footer>
+    <div className='container__footer'>
+      <footer >
         <div className="container">
           <div className="box logo">
             <img src={banner} alt="" />
@@ -22,47 +106,53 @@ export default function Footer() {
 
           <div className="box">
             <Link to={`/seccion/Deportes`}>
-              <h3>Deportes</h3>
+              <h3>DEPORTES</h3>
             </Link>
-            <div className="item">
-              <img src={popular[0].imagen} alt="" />
-              <Link to={`/noticia/${popular[0].titulo}`}>
-                <p>{popular[0].titulo.slice(0, 50)} ...</p>
-              </Link>
-            </div>
-            <div className="item">
-              <img src={popular[1].imagen} alt="" />
-              <Link to={`/noticia/${popular[1].titulo}`}>
-                <p>{popular[1].titulo}</p>
-              </Link>
-            </div>
+            {deportes.map((d, index) => {
+              return (
+                <div className="item">
+                  <img className='img__footer' src={imagenDeporte[index]} alt="adwawdawd" />
+                  <Link to={`/noticia/${d.titulo}/${d.noticiaId}`}>
+                    <p>{d.subtitulo.slice(0, 50)} ...</p>
+                  </Link>
+                </div>
+              )
+            })}
+
           </div>
 
           <div className="box">
-            <Link to={`/seccion/Espectáculo`}>
-              <h3>Espectáculo</h3>
+            <Link to={`/seccion/MENDOZA`}>
+              <h3>MENDOZA</h3>
             </Link>
-            <div className="item">
-              <img src={popular[2].imagen} alt="" />
-              <Link to={`/noticia/${popular[2].titulo}`}>
-                <p>{popular[2].titulo}</p>
-              </Link>
-            </div>
-            <div className="item">
-              <img src={popular[3].imagen} alt="" />
-              <Link to={`/noticia/${popular[3].titulo}`}>
-                <p>{popular[3].titulo}</p>
-              </Link>
-            </div>
+            {mendoza.map((d, index) => {
+              return (
+                <div className="item">
+                  <img className="img__footer" src={imagenMendoza[index]} alt="adwawdawd" />
+                  <Link to={`/noticia/${d.titulo}/${d.noticiaId}`}>
+                    <p>{d.subtitulo.slice(0, 50)} ...</p>
+                  </Link>
+                </div>
+              )
+            })}
           </div>
+
 
           <div className="box">
             <h3>Etiquetas</h3>
             <ul>
-              <Link to={`/Futbol`}><li>
-                <span>Futbol</span><label htmlFor="">(6)</label>
-              </li> </Link>
-              <Link to={`/Naturaleza`}><li>
+              {secciones.slice(0, 4).map((seccion, index) => (
+                <Link key={seccion.id} to={`/seccion/${seccion.nombre}`}>
+                  <li>
+                    <span>{seccion.nombre}</span>
+                  </li>
+                </Link>
+              ))}
+              <li>
+                ......
+              </li>
+            </ul>
+            {/* <Link to={`/Naturaleza`}><li>
                 <span>Naturaleza</span><label htmlFor="">(5)</label>
               </li></Link>
               <Link to={`/Moda`}><li>
@@ -70,8 +160,7 @@ export default function Footer() {
               </li></Link>
               <Link to={`/Salud`}><li>
                 <span>Salud</span><label htmlFor="">(6)</label>
-              </li></Link>
-            </ul>
+              </li></Link> */}
           </div>
         </div>
       </footer>
@@ -83,14 +172,14 @@ export default function Footer() {
             © 2023 <Link to='/'>MendozaNews</Link>
           </p>
           <Link to='/privacidad/politica'>
-          <p>
-            Política de privacidad
-          </p>
+            <p>
+              Política de privacidad
+            </p>
           </Link>
           <p>Desarrollado por <a href="https://digitalculture.es/Ar/index.html"><span>Digital Culture</span></a></p>
         </div>
       </div>
 
-    </>
+    </div>
   );
 }

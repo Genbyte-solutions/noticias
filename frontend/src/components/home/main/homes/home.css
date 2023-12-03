@@ -13,12 +13,19 @@ main .container{
 }
 
 @media screen and (max-width: 768px) {
+    main{
+        width: 100vw;
+    }
     main .container{
         flex-direction: column;
+        align-items: center;
+          
     }
     
     .mainContent {
         width: 100%;
+     
+     
     }
     
     .sideContent {
