@@ -124,7 +124,7 @@ const CargarNoticia = () => {
       formData.append("etiquetas", etiquetas);
       console.log("FormData enviado:", formData); // Agregar este console log
       const response = await axios.post(
-        "http://localhost:8080/api/noticias",
+        "http://localhost:8080/api/v1/noticia",
         formData,
         {
           headers: {
