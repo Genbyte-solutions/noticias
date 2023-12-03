@@ -14,7 +14,18 @@ const CargarNoticia = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const handleReset = () => {
+    setTitulo("");
+    setSubtitulo("");
+    setParrafos([]);
+    setEtiquetas([]);
+    setIdSeccion("");
+    setIdAutor("");
+    setPortada(null);
+    setImagenes([]);
+    // Restablecer otros estados si es necesario
+  };
+  
   const [titulo, setTitulo] = useState("");
   const [subtitulo, setSubtitulo] = useState("");
   const [parrafos, setParrafos] = useState([]);
@@ -350,9 +361,10 @@ const CargarNoticia = () => {
               Guardar Noticia
             </button>
             <div className="reset-button-container">
-              <button id="reset-btn" className="reset-button" type="reset">
-                Resetear
-              </button>
+            <button id="reset-btn" className="reset-button" type="button" onClick={handleReset}>
+  Resetear
+</button>
+
             </div>
           </div>
         </form>

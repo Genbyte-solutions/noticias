@@ -4,6 +4,7 @@ import Notification from "../../../../components/notificacion/Notificacion.jsx";
 import { imagenPorIdUsuario } from "../../../../service/imagen/Imagen.js";
 import { listaUsuarios } from "../../../../service/usuario/Listar.js";
 import "./lista-usuarios.css";
+import axios from "axios";
 function ListaUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const [imagenes, setImagenes] = useState();
@@ -34,6 +35,7 @@ function ListaUsuarios() {
       for (const usuario of usuarios) {
         try {
           const imagenData = await imagenPorIdUsuario(usuario.usuarioId);
+          // console.log(imagenData);
           imagenesPorUsuario[usuario.usuarioId] = imagenData;
         } catch (error) {
           console.error(
@@ -48,33 +50,29 @@ function ListaUsuarios() {
     cargarImagenes();
   }, [usuarios]);
 
-  const handleEliminarUsuario = (id) => {
-    fetch(`http://localhost:8080/api/usuario/eliminar/${id}`, {
-      method: "POST",
-    })
-      .then(async (response) => {
-        if (response.ok) {
-          const responseData = await response.text();
-          setNotificationMessage(responseData);
-          setShowNotification(true);
-          // Actualizar la lista de usuarios después de eliminar
-          setUsuarios((prevUsuarios) =>
-            prevUsuarios.filter((usuario) => usuario.usuarioId !== id)
-          );
-        } else {
-          setNotificationMessage(
-            "Error al eliminar el usuario. Response not ok: " +
-              response.statusText
-          );
-          setShowNotification(true);
-        }
-      })
-      .catch((error) => {
+  const handleEliminarUsuario = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/v1/usuario/${id}`
+      );
+      if (response.status === 200) {
+        // const responseData = await response.text();
+        setNotificationMessage("Usuario eliminado con éxito");
+        setShowNotification(true);
+        // Actualizar la lista de usuarios después de eliminar
+        setUsuarios((prevUsuarios) =>
+          prevUsuarios.filter((usuario) => usuario.usuarioId !== id)
+        );
+      } else {
         setNotificationMessage(
-          "Error al eliminar el usuario: " + error.message
+          "Error al eliminar el usuario. Response not ok: " + response.status
         );
         setShowNotification(true);
-      });
+      }
+    } catch (error) {
+      setNotificationMessage("Error al eliminar el usuario: " + error.message);
+      setShowNotification(true);
+    }
   };
 
   return (
@@ -82,7 +80,6 @@ function ListaUsuarios() {
       <table className="lista-usuarios-table">
         <thead>
           <tr>
-            <th className="table-header">ID</th>
             <th className="table-header">Nombre</th>
             <th className="table-header">Apellido</th>
             <th className="table-header">Usuario</th>
@@ -96,7 +93,6 @@ function ListaUsuarios() {
         <tbody>
           {usuarios.map((usuario) => (
             <tr key={usuario.usuarioId} className="border-usuarios">
-              <td className="table-body-usuarios">{usuario.usuarioId}</td>
               <td className="table-body-usuarios">{usuario.nombre}</td>
               <td className="table-body-usuarios">{usuario.apellido}</td>
               <td className="table-body-usuarios">{usuario.nombreUsuario}</td>
@@ -104,18 +100,22 @@ function ListaUsuarios() {
               <td className="table-body-usuarios">{usuario.email}</td>
               <td className="table-body-usuarios">{usuario.telefono}</td>
               <td className="table-body-usuarios">
-                {usuario.imagen && imagenes[usuario.usuarioId] && (
+                {/* {console.log(imagenes[usuario.usuarioId])} */}
+                {imagenes[usuario.usuarioId] ? (
                   <img
                     src={[imagenes[usuario.usuarioId]]}
                     alt="Icono"
                     className="icono-image"
                   />
+                ) : (
+                  ""
                 )}
               </td>
               <td className="button-usuarios-td">
                 <button
                   className="usuarios-button"
                   onClick={() => handleEliminarUsuario(usuario.usuarioId)}
+                  // usuario.usuarioId
                 >
                   Eliminar
                 </button>
