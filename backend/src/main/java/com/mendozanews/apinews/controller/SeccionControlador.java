@@ -8,6 +8,9 @@ import com.mendozanews.apinews.model.dto.response.SeccionResDto;
 import com.mendozanews.apinews.model.entity.Seccion;
 import com.mendozanews.apinews.model.payload.ResponseMessage;
 import com.mendozanews.apinews.service.interfaces.ISeccion;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("api/v1")
+@Tag(name = "Seccion")
 public class SeccionControlador {
 
     private final ISeccion seccionService;
@@ -31,6 +35,17 @@ public class SeccionControlador {
         this.seccionMapper = seccionMapper;
     }
 
+    @Operation(
+            summary = "Crea una seccion",
+            responses = {
+                    @ApiResponse(responseCode = "201",
+                            description = "La solicitud ha tenido éxito y se ha creado un nuevo recurso como resultado de ello"),
+                    @ApiResponse(responseCode = "400",
+                            description = "El servidor no pudo interpretar la solicitud dada una sintaxis inválida"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @PostMapping("/seccion")
     public ResponseEntity<?> crearSeccion(
             @ModelAttribute @Valid SeccionDto seccionDto,
@@ -45,6 +60,19 @@ public class SeccionControlador {
                 .build(), HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Edita una seccion por ID",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "400",
+                            description = "El servidor no pudo interpretar la solicitud dada una sintaxis inválida"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @PutMapping("/seccion/{seccionId}")
     public ResponseEntity<?> editarSeccion(@PathVariable("seccionId") String seccionId,
                                            @ModelAttribute @Valid SeccionDto seccionDto,
@@ -66,6 +94,19 @@ public class SeccionControlador {
         }
     }
 
+
+    @Operation(
+            summary = "Busca una seccion por ID o Nombre",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
+
     @GetMapping("/seccion/{buscar}")
     public ResponseEntity<?> buscarSeccion(@PathVariable(value = "buscar") String buscar) {
 
@@ -82,8 +123,19 @@ public class SeccionControlador {
         return new ResponseEntity<>(seccionResDto, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Lista de secciones",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "404",
+                            description = "El servidor no pudo encontrar el contenido solicitado"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @GetMapping("/secciones")
-    public ResponseEntity<?> Secciones() {
+    public ResponseEntity<?> listarSecciones() {
 
         List<Seccion> secciones = seccionService.listarSecciones();
         if (secciones.isEmpty()) throw new ResourceNotFoundException("secciones");
@@ -92,6 +144,15 @@ public class SeccionControlador {
         return new ResponseEntity<>(seccionesResDto, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Elimina una seccion por ID",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "La solicitud ha tenido éxito"),
+                    @ApiResponse(responseCode = "500",
+                            description = "El servidor ha encontrado una situación que no sabe cómo manejarla")
+            }
+    )
     @DeleteMapping("/seccion/{seccionId}")
     public ResponseEntity<?> eliminarSeccionPorId(@PathVariable("seccionId") String seccionId) {
         seccionService.eliminarSeccionPorId(seccionId);

@@ -6,14 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
-@RestController
 @SpringBootApplication
 public class ApiNewsApplication {
-
-    @GetMapping
-    public String hello() {
-        return "Hello, world!";
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(ApiNewsApplication.class, args);
