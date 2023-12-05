@@ -24,7 +24,7 @@ public class Seccion {
     @Column(name = "nombre", nullable = false, unique = true)
     private String nombre;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "icono", referencedColumnName = "icono_seccion_id")
     private IconoSeccion icono;
 }

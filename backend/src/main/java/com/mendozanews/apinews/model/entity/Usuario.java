@@ -55,7 +55,7 @@ public class Usuario {
     @Column(name = "fecha_registro", updatable = false)
     private Timestamp fechaRegistro;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
     private Imagen foto;
 }

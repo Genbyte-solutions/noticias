@@ -69,10 +69,11 @@ public class UsuarioServicio implements UserDetailsService, IUsuario {
         usuario.setApellido(usuarioDto.getApellido());
         usuario.setNombreUsuario(usuarioDto.getNombreUsuario());
         usuario.setEmail(usuarioDto.getEmail());
-        usuario.setPassword(new BCryptPasswordEncoder().encode(usuarioDto.getPassword()));
+        usuario.setPassword(new BCryptPasswordEncoder().encode(usuarioDto.getConfirmPassword()));
         usuario.setTelefono(usuarioDto.getTelefono());
         usuario.setRol(usuarioDto.getRol());
-        usuario.setFoto(fotoActualizada);
+
+        if (fotoActualizada!=null) usuario.setFoto(fotoActualizada);
 
         return usuarioRepo.save(usuario);
     }
@@ -106,10 +107,6 @@ public class UsuarioServicio implements UserDetailsService, IUsuario {
 
     @Transactional
     public void eliminarUsuarioPorId(String id) {
-        Usuario usuario = usuarioRepo.findById(id).orElse(null);
-        if (usuario != null && usuario.getFoto().getImagenId() != null) {
-            imagenServicio.eliminarImagenPorId(usuario.getFoto().getImagenId());
-        }
         usuarioRepo.deleteById(id);
     }
 

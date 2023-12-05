@@ -74,11 +74,6 @@ public class AutorServicio implements IAutor {
     // ELIMINA AUTOR POR ID
     @Transactional
     public void eliminarAutorPorId(String id) {
-
-        Autor autor = autorRepositorio.findById(id).orElse(null);
-        if (autor != null && autor.getFoto().getImagenId() != null) {
-            imagenServicio.eliminarImagenPorId(autor.getFoto().getImagenId());
-        }
         autorRepositorio.deleteById(id);
     }
 }
