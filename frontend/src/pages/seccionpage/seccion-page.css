@@ -1,4 +1,4 @@
-.seccion-page .encabezado{
+.seccion-page .encabezado {
     margin: 30px;
     display: flex;
     align-items: center;
@@ -12,4 +12,11 @@
     line-height: 40px;
     font-weight: 700;
     text-transform: uppercase;
-  }
+}
+
+@media screen and (max-width:480px) {
+    .seccion-page .titulo-encabezado {
+
+        font-size: 25px;
+    }
+}

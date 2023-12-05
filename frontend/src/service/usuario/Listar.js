@@ -4,7 +4,7 @@ import axios from "axios";
 export const listaUsuarios = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/usuario/listar"
+      "http://localhost:8080/api/v1/usuarios"
     );
     return response.data;
   } catch (error) {
@@ -16,7 +16,7 @@ export const listaUsuarios = async () => {
 // Obtener usuario por ID
 export const usuarioPorId = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/usuario/${id}`);
+    const response = await axios.get(`http://localhost:8080/api/v1/usuario/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error al obtener usuario por ID: ", error);

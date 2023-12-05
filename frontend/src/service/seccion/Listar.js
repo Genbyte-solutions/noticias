@@ -4,7 +4,7 @@ import axios from "axios";
 export const listaSecciones = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/secciones"
+      "http://localhost:8080/api/v1/secciones"
     );
     return response.data;
   } catch (error) {
@@ -25,10 +25,10 @@ export const seccionPorId = async (id) => {
 };
 
 //  SECCION POR CODIGO
-export const seccionPorCodigo = async (codigo) => {
+export const seccionPorCodigo = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/seccion/codigo/${codigo}`
+      `http://localhost:8080/api/v1/seccion/${id}`
     );
     return response.data;
   } catch (error) {

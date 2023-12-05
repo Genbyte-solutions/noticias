@@ -29,6 +29,7 @@
   cursor: pointer;
   padding: 5px;
   margin-right: 5px;
+  width: 60px;
 }
 
 .usuarios-button:hover {
@@ -70,13 +71,12 @@
 .table-body-usuarios {
   border: 1px solid black;
   text-align: center;
+  padding-top: 5px;
 }
 .border-usuarios {
   border: 1px solid black;
 }
 .button-usuarios-td {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
   padding: 5px;
 }

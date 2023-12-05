@@ -1,5 +1,6 @@
 .clients {
   padding: 0;
+
 }
 
 .clients .client-logo {
@@ -131,4 +132,26 @@
 
 .publi-simple .img-container img:hover {
   transform: scale(1.2);
+} 
+@media screen and (max-width:480px) {
+  /* .clients{
+    background-color: aqua;
+  } */
+  .clients .container .publicidades {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+  }
+  .clients .container .publicidades .cajita{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+     width: 40%;
+  }
+  .clients .container .publicidades .cajita .client-logo img{
+    width: 120%;
+  }
 }

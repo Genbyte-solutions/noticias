@@ -4,19 +4,81 @@ import Side from "../../components/home/sideContent/side/Side.jsx";
 import SinglePageSlider from "../../components/singlePage/SinglePageSlider.jsx";
 import { principales } from "../../service/noticia/Principales.js";
 import "./single-page.css";
+import { FaFacebookF } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+import { FaTwitter } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
+import axios from "axios";
+
+import { imagenPorId } from "../../service/imagen/Imagen.js";
 
 export default function SinglePage() {
-  const { titulo } = useParams();
-  const [item, setItem] = useState(null);
+  const { titulo, id } = useParams();
+  const [item, setItem] = useState();
+  const [imagenAutor, setImagenAutor] = useState("")
+  const [imagenNews, setImagenNews] = useState([])
+
+
+  //TRAYENDO LA NOTICIA POR EL ID
+  useEffect(() => {
+    const fetchNoticia = async () => {
+      try {
+        if (id) {
+          const response = await axios.get(`http://localhost:8080/api/v1/noticia/${id}`);
+          setItem(response.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchNoticia();
+  }, [id]);
+
+  //TRAYENDO LA IMAGEN DEL AUTOR
 
   useEffect(() => {
-    const item = principales.find((item) => item.titulo === titulo);
-    window.scrollTo(0, 0);
-    if (item) {
-      setItem(item);
-    }
-  }, [titulo]);
+    try {
+      const fetchUrl = async () => {
+        const response = await axios.get(`http://localhost:8080/api/v1/imagen/autor/${item.autorResDto.autorId}`, { responseType: "arraybuffer" })
+        const imageUrl = URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
 
+        setImagenAutor(imageUrl)
+      }
+      fetchUrl()
+    } catch (e) {
+      console.log(e);
+    }
+  }, [item])
+
+
+  //TRAYENDO LAS IMAGENES DE LA NOTICIA (FALTA TERMINAR)
+
+  useEffect(() => {
+    const fetchImageNews = async () => {
+      try {
+        if (id) {
+          const response = await axios.get(`http://localhost:8080/api/v1/imagenes/noticia/${id}`);
+          let arrayDeImgs = response.data;
+
+          const imagePromises = arrayDeImgs.map(async (img) => {
+            console.log(img, "este es el url de cada imagen");
+            const imageResponse = await axios.get(`http://localhost:8080/api/v1/imagen/noticia/${img}`, { responseType: "arraybuffer" });
+            return URL.createObjectURL(new Blob([imageResponse.data], { type: imageResponse.headers['content-type'] }));
+          });
+
+          const imagenesResueltas = await Promise.all(imagePromises);
+          setImagenNews(imagenesResueltas);
+        }
+      } catch (e) {
+        console.log("error", e);
+      }
+    };
+
+    fetchImageNews();
+  }, [id]);
+
+  console.log(imagenNews, "estas son las imagenes ");
   return (
     <>
       {item ? (
@@ -27,74 +89,90 @@ export default function SinglePage() {
               <h1 className="titulo">{item.titulo}</h1>
               <div className="autor">
                 <span>por</span>
-                <img src={item.autor.foto} alt="" />
-                <Link to={`/autor/${item.autor.nombre}`}>
-                  <p>{item.autor.nombre}</p>
+                <img src={imagenAutor} alt="foto del autor" />
+                <Link to={`/autor/${item.autorResDto.nombre}/${item.autorResDto.apellido}`}>
+                  <p>{item.autorResDto.nombre}</p>
                 </Link>
-                <label htmlFor="">{item.fecha}</label>
+                <label htmlFor="">{new Date().toLocaleDateString()}</label>
               </div>
+
               <div className="social">
                 <div className="socBox">
-                  <i className="fab fa-facebook-f"></i>
+                  <FaFacebookF />
                 </div>
                 <div className="socBox">
-                  <i className="fab fa-instagram"></i>
+                  <FaInstagram />
                 </div>
-                <div className="socBox">
-                  <i className="fab fa-twitter"></i>
+                <div className="socBox twitter">
+                  <FaTwitter />
                 </div>
-                <div className="socBox">
-                  <i className="fab fa-youtube"></i>
+                <div className="socBox youtube">
+                  <FaYoutube />
                 </div>
               </div>
+
               <div className="descTop">
-                {item.desc.map((elemento, id) =>
+                {item.parrafos.map((elemento, id) =>
                   id < 2 ? (
                     <p key={id}>
-                      {elemento}
-                      {elemento}
-                      {elemento}
                       {elemento}
                     </p>
                   ) : null
                 )}
               </div>
-              <img src={item.imagen} alt="" />
+
+              {item.etiquetas.map((p, i) => (
+                <p key={i} className="etiqueta">
+                  <strong>#{p}</strong>
+                </p>
+              ))}
+
+              {/* Primera imagen después de las etiquetas */}
+              {imagenNews.length > 0 && (
+                <img src={imagenNews[0]} alt={imagenNews[0]} />
+              )}
+
+              {/*   /////////////////////////////////////////////////   */}
               <div className="descBot">
                 <h1>{item.titulo}</h1>
-                <p>{item.desc[0]}</p>
+                <p>{item.parrafos[0]}</p>
               </div>
-              {item.quote ? (
+
+              {item.subtitulo ? (
                 <div className="quote">
                   <i className="fa fa-quote-left"></i>
                   <p>
-                    {item.quote}
-                    {item.quote}
-                    {item.quote}
+                    {item.subtitulo}
                   </p>
                 </div>
               ) : (
                 <></>
               )}
+
               <div className="descTop">
-                {item.desc.map((elemento, id) =>
+                {item.parrafos.map((elemento, id) =>
                   id > 1 ? (
                     <p key={id}>
-                      {elemento}
-                      {elemento}
-                      {elemento}
                       {elemento}
                     </p>
                   ) : null
                 )}
               </div>
+         
+              {/* Segunda imagen después del subtitulo */}
+              {imagenNews.length > 1 && (
+                <img src={imagenNews[1]} alt={imagenNews[1]} />
+              )}
+
               <div className="sobre-autor">
                 <div className="autor">
-                  <img src={item.autor.foto} alt="" />
+                  <div className="img__autor">
+                    <img src={imagenAutor} alt="" />
+                  </div>
                   <div className="texto">
                     <span>Más de</span>
-                    <Link to={`/autor/${item.autor.nombre}`}>
-                      <p>{item.autor.nombre}</p>
+                    <Link to={`/autor/${item.autorResDto.nombre}/${item.autorResDto.apellido}`}>
+                      <p>{item.autorResDto.nombre + " " + item.autorResDto.apellido} </p>
                     </Link>
                   </div>
                 </div>
@@ -113,4 +191,4 @@ export default function SinglePage() {
       )}
     </>
   );
-}
+}  

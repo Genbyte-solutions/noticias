@@ -191,7 +191,7 @@ export const listaNoticias = async () => {
 // Obtener noticia por ID
 export const noticiaPorId = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/noticia/${id}`);
+    const response = await axios.get(`http://localhost:8080/api/v1/noticia/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error al obtener noticia por ID: ", error);
@@ -203,7 +203,7 @@ export const noticiaPorId = async (id) => {
 export const noticiasResumen = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/noticia/seccion"
+      "http://localhost:8080/api/v1/noticias/seccion"
     );
     return response.data;
   } catch (error) {
@@ -226,10 +226,10 @@ export const noticiasPorAutor = async (id) => {
 };
 
 // Obtener noticias por ID de sección
-export const noticiasPorSeccion = async (id) => {
+export const noticiasPorSeccion = async (seccion) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/noticia/seccion/${id}`
+      `http://localhost:8080/api/v1/noticias/${seccion}?offset=0&limit=10`
     );
     return response.data;
   } catch (error) {

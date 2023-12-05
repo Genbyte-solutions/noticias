@@ -1,3 +1,45 @@
+/* NUEVOS ESTILOS */
+/* .container__footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  width: 100vw;
+  box-sizing: border-box;
+  margin-top: 5vw;
+  padding: 30px;
+}
+footer{
+  background-color: aqua;
+  width: 100vw;
+}
+footer .container{
+  background-color: azure;
+}
+footer p,
+footer span,
+footer label {
+  font-size: 10%vw;
+}
+.legal{
+  footer .item img {
+    max-height: 80px;
+    min-width: 80px;
+    object-fit: cover;
+  }
+  background-color: blue;
+} */
+
+/* TERMINACION DE NUEVOS ESTILOS */
+
+.container__footer {
+  margin: 0;
+  width: 100vw;
+  box-sizing: border-box;
+  
+}
+
 footer {
   background-color: #333;
   color: #fff;
@@ -12,15 +54,15 @@ footer label {
   font-size: 10%vw;
 }
 
-footer a{
+footer a {
   color: #fff;
   transition: all 0.5s;
 }
 
-footer a:hover{
+footer a:hover {
   transform: scale(1.02);
-  
-  & span{
+
+  & span {
     transform: scale(1.02);
   }
 }
@@ -29,6 +71,7 @@ footer .container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 30px;
+
 }
 
 footer .logo img {
@@ -49,6 +92,8 @@ footer h3 {
 }
 
 footer .item {
+
+
   display: flex;
   align-items: center;
   margin-bottom: 30px;
@@ -56,11 +101,10 @@ footer .item {
 }
 
 footer .item img {
-  max-height: 80px;
-  min-width: 80px;
+  max-height: 40px;
+  min-width: 70px;
   object-fit: cover;
 }
-
 footer .item p {
   padding: 10px 20px;
   line-height: 1.5;
@@ -93,20 +137,33 @@ footer ul li span::before {
   border-top: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.legal a{
+.legal a {
   color: #fff;
   transition: all 0.5s;
 }
 
-.legal a:hover{
+
+.legal a:hover {
   transform: scale(1.02);
   color: goldenrod;
 }
 
 @media screen and (max-width: 768px) {
+
+ footer{
+width: 100vw;
+ }
   footer .container {
     grid-template-columns: repeat(2, 1fr);
+    padding: 0px 0;
+
+
   }
+
+  footer .logo img {
+    width: 80%;
+  }
+
   footer p,
   footer span,
   footer label {
@@ -128,5 +185,62 @@ footer ul li span::before {
 
   .legal p {
     font-size: xx-small;
+  }
+
+  ;
+}
+
+/* ... (código existente) ... */
+
+@media screen and (max-width: 480px) {
+  .full-header{
+    width: 100vw;
+  }
+  footer {
+    border: none;
+    padding: 0;
+    margin: 0;
+    margin-right: 0;
+    padding-right: 0;
+  margin-top: 15%;
+    
+  }
+  
+
+  footer .container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 10px;
+    padding-top: 20px;
+  }
+
+  footer .logo img {
+    width: 80%;
+  }
+
+  footer p,
+  footer span,
+  footer label {
+    font-size: x-small;
+  }
+
+  footer h3 {
+    margin-bottom: 20px;
+  }
+
+  footer .item img {
+    max-height: 40px;
+    min-width: 40px;
+  }
+
+
+  footer ul li {
+    margin-bottom: 10px;
+  }
+  .legal .container{
+    display: flex;
+    flex-direction: column;
+  }
+  .legal p {
+    font-size: x-small;
   }
 }

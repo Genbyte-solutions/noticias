@@ -3,6 +3,9 @@
 }
  */
 /* ------------- Social ------------- */
+/* .side{
+  border: 1px solid red;
+} */
 .social .socBox {
   padding: 10px 20px;
   margin-bottom: 10px;
@@ -27,6 +30,7 @@
 /* ------------- Banner ------------- */
 .banner {
   margin: 40px 0;
+  margin-top: 100px;
 }
 
 .banner img {
@@ -38,4 +42,11 @@
   position: relative;
   margin-bottom: 20px;
   padding: 5px;
+}
+.radio .flexCT iframe{
+  width: 100%;
+  
+}
+.categorias{
+  margin-top:150px;
 }

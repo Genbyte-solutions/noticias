@@ -1,3 +1,7 @@
+
+.full-header {
+  width: 100vw;
+}
 .head {
   cursor: pointer;
   background-color: #ef850b;
@@ -21,7 +25,12 @@
 header {
   padding: 0 0;
 }
-
+header nav .navbar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
 header nav {
   display: flex;
   justify-content: center;
@@ -63,16 +72,18 @@ header li a:hover {
 
 @media screen and (max-width: 768px) {
 
-  .full-header{
+  .full-header {
     display: flex;
     position: fixed;
     top: 0;
     z-index: 9999;
+    position: relative;
   }
 
-  header{
+  header {
     background-color: #ef850b;
     display: flex;
+    width: 10%;
   }
 
   .head {
@@ -106,10 +117,95 @@ header li a:hover {
     /* overflow-y: scroll; */
     background-color: #fff;
   }
+/* Estilos comunes para la transición */
+header .navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  top: 100%;
+  padding: 10px 15px;
+  transform: translateY(-10px);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
 
+/* Cuando .navbar está abierto, ajusta las propiedades para mostrarlo */
+.navbar.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
   header li {
     margin: 0;
     height: 15px;
+  }
+
+  header li a {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .full-header {
+    width: 100vw;
+  }
+
+  .head {
+    padding: 10px 0;
+  }
+
+  header {
+     
+    width: 20%;
+  }
+
+  .head .logo img {
+    min-width: 20%;
+    max-width: 50%;
+  }
+
+  header .barIco {
+    display: block;
+    cursor: pointer;
+  }
+/* Estilos comunes para la transición */
+header .navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  top: 100%;
+  padding: 10px 15px;
+  transform: translateY(-10px);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+/* Cuando .navbar está abierto, ajusta las propiedades para mostrarlo */
+.navbar.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+  /* header .navbar {
+
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    top: 100%;
+    padding: 10px 15px;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+
+
+  } */
+
+
+  header li {
+    margin: 0;
+    height: auto;
   }
 
   header li a {

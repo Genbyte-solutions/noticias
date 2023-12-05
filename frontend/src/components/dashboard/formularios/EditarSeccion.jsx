@@ -1,7 +1,7 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from "react-router-dom";
+import axios from 'axios';
 import Notification from '../../../components/notificacion/Notificacion';
 import { imagenPorIdSeccion } from '../../../service/imagen/Imagen.js';
 import { seccionPorCodigo } from '../../../service/seccion/Listar.js';
@@ -12,73 +12,51 @@ function EditarSeccion() {
     const [icono, setIcono] = useState();
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [iconoName, setIconoName] = useState('Subir icono');
-    const dataRef = useRef(null);
     const [showNotification, setShowNotification] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
 
     useEffect(() => {
-        seccionPorCodigo(codigo)
-            .then(data => {
-                setSeccion(data);
-                // Al recibir los datos de la seccion, actualiza los campos de entrada
-                setValue('id', data.id);
-                setValue('codigo', data.codigo);
-                setValue('nombre', data.nombre);
-            })
-            .catch(error => console.error('Error al obtener la seccion: ', error));
+        seccionPorCodigo(codigo).then(data => {
+            setSeccion(data);
+            setValue('id', data.id);
+            setValue('codigo', data.codigo);
+            setValue('nombre', data.nombre);
+        }).catch(error => console.error('Error al obtener la sección:', error));
     }, [codigo, setValue]);
 
-    const idSeccion = seccion.id
-
     useEffect(() => {
-        imagenPorIdSeccion(idSeccion)
-            .then(data => {
+        if (seccion.id) {
+            imagenPorIdSeccion(seccion.id).then(data => {
                 setIcono(data);
-            })
-            .catch(error => console.error('Error al obtener el icono de seccion: ', error));
-    }, [idSeccion]);
+            }).catch(error => console.error('Error al obtener el icono de sección:', error));
+        }
+    }, [seccion.id]);
 
-    const handleNotificationClose = () => {
-        setShowNotification(false);
-        setNotificationMessage('');
+    const handleIconoChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setIconoName(e.target.files[0].name);
+        }
     };
 
-    useEffect(() => {
-        if (errors.icono) {
-            setIconoName(errors.icono.message);
-        } else {
-            const icono = dataRef.current ? dataRef.current.icono : null;
-            setIconoName(icono ? icono[0].name : 'Subir icono');
-        }
-    }, [errors.icono, dataRef]);
-
     const onSubmit = async (data) => {
-        dataRef.current = { ...data };
         const formData = new FormData();
-        formData.append('codigo', data.codigo);
+       
         formData.append('nombre', data.nombre);
-        if (data.icono) {
+        if (data.icono && data.icono.length > 0) {
             formData.append('icono', data.icono[0]);
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/seccion/editar/${seccion.id}`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                const responseData = await response.text();
-                setNotificationMessage(responseData);
-                setShowNotification(true);
+            const response = await axios.put(`http://localhost:8080/api/v1/seccion/${seccion.seccionId}`, formData);
+            if (response.status === 200) {
+                setNotificationMessage("Sección actualizada con éxito");
             } else {
-                setNotificationMessage('Error al enviar el formulario. Response not ok: ' + response.statusText);
-                setShowNotification(true);
+                setNotificationMessage(`Error al actualizar la sección: ${response.statusText}`);
             }
         } catch (error) {
-            setNotificationMessage('Error al enviar el formulario: ' + error.message);
-            setShowNotification(true);
+            setNotificationMessage(`Error al actualizar la sección: ${error.message}`);
         }
+        setShowNotification(true);
     };
 
     return (
@@ -86,18 +64,8 @@ function EditarSeccion() {
             <div className='form-container'>
                 <form onSubmit={handleSubmit(onSubmit)} className='form'>
                     <span className="titulo">Editar Sección</span>
-                    {icono && <img src={icono} alt="icono" />}
-                    <div>
-                        <label htmlFor="codigo">Codigo</label>
-                        <input
-                            type="text"
-                            id="codigo"
-                            {...register('codigo', { required: 'Completa este campo' })}
-                            className='input'
-                            defaultValue={_ => seccion.codigo} // Establece el valor inicial
-                        />
-                        {errors.codigo && <span className="error-msg">{errors.codigo.message}</span>}
-                    </div>
+                    {icono && <img src={icono} alt="Icono de la sección" style={{ maxWidth: "100px", maxHeight: "100px" }} />}
+             
                     <div>
                         <label htmlFor="nombre">Nombre</label>
                         <input
@@ -105,14 +73,14 @@ function EditarSeccion() {
                             id="nombre"
                             {...register('nombre', { required: 'Completa este campo' })}
                             className="input"
-                            defaultValue={_ => seccion.nombre} // Establece el valor inicial
+                            defaultValue={seccion.nombre}
                         />
                         {errors.nombre && <span className="error-msg">{errors.nombre.message}</span>}
                     </div>
                     <div>
                         <label className="cargar-archivo input" htmlFor="icono">
                             <div className="icono">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24">
+                               <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24">
                                     <g strokeWidth="0" id="SVGRepo_bgCarrier"></g>
                                     <g strokeLinejoin="round" strokeLinecap="round" id="SVGRepo_tracerCarrier"></g>
                                     <g id="SVGRepo_iconCarrier">
@@ -121,17 +89,16 @@ function EditarSeccion() {
                                 </svg>
                             </div>
                             <div className='texto'>
-                                <span className={errors.icono ? "error-msg" : ""}>
-                                    {errors.icono ? errors.icono.message : iconoName}
-                                </span>
+                                <span>{iconoName}</span>
                             </div>
-                            <input
-                                type="file"
-                                id="icono"
-                                {...register('icono', { required: 'Icono requerido' })}
-                                className='input'
-                            />
                         </label>
+                        <input
+                            type="file"
+                            id="icono"
+                            {...register('icono')}
+                            className='input'
+                            onChange={handleIconoChange}
+                        />
                     </div>
                     <div className="button-container">
                         <button type="submit" className="send-button">
@@ -145,7 +112,7 @@ function EditarSeccion() {
                     </div>
                 </form>
             </div>
-            {showNotification && <Notification message={notificationMessage} onClose={handleNotificationClose} />}
+            {showNotification && <Notification message={notificationMessage} onClose={() => setShowNotification(false)} />}
         </section>
     );
 }

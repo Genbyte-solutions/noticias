@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Notification from "../../../components/notificacion/Notificacion";
+import axios from "axios";
 
 function CargarUsuario() {
   const {
@@ -13,19 +14,20 @@ function CargarUsuario() {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
 
+
   const handleNotificationClose = () => {
     setShowNotification(false);
     setNotificationMessage("");
   };
 
   useEffect(() => {
-    if (errors.imagen) {
-      setImagenName(errors.imagen.message);
+    if (errors.foto) {
+      setImagenName(errors.foto.message);
     } else {
-      const imagen = dataRef.current ? dataRef.current.imagen : null;
+      const imagen = dataRef.current ? dataRef.current.foto : null;
       setImagenName(imagen ? imagen[0].name : "Subir imagen");
     }
-  }, [errors.imagen, dataRef]);
+  }, [errors.foto, dataRef]);
 
   const onSubmit = async (data) => {
     dataRef.current = { ...data };
@@ -33,35 +35,36 @@ function CargarUsuario() {
     formData.append("nombre", data.nombre);
     formData.append("apellido", data.apellido);
     formData.append("nombreUsuario", data.nombreUsuario);
-    formData.append("imagen", data.imagen[0]);
+    formData.append("rol", data.rol);
+    formData.append("foto", data.foto[0]);
     formData.append("email", data.email);
     formData.append("telefono", data.telefono);
     formData.append("password", data.password);
-    formData.append("password2", data.password2);
-
+    formData.append("confirmPassword", data.confirmPassword);
+    // console.log(formData);
+    
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/usuario/registrar",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+        const response = await axios.post(`http://localhost:8080/api/v1/usuario`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+        })
 
-      if (response.ok) {
-        const responseData = await response.text();
-        setNotificationMessage(responseData);
+      if (response.status === 201) {
+        // const responseData = await response.text();
+        setNotificationMessage('Usuario registrado con éxito');
         setShowNotification(true);
-      } else {
-        setNotificationMessage(
-          "Error al enviar el formulario. Response not ok: " +
-            response.statusText
-        );
+      } 
+    } catch (error) {
+      const status = error.response.status;
+      if(status === 500){
+        setNotificationMessage('El usuario ya existe');
+        setShowNotification(true);
+      }else{
+        setNotificationMessage('Solicitud rechazada por sintaxis invalidad');
         setShowNotification(true);
       }
-    } catch (error) {
-      setNotificationMessage("Error al enviar el formulario: " + error.message);
-      setShowNotification(true);
+
     }
   };
 
@@ -77,6 +80,8 @@ function CargarUsuario() {
               id="nombre"
               {...register("nombre", {
                 required: "Por favor, completa este campo.",
+                minLength: {value: 3, message: 'Mínimo 3 carácteres'},
+                maxLength: {value: 20, message: 'Máximo 20 carácteres'}
               })}
               className="input"
             />
@@ -91,6 +96,8 @@ function CargarUsuario() {
               id="apellido"
               {...register("apellido", {
                 required: "Por favor, completa este campo.",
+                minLength: {value: 3, message: 'Mínimo 3 carácteres'},
+                maxLength: {value: 50, message: 'Máximo 50 carácteres'}
               })}
               className="input"
             />
@@ -105,6 +112,8 @@ function CargarUsuario() {
               id="nombreUsuario"
               {...register("nombreUsuario", {
                 required: "Por favor, completa este campo.",
+                minLength: {value: 3, message: 'Mínimo 3 carácteres'},
+                maxLength: {value: 20, message: 'Máximo 20 carácteres'}
               })}
               className="input"
             />
@@ -113,7 +122,20 @@ function CargarUsuario() {
             )}
           </div>
           <div>
-            <label className="cargar-archivo input" htmlFor="imagen">
+            <label htmlFor="rol">Rol</label>
+            <input type="text" 
+              placeholder="ADMIN or USER"
+              id="rol"
+              className="input"
+              {...register('rol', {
+                required: 'Debe indicar el rol',
+                minLength: {value: 4, message: 'Debe ser ADMIN or USER'},
+                maxLength: {value: 5, message: 'Debe ser ADMIN or USER'}
+              })}/>
+              {errors.rol && (<span className="error-msg">{errors.rol.message}</span>)}
+          </div>
+          <div>
+            <label className="cargar-archivo input" htmlFor="foto">
               <div className="icono">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -137,15 +159,15 @@ function CargarUsuario() {
                 </svg>
               </div>
               <div className="texto">
-                <span className={errors.imagen ? "error-msg" : ""}>
-                  {errors.imagen ? errors.imagen.message : imagenName}
+                <span className={errors.foto ? "error-msg" : ""}>
+                  {errors.foto ? errors.foto.message : imagenName}
                 </span>
               </div>
             </label>
             <input
               type="file"
-              id="imagen"
-              {...register("imagen", {
+              id="foto"
+              {...register("foto", {
                 required: "Por favor, sube una imagen.",
               })}
             />
@@ -157,6 +179,7 @@ function CargarUsuario() {
               id="email"
               {...register("email", {
                 required: "Por favor, completa este campo.",
+                pattern: {value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, message: 'Formato inválido, debe tener el siguiente formato: ejemplo@email.com'}
               })}
               className="input"
             />
@@ -170,7 +193,7 @@ function CargarUsuario() {
               type="tel"
               id="telefono"
               {...register("telefono", {
-                required: "Por favor, completa este campo.",
+                // required: "Por favor, completa este campo.",
               })}
               className="input"
             />
@@ -185,6 +208,8 @@ function CargarUsuario() {
               id="password"
               {...register("password", {
                 required: "Por favor, completa este campo.",
+                minLength: {value: 6, message: 'Mínimo 6 carácteres'},
+                maxLength: {value: 20, message: 'Máximo 20 carácteres'}
               })}
               className="input"
             />
@@ -193,17 +218,19 @@ function CargarUsuario() {
             )}
           </div>
           <div>
-            <label htmlFor="password2">Repita contraseña</label>
+            <label htmlFor="confirmPassword">Repita contraseña</label>
             <input
               type="password"
-              id="password2"
-              {...register("password2", {
+              id="confirmPassword"
+              {...register("confirmPassword", {
                 required: "Por favor, completa este campo.",
+                minLength: {value: 3, message: 'Mínimo 3 carácteres'},
+                maxLength: {value: 20, message: 'Máximo 20 carácteres'}
               })}
               className="input"
             />
-            {errors.password2 && (
-              <span className="error-msg">{errors.password2.message}</span>
+            {errors.confirmPassword && (
+              <span className="error-msg">{errors.confirmPassword.message}</span>
             )}
           </div>
           <div className="button-container">

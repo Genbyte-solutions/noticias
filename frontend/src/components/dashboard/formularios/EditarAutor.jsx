@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import Notification from "../../../components/notificacion/Notificacion";
 import { autorPorId } from "../../../service/autor/Listar.js";
 import { imagenPorIdAutor } from "../../../service/imagen/Imagen.js";
+import axios from "axios";
 
 function EditarAutor() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ function EditarAutor() {
     handleSubmit,
     setValue,
     formState: { errors },
+    reset
   } = useForm();
   const [fotoName, setFotoName] = useState("Subir foto");
   const dataRef = useRef(null);
@@ -64,22 +66,23 @@ function EditarAutor() {
     formData.append("foto", data.foto[0]);
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/autor/editar/${id}`,
+      const response = await axios.put(
+        `http://localhost:8080/api/v1/autor/${id}`, formData,
         {
-          method: "POST",
-          body: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
 
-      if (response.ok) {
-        const responseData = await response.text();
-        setNotificationMessage(responseData);
+      if (response.status === 200) {
+        // const responseData = await response.text();
+        setNotificationMessage('Edición realizada correctamente');
         setShowNotification(true);
       } else {
         setNotificationMessage(
           "Error al enviar el formulario. Response not ok: " +
-            response.statusText
+            response.status
         );
         setShowNotification(true);
       }
@@ -87,6 +90,7 @@ function EditarAutor() {
       setNotificationMessage("Error al enviar el formulario: " + error.message);
       setShowNotification(true);
     }
+    reset();
   };
 
   return (
@@ -94,7 +98,10 @@ function EditarAutor() {
       <div className="form-container">
         <form onSubmit={handleSubmit(onSubmit)} className="form">
           <span className="titulo">Editar Autor</span>
-          {foto && <img src={foto} alt="Foto" />}
+          <div className="container-photo">
+
+          {foto && <img className="photo" src={foto} alt="Foto" />}
+          </div>
           <div>
             <label htmlFor="nombre">Nombre</label>
             <input
