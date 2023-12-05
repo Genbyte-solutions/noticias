@@ -57,7 +57,7 @@ public class Noticia {
     @Column(name = "fecha_edicion")
     private Timestamp fechaEdicion;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "portada", referencedColumnName = "portada_id")
     private Portada portada;
 

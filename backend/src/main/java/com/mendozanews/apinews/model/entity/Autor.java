@@ -30,7 +30,7 @@ public class Autor {
     @Column(name = "apellido")
     private String apellido;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "foto", referencedColumnName = "imagen_id")
     private Imagen foto;
 

@@ -89,29 +89,21 @@ public class UsuarioControlador {
     @PutMapping("/usuario/{usuarioId}")
     public ResponseEntity<?> editarUsuario(@PathVariable("usuarioId") String usuarioId,
                                            @ModelAttribute @Valid UsuarioDto usuarioDto,
-                                           @RequestParam("currentPassword") String currentPassword,
                                            @RequestPart(value = "foto", required = false) MultipartFile foto) {
-
-        if (!usuarioDto.getPassword().equals(usuarioDto.getConfirmPassword())) {
-            return new ResponseEntity<>(ResponseMessage.builder()
-                    .mensaje("Las contraseñas no coinciden")
-                    .build(), HttpStatus.BAD_REQUEST);
-        }
 
         try {
             Usuario usuario = usuarioServicio.buscarUsuarioPorId(usuarioId);
             if (usuario == null) throw new ResourceNotFoundException("Usuario", "id", usuarioId);
 
-            if (!passwordEncoder.matches(currentPassword, usuario.getPassword())) {
+            if (!passwordEncoder.matches(usuarioDto.getPassword(), usuario.getPassword())) {
                 return new ResponseEntity<>(ResponseMessage.builder()
                         .mensaje("Contraseña incorrecta")
                         .build(), HttpStatus.BAD_REQUEST);
             }
 
-            Usuario usuarioEditado = usuarioServicio.editarUsuario(usuario, usuarioDto, foto);
-            UsuarioResDto usuarioResDto = usuarioMapper.toDTO(usuarioEditado);
+            usuarioServicio.editarUsuario(usuario, usuarioDto, foto);
 
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException ioException) {
             throw new ResourceBadRequestException(ioException.getMessage());
         }
