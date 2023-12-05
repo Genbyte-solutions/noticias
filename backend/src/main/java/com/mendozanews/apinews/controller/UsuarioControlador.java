@@ -75,7 +75,9 @@ public class UsuarioControlador {
     }
 
     @GetMapping("/usuario/defecto")
-    public ResponseEntity<?> crearUsuarioPorDefectoEndpoint() {
+    public ResponseEntity<?> crearUsuarioPorDefectoEndpoint(
+            @RequestParam("contrasena") String contrasena) {
+
         Usuario usuarioExistente = usuarioServicio.buscarUsuario("admin");
         if (usuarioExistente != null) {
             return new ResponseEntity<>("El usuario por defecto ya existe", HttpStatus.BAD_REQUEST);
@@ -86,8 +88,8 @@ public class UsuarioControlador {
                 .apellido("admin")
                 .nombreUsuario("admin")
                 .email("admin@admin.com")
-                .password("admin")
-                .confirmPassword("admin")
+                .password(contrasena)
+                .confirmPassword(contrasena)
                 .rol(Rol.ADMIN)
                 .telefono("123456789")
                 .build();
