@@ -6,6 +6,7 @@ import com.mendozanews.apinews.mapper.UsuarioMapper;
 import com.mendozanews.apinews.model.dto.request.UsuarioDto;
 import com.mendozanews.apinews.model.dto.response.UsuarioResDto;
 import com.mendozanews.apinews.model.entity.Usuario;
+import com.mendozanews.apinews.model.enums.Rol;
 import com.mendozanews.apinews.model.payload.ResponseMessage;
 import com.mendozanews.apinews.service.interfaces.IUsuario;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,6 +73,35 @@ public class UsuarioControlador {
             throw new ResourceBadRequestException(ioException.getMessage());
         }
     }
+
+    @GetMapping("/usuario/defecto")
+    public ResponseEntity<?> crearUsuarioPorDefectoEndpoint(
+            @RequestParam("contrasena") String contrasena) {
+
+        Usuario usuarioExistente = usuarioServicio.buscarUsuario("admin");
+        if (usuarioExistente != null) {
+            return new ResponseEntity<>("El usuario por defecto ya existe", HttpStatus.BAD_REQUEST);
+        }
+
+        UsuarioDto usuarioDto = UsuarioDto.builder()
+                .nombre("admin")
+                .apellido("admin")
+                .nombreUsuario("admin")
+                .email("admin@admin.com")
+                .password(contrasena)
+                .confirmPassword(contrasena)
+                .rol(Rol.ADMIN)
+                .telefono("123456789")
+                .build();
+
+        try {
+            usuarioServicio.crearUsuario(usuarioDto, null);
+        } catch (IOException ioException) {
+            return new ResponseEntity<>("Error al crear el usuario por defecto", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("Usuario por defecto creado exitosamente", HttpStatus.CREATED);
+    }
+
 
     @Operation(
             summary = "Edita un usuario por ID",
