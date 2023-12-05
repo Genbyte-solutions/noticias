@@ -47,9 +47,6 @@ export default function HeaderDashboard() {
                 <li>
                   <Link to="/administrador/usuario/listar">Listar Usuarios</Link>
                 </li>
-                <li>
-                  <Link to="/administrador/login">Login</Link>
-                </li>
               </ul>
               <button className="barIco" onClick={() => setNavbar(!navbar)}>
                 {navbar ? (
